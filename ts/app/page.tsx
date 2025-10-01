@@ -1,5 +1,6 @@
-import Navbar from "./components/navbar/navbar";
+"use client";
+import Home from "./components/home/home";
 
-export default function Home() {
-  return <Navbar />;
+export default function HomePage() {
+  return <Home />;
 }
