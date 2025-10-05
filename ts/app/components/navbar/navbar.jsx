@@ -57,7 +57,7 @@ const Navbar = () => {
   return (
     <nav className={`navbar-container ${mode}`}> 
       <div className="navbar-logo">
-        <NextImage src="/logo.png" alt="Logo" width={40} height={40} />
+        <NextImage src="/logo.png" alt="Logo" width={60} height={32} />
       </div>
       <ul className="navbar-list">
         <li className="navbar-toggle">
@@ -138,6 +138,7 @@ const Navbar = () => {
           padding: 0.5rem 2rem;
           box-shadow: 0 2px 12px rgba(0,0,0,0.04);
           min-height: 64px;
+          background: transparent;
         }
         .toggle-switch {
           position: relative;
@@ -191,10 +192,10 @@ const Navbar = () => {
           transform: translateY(-50%) translateX(24px);
         }
         .navbar-container.dark {
-          background: #111;
+          background: transparent;
         }
         .navbar-container.light {
-          background: #fff;
+          background: transparent;
         }
         .navbar-logo {
           margin-right: 2rem;
