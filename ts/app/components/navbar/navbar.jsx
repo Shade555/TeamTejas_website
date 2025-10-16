@@ -36,7 +36,8 @@ const navItems = [
 ];
 
 const Navbar = () => {
-  let currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
+  let currentPath =
+    typeof window !== "undefined" ? window.location.pathname : "/";
   const [hovered, setHovered] = useState(null);
 
   // Clear hovered state when route changes so pill doesn't remain on previous tab
@@ -55,19 +56,33 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`navbar-container ${mode}`}> 
+    <nav className={`navbar-container ${mode}`}>
       <div className="navbar-logo">
         <NextImage src="/logo.png" alt="Logo" width={60} height={32} />
       </div>
       <ul className="navbar-list">
         <li className="navbar-toggle">
-          <button className="toggle-switch" onClick={handleToggle} aria-label="Toggle dark/light mode">
+          <button
+            className="toggle-switch"
+            onClick={handleToggle}
+            aria-label="Toggle dark/light mode"
+          >
             <span className={`switch-track ${mode}`}></span>
-            <span className={`switch-thumb ${mode}`}> 
+            <span className={`switch-thumb ${mode}`}>
               {mode === "dark" ? (
-                <NextImage src="/dark/half-moon.png" alt="Moon" width={20} height={20} />
+                <NextImage
+                  src="/dark/half-moon.png"
+                  alt="Moon"
+                  width={20}
+                  height={20}
+                />
               ) : (
-                <NextImage src="/light/sun.png" alt="Sun" width={20} height={20} />
+                <NextImage
+                  src="/light/sun.png"
+                  alt="Sun"
+                  width={20}
+                  height={20}
+                />
               )}
             </span>
           </button>
@@ -77,7 +92,8 @@ const Navbar = () => {
           const isHovered = hovered === item.name;
           // Pick pill color based on tab index (matches image)
           // Pill color: translucent blue for dark, black for light
-          const pillColor = mode === "dark" ? "rgba(59, 130, 246, 0.25)" : "rgba(0,0,0,0.12)";
+          const pillColor =
+            mode === "dark" ? "rgba(59, 130, 246, 0.25)" : "rgba(0,0,0,0.12)";
           const showPill = isActive || isHovered;
           // Animation: pill expands left-to-right as label appears
           // Calculate pill width: icon + label + padding (tighter fit)
@@ -91,7 +107,12 @@ const Navbar = () => {
               className={`navbar-item${isActive ? " active" : ""}`}
               onMouseEnter={() => setHovered(item.name)}
               onMouseLeave={() => setHovered(null)}
-              style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}
+              style={{
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
               {showPill && (
                 <span
@@ -112,17 +133,36 @@ const Navbar = () => {
                     zIndex: 1,
                     pointerEvents: "none",
                     overflow: "hidden",
-                    transition: "background 0.3s"
+                    transition: "background 0.3s",
                   }}
                 >
                   {/* Empty span for pill background only */}
                 </span>
               )}
-              <Link href={item.href} className="navbar-link" style={{ position: "relative", zIndex: 2, display: "flex", alignItems: "center", paddingLeft: "8px", paddingRight: "8px" }}>
+              <Link
+                href={item.href}
+                className="navbar-link"
+                style={{
+                  position: "relative",
+                  zIndex: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  paddingLeft: "8px",
+                  paddingRight: "8px",
+                }}
+              >
                 <span className="navbar-icon">
-                  <NextImage src={mode === "dark" ? item.icon : item.iconLight} alt={item.name + " icon"} width={22} height={22} />
+                  <NextImage
+                    src={mode === "dark" ? item.icon : item.iconLight}
+                    alt={item.name + " icon"}
+                    width={22}
+                    height={22}
+                  />
                 </span>
-                <span className={`navbar-text${showPill ? " show" : ""}`} style={{ marginLeft: "8px" }}>
+                <span
+                  className={`navbar-text${showPill ? " show" : ""}`}
+                  style={{ marginLeft: "8px" }}
+                >
                   {item.name}
                 </span>
               </Link>
@@ -136,7 +176,7 @@ const Navbar = () => {
           align-items: center;
           justify-content: space-between;
           padding: 0.5rem 2rem;
-          box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
           min-height: 64px;
           background: transparent;
         }
@@ -175,7 +215,7 @@ const Navbar = () => {
           height: 20px;
           border-radius: 50%;
           background: transparent;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
           transform: translateY(-50%) translateX(0);
           transition: background 0.3s, transform 0.3s;
           display: flex;
@@ -230,14 +270,21 @@ const Navbar = () => {
           width: 44px;
           min-width: 44px;
           opacity: 0.7;
-          transition: width 0.35s cubic-bezier(.77,0,.18,1), background 0.3s;
+          transition: width 0.35s cubic-bezier(0.77, 0, 0.18, 1),
+            background 0.3s;
         }
         .pill-animate {
-          animation: pill-expand-ltr 0.35s cubic-bezier(.77,0,.18,1) forwards;
+          animation: pill-expand-ltr 0.35s cubic-bezier(0.77, 0, 0.18, 1)
+            forwards;
         }
         @keyframes pill-expand-ltr {
-          0% { width: 44px; opacity: 0.7; }
-          100% { opacity: 1; }
+          0% {
+            width: 44px;
+            opacity: 0.7;
+          }
+          100% {
+            opacity: 1;
+          }
         }
         .navbar-link {
           display: flex;
@@ -269,7 +316,8 @@ const Navbar = () => {
           white-space: nowrap;
           margin-left: 0.5rem;
           color: ${mode === "dark" ? "#75FBFD" : "#111"};
-          transition: max-width 0.4s cubic-bezier(.77,0,.18,1), opacity 0.3s;
+          transition: max-width 0.4s cubic-bezier(0.77, 0, 0.18, 1),
+            opacity 0.3s;
         }
         .navbar-text.show {
           max-width: 120px;

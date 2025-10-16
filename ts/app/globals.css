@@ -14,7 +14,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #070e1c; /* replaced dark black with requested color */
     --foreground: #ededed;
   }
 }
@@ -23,4 +23,64 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Sponsor button styles (responsive pill) */
+.sponsor-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.85));
+  border: 2px solid rgba(42, 212, 255, 0.12);
+  color: #74f1ff;
+  font-weight: 500;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: inset 0 -6px 18px rgba(0, 0, 0, 0.6);
+  transition: box-shadow 220ms ease, transform 160ms ease, background 160ms ease,
+    text-shadow 200ms ease;
+  text-decoration: none;
+}
+
+/* Desktop (reduced) */
+.sponsor-button {
+  padding: 10px 40px;
+  font-size: 18px;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .sponsor-button {
+    padding: 8px 28px;
+    font-size: 16px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .sponsor-button {
+    padding: 6px 18px;
+    font-size: 14px;
+  }
+}
+
+.sponsor-button:hover,
+.sponsor-button:focus {
+  /* darker inner panel */
+  /* navy-ish background matching reference */
+  background: linear-gradient(180deg, #0f2740, #0b2136);
+  /* stronger cyan border */
+  border-color: rgba(42, 212, 255, 0.22);
+  /* outer cyan glow + subtle outer stroke */
+  box-shadow: 0 8px 30px rgba(42, 212, 255, 0.22),
+    0 0 6px rgba(42, 212, 255, 0.08), inset 0 -8px 24px rgba(0, 0, 0, 0.6);
+  transform: translateY(-2px);
+  outline: none;
+  text-shadow: 0 3px 14px rgba(42, 212, 255, 0.5);
+  color: #66f0ff; /* brighter cyan text on hover */
+}
+
+.sponsor-button:active {
+  transform: translateY(-2px);
 }
