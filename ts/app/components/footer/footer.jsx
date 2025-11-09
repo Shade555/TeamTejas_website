@@ -70,7 +70,7 @@ export default function Footer() {
         <div className={styles.right}>
           <div className={styles.socials}>
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/sfit_tejas/?hl=en"
               target="_blank"
               rel="noreferrer"
               aria-label="Instagram"
@@ -78,7 +78,7 @@ export default function Footer() {
               <InstagramIcon className={styles.icon} />
             </a>
             <a
-              href="https://linkedin.com"
+              href="https://in.linkedin.com/company/team-tejas"
               target="_blank"
               rel="noreferrer"
               aria-label="LinkedIn"

@@ -31,7 +31,7 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.85));
+  background: #2596be;
   border: 2px solid rgba(42, 212, 255, 0.12);
   color: #74f1ff;
   font-weight: 500;
@@ -69,13 +69,8 @@ body {
 .sponsor-button:focus {
   /* darker inner panel */
   /* navy-ish background matching reference */
-  background: linear-gradient(180deg, #0f2740, #0b2136);
+  background: rgb(80, 95, 168);
   /* stronger cyan border */
-  border-color: rgba(42, 212, 255, 0.22);
-  /* outer cyan glow + subtle outer stroke */
-  box-shadow: 0 8px 30px rgba(42, 212, 255, 0.22),
-    0 0 6px rgba(42, 212, 255, 0.08), inset 0 -8px 24px rgba(0, 0, 0, 0.6);
-  transform: translateY(-2px);
   outline: none;
   text-shadow: 0 3px 14px rgba(42, 212, 255, 0.5);
   color: #66f0ff; /* brighter cyan text on hover */

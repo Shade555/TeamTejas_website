@@ -1,8 +1,12 @@
 .footer {
-  background: #222; /* dark footer */
-  color: #e6eef7;
-  padding: 28px 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.068); /* semi-transparent white */
+  color: #cfefff;
+  padding: 15px 0;
+  text-align: center;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 }
 .container {
   max-width: 1100px;
