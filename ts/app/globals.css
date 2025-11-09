@@ -14,7 +14,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #070e1c; /* replaced dark black with requested color */
     --foreground: #ededed;
   }
 }
@@ -22,6 +22,62 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Sponsor button styles (responsive pill) */
+.sponsor-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #2596be;
+  border: 2px solid rgba(42, 212, 255, 0.12);
+  color: #74f1ff;
+  font-weight: 500;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: inset 0 -6px 18px rgba(0, 0, 0, 0.6);
+  transition: box-shadow 220ms ease, transform 160ms ease, background 160ms ease,
+    text-shadow 200ms ease;
+  text-decoration: none;
+}
+
+/* Desktop (reduced) */
+.sponsor-button {
+  padding: 10px 40px;
+  font-size: 18px;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .sponsor-button {
+    padding: 8px 28px;
+    font-size: 16px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .sponsor-button {
+    padding: 6px 18px;
+    font-size: 14px;
+  }
+}
+
+.sponsor-button:hover,
+.sponsor-button:focus {
+  /* darker inner panel */
+  /* navy-ish background matching reference */
+  background: rgb(80, 95, 168);
+  /* stronger cyan border */
+  outline: none;
+  text-shadow: 0 3px 14px rgba(42, 212, 255, 0.5);
+  color: #66f0ff; /* brighter cyan text on hover */
+}
+
+.sponsor-button:active {
+  transform: translateY(-2px);
   font-family: 'Inter', Arial, Helvetica, sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
