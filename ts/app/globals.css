@@ -22,5 +22,82 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide native scrollbars but preserve scrolling behavior */
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+/* Firefox */
+* { scrollbar-width: none; -ms-overflow-style: none; }
+
+/* Responsive rules: scale hero and move navbar icons to bottom on smaller screens */
+
+/* Tablet: scale down slightly and keep layout */
+@media (max-width: 1024px) {
+  .hero-section {
+    transform: scale(0.92);
+    transform-origin: left center;
+    padding: 4.5rem 3.5rem !important;
+  }
+  .hero-left {
+    transform: translateY(-1.4rem) !important;
+  }
+}
+
+/* Mobile / small tablets: scale more and center critical elements visually */
+@media (max-width: 768px) {
+  .hero-section {
+    transform: scale(0.78);
+    transform-origin: left center;
+    padding: 3rem 1.5rem !important;
+  }
+  .hero-left {
+    transform: translateY(-1rem) !important;
+    max-width: 60% !important;
+  }
+  .hero-right {
+    max-width: 40% !important;
+    padding-left: 1rem !important;
+  }
+
+  /* Move navbar icons into a centered bottom pill bar */
+  .navbar-list {
+    position: fixed !important;
+    bottom: 16px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: rgba(0,0,0,0.35) !important;
+    backdrop-filter: blur(6px) !important;
+    padding: 6px 10px !important;
+    border-radius: 999px !important;
+    gap: 0.5rem !important;
+    z-index: 1200 !important;
+    justify-content: center !important;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35) !important;
+  }
+
+  /* Icons only in pill, hide labels */
+  .navbar-text {
+    display: none !important;
+  }
+  .navbar-pill {
+    display: none !important;
+  }
+  .navbar-item,
+  .navbar-link {
+    padding: 6px !important;
+  }
+
+  /* Hide logo to save space (keeps top area cleaner) */
+  .navbar-logo {
+    display: none !important;
+  }
 }

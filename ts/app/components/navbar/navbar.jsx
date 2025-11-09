@@ -76,8 +76,8 @@ const Navbar = () => {
           const isActive = currentPath === item.href;
           const isHovered = hovered === item.name;
           // Pick pill color based on tab index (matches image)
-          // Pill color: translucent blue for dark, black for light
-          const pillColor = mode === "dark" ? "rgba(59, 130, 246, 0.25)" : "rgba(0,0,0,0.12)";
+          // Pill color: translucent blue for dark, translucent white for light
+          const pillColor = mode === "dark" ? "rgba(59, 130, 246, 0.25)" : "rgba(255,255,255,0.5)";
           const showPill = isActive || isHovered;
           // Animation: pill expands left-to-right as label appears
           // Calculate pill width: icon + label + padding (tighter fit)
@@ -245,15 +245,15 @@ const Navbar = () => {
           text-decoration: none;
           padding: 0.5rem 1rem;
           border-radius: 2rem;
-          background: ${mode === "dark" ? "#1a2233" : "#e3e3e3"};
-          color: ${mode === "dark" ? "#2ad4ff" : "#222"};
+          background: transparent;
+          color: ${mode === "light" ? "#111" : "#2ad4ff"};
           font-weight: 500;
           transition: background 0.2s, color 0.2s;
         }
         .navbar-item.active .navbar-link,
         .navbar-item:hover .navbar-link {
-          background: ${mode === "dark" ? "#2ad4ff" : "#222"};
-          color: ${mode === "dark" ? "#fff" : "#fff"};
+          background: transparent;
+          color: #fff;
         }
         .navbar-icon {
           display: flex;
@@ -268,13 +268,13 @@ const Navbar = () => {
           overflow: hidden;
           white-space: nowrap;
           margin-left: 0.5rem;
-          color: ${mode === "dark" ? "#75FBFD" : "#111"};
+          color: ${mode === "light" ? "#111" : "#75FBFD"};
           transition: max-width 0.4s cubic-bezier(.77,0,.18,1), opacity 0.3s;
         }
         .navbar-text.show {
           max-width: 120px;
           opacity: 1;
-          color: ${mode === "dark" ? "#75FBFD" : "#111"};
+          color: ${mode === "light" ? "#111" : "#75FBFD"};
         }
       `}</style>
     </nav>
