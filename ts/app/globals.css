@@ -119,9 +119,19 @@ body {
     transform: translateY(-1rem) !important;
     max-width: 60% !important;
   }
+
+  /* Accent color used for specific words */
+  .accent-word {
+    color: #75FBFD !important;
+  }
   .hero-right {
     max-width: 40% !important;
     padding-left: 1rem !important;
+  }
+
+  /* Ensure accent color applies globally (override inline/parent color if necessary) */
+  .accent-word {
+    color: #75FBFD !important;
   }
 
   /* Move navbar icons into a centered bottom pill bar */
@@ -157,3 +167,38 @@ body {
     display: none !important;
   }
 }
+
+/* Ensure sponsor logos are hidden by default to prevent a flash
+   before GSAP runs. Animations will set transform/opacity to make
+   them visible when the element enters the viewport. */
+.sponsor-logo {
+  opacity: 0;
+  transform: translateY(-40px) translateX(0);
+  will-change: transform, opacity;
+}
+
+/* Optional directional offset used as a fallback for non-JS users */
+.sponsor-logo-right {
+  transform: translateY(-40px) translateX(40px);
+}
+.sponsor-logo-left {
+  transform: translateY(-40px) translateX(-40px);
+}
+
+
+/* Sponsor CTA center-fill hover effect */
+.sponsor-cta {
+  position: relative;
+  overflow: hidden;
+}
+.sponsor-cta > span {
+  position: relative;
+  z-index: 2; /* keep text above the fill */
+}
+.sponsor-cta::before {
+  /* Disabled: fill hover removed per user request (keep outline only).
+     Leaving an empty pseudo-element in case other styles rely on its presence. */
+  content: '';
+  display: none;
+}
+

@@ -36,7 +36,7 @@ const Home = () => {
           textAlign: 'left',
           fontFamily: 'Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial'
         }}>
-          Defending<br />the Digital
+          <span className="accent-word" style={{ color: '#75FBFD' }}>Defending</span><br />the Digital
         </div>
 
         <div style={{ marginTop: '2.4rem' }}>
@@ -87,7 +87,7 @@ const Home = () => {
           display: 'inline-block'
         }}>
           <div style={{ display: 'block', position: 'relative', transform: 'translateX(-18.5rem)' }}>on</div>
-          <div style={{ display: 'block' }}>the Dot.</div>
+          <div style={{ display: 'block' }}>the <span className="accent-word" style={{ color: '#75FBFD' }}>Dot.</span></div>
         </h1>
 
       </div>
