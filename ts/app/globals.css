@@ -3,9 +3,6 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -78,7 +75,7 @@ body {
 
 .sponsor-button:active {
   transform: translateY(-2px);
-  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -92,7 +89,10 @@ body {
 }
 
 /* Firefox */
-* { scrollbar-width: none; -ms-overflow-style: none; }
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
 
 /* Responsive rules: scale hero and move navbar icons to bottom on smaller screens */
 
@@ -130,14 +130,14 @@ body {
     bottom: 16px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    background: rgba(0,0,0,0.35) !important;
+    background: rgba(0, 0, 0, 0.35) !important;
     backdrop-filter: blur(6px) !important;
     padding: 6px 10px !important;
     border-radius: 999px !important;
     gap: 0.5rem !important;
     z-index: 1200 !important;
     justify-content: center !important;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.35) !important;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35) !important;
   }
 
   /* Icons only in pill, hide labels */
@@ -156,4 +156,78 @@ body {
   .navbar-logo {
     display: none !important;
   }
+}
+
+/* Animated gradient border for mission/value/vision cards */
+/* We'll animate the gradient's background-position through the four corners
+   to create a square-path movement: top -> right -> bottom -> left. */
+
+@keyframes squareMove {
+  0% {
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+/* default: no visible border */
+.blue-border {
+  position: relative;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  overflow: hidden;
+}
+
+/* make sure card content sits above the pseudo-element */
+.blue-border > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* pseudo-element draws the animated gradient border (hollow center) */
+.blue-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px; /* border thickness */
+  border-radius: inherit;
+  pointer-events: none;
+  /* linear gradient with the requested blue stops; we'll animate its
+     background-position in a square path so the light-blue band appears
+     to move around the border edges (not a circular rotation). */
+  background: linear-gradient(
+    90deg,
+    #0d1433 0%,
+    #171f55 25%,
+    #274272 60%,
+    #6c90c3 85%,
+    #0d1433 100%
+  );
+  /* make the background larger so moving the position creates visible travel */
+  background-size: 200% 200%;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  /* hollow out the center so only the border is visible */
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: 0;
+}
+
+/* when the JS toggles this class on hover, show & animate the border */
+.blue-border.animated-blue-border::before {
+  opacity: 1;
+  /* slowed down from 3.2s to 6s for a gentler movement */
+  animation: squareMove 5s linear infinite;
 }
