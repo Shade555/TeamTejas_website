@@ -19,6 +19,13 @@
   }
 }
 
+/* Ensure the document background is solid in dark mode to avoid flashes during scroll */
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background-color: #070e1c !important;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
