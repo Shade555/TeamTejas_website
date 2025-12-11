@@ -77,19 +77,20 @@ const Sponsor = () => {
             <a href="/sponsor/form" style={{ textDecoration: "none" }}>
               <button
                 style={{
-                  background: "transparent",
+                  background: "rgba(59,130,246,0.25)",
                   color: "#66f0ff",
                   padding: "0.6rem 1rem",
-                  border: "1px solid rgba(102,240,255,0.18)",
+                  border: "none",
                   borderRadius: "999px",
                   cursor: "pointer",
                   fontSize: "1rem",
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "0.6rem",
-                  /* keep outline only, remove ambient/glow */
+                  /* remove ambient/glow */
                   boxShadow: "none",
-                  transition: "transform 120ms ease",
+                  transition: "transform 160ms cubic-bezier(.2,.9,.2,1)",
+                  transform: "translateY(0) scale(1)",
                 }}
                 className="sponsor-cta"
               >
@@ -97,6 +98,16 @@ const Sponsor = () => {
                   Sponsor Us
                 </span>
               </button>
+              <style jsx>{`
+                .sponsor-cta{ will-change: transform; }
+                .sponsor-cta:hover{
+                  transform: translateY(-6px) scale(1.02);
+                }
+                /* Slight adjustment for active/press feedback */
+                .sponsor-cta:active{
+                  transform: translateY(-2px) scale(0.995);
+                }
+              `}</style>
             </a>
           </div>
         </section>

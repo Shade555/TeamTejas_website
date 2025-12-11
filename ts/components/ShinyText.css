@@ -1,16 +1,27 @@
 .shiny-text {
-  color: #b5b5b5a4; /* Adjust this color to change intensity/style */
+  /* base color is part of the gradient so the shine can sweep across it */
   background: linear-gradient(
     120deg,
-    rgba(255, 255, 255, 0) 40%,
-    rgba(255, 255, 255, 0.8) 50%,
-    rgba(255, 255, 255, 0) 60%
+    rgb(179, 207, 229) 0%,
+    rgb(179, 207, 229) 45%,
+    #75FBFD 70%,
+    rgb(179, 207, 229) 55%,
+    rgb(179, 207, 229) 100%
   );
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
+  /* make the element show the background as text color */
+  color: transparent;
+  -webkit-text-fill-color: transparent;
   display: inline-block;
-  animation: shine 5s linear infinite;
+  /* Temporarily disable the animated shine. To re-enable, remove this line or add the `enabled` class to the element. */
+  animation: none;
+}
+
+/* Utility: add this class to re-enable the shine on specific elements without editing this file */
+.shiny-text.enabled {
+  animation: shine 3s linear infinite;
 }
 
 @keyframes shine {
