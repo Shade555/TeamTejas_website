@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import NextImage from "next/image";
+import { usePathname } from "next/navigation";
+
 const navItems = [
   {
     name: "Home",
@@ -36,27 +38,25 @@ const navItems = [
 ];
 
 const Navbar = () => {
-  let currentPath =
-    typeof window !== "undefined" ? window.location.pathname : "/";
+  const pathname = usePathname() || "/";
   const [hovered, setHovered] = useState(null);
-
-  // Clear hovered state when route changes so pill doesn't remain on previous tab
-  React.useEffect(() => {
-    setHovered(null);
-  }, [currentPath]);
   const [mode, setMode] = useState("dark");
   const [showNightGif, setShowNightGif] = useState(false);
+
+  React.useEffect(() => {
+    setHovered(null);
+  }, [pathname]);
 
   const handleToggle = () => {
     if (mode === "light") {
       setShowNightGif(true);
-      setTimeout(() => setShowNightGif(false), 1200); // 1.2s for gif duration
+      setTimeout(() => setShowNightGif(false), 1200);
     }
     setMode(mode === "dark" ? "light" : "dark");
   };
 
   return (
-    <nav className={`navbar-container ${mode}`}>
+    <nav className="navbar-container">
       <div className="navbar-logo">
         <NextImage src="/logo.png" alt="Logo" width={60} height={32} />
       </div>
@@ -88,14 +88,13 @@ const Navbar = () => {
           </button>
         </li>
         {navItems.map((item) => {
-          const isActive = currentPath === item.href;
+          const isActive = pathname === item.href;
           const isHovered = hovered === item.name;
-          // Pick pill color based on tab index (matches image)
-          // Pill color: translucent blue for dark, translucent white for light
-          const pillColor = mode === "dark" ? "rgba(59, 130, 246, 0.25)" : "rgba(255,255,255,0.5)";
+          const pillColor =
+            mode === "dark"
+              ? "rgba(59, 130, 246, 0.25)"
+              : "rgba(255,255,255,0.5)";
           const showPill = isActive || isHovered;
-          // Animation: pill expands left-to-right as label appears
-          // Calculate pill width: icon + label + padding (tighter fit)
           const iconWidth = 22;
           const labelWidth = item.name.length * 8;
           const pillPadding = 33;
@@ -134,9 +133,7 @@ const Navbar = () => {
                     overflow: "hidden",
                     transition: "background 0.3s",
                   }}
-                >
-                  {/* Empty span for pill background only */}
-                </span>
+                />
               )}
               <Link
                 href={item.href}
@@ -169,6 +166,7 @@ const Navbar = () => {
           );
         })}
       </ul>
+
       <style jsx>{`
         .navbar-container {
           display: flex;
@@ -315,7 +313,8 @@ const Navbar = () => {
           white-space: nowrap;
           margin-left: 0.5rem;
           color: ${mode === "light" ? "#111" : "#75FBFD"};
-          transition: max-width 0.4s cubic-bezier(.77,0,.18,1), opacity 0.3s;
+          transition: max-width 0.4s cubic-bezier(0.77, 0, 0.18, 1),
+            opacity 0.3s;
         }
         .navbar-text.show {
           max-width: 120px;
