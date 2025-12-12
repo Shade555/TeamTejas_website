@@ -103,7 +103,7 @@ const Testimonials = () => {
                 <div className="card" key={`${copyIdx}-${i}`}>
                   <GlassSurface
                     width={500}
-                    height={320}
+                    height={360}
                     borderRadius={16}
                     className="testimonial-surface"
                     displace={2.5}             // was 10  → LESS blur
@@ -147,7 +147,7 @@ const Testimonials = () => {
           position: absolute;
           inset: 0;
           background-image: url('/testimonials/testimo_bg.png');
-          background-size: 80% auto;
+          background-size: 76% auto;
           background-position: center center;
           background-repeat: no-repeat;
           opacity: 0.70; /* adjust this to change image opacity only */
@@ -199,8 +199,7 @@ const Testimonials = () => {
 
         .card-inner{ display:flex; flex-direction:column; justify-content:space-between; width:100%; }
 
-        .quote{ font-size: 1rem; line-height: 1.5; margin: 0 0 0.6rem; color: #eafcff; text-align: left; }
-        .quote{ display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+        .quote{ font-size: 1rem; line-height: 1.5; margin: 0 0 0.6rem; color: #eafcff; text-align: left; white-space: normal; display: block; overflow: visible; }
 
         .meta{ display:flex; flex-direction: column; gap: 2px; font-size: 0.95rem; color: rgba(255,255,255,0.95); align-items: flex-end; }
         .name{ font-weight: 800; }
