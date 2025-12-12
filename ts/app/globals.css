@@ -3,9 +3,6 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -14,7 +11,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #070e1c; /* replaced dark black with requested color */
+    --background: #070e1c;
     --foreground: #ededed;
   }
 }
@@ -74,10 +71,7 @@ body {
 
 .sponsor-button:hover,
 .sponsor-button:focus {
-  /* darker inner panel */
-  /* navy-ish background matching reference */
   background: rgb(80, 95, 168);
-  /* stronger cyan border */
   outline: none;
   text-shadow: 0 3px 14px rgba(42, 212, 255, 0.5);
   color: #66f0ff; /* brighter cyan text on hover */
@@ -85,25 +79,22 @@ body {
 
 .sponsor-button:active {
   transform: translateY(-2px);
-  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Hide native scrollbars but preserve scrolling behavior */
-/* Chrome, Edge, Safari */
 ::-webkit-scrollbar {
   width: 0px;
   height: 0px;
 }
 
-/* Firefox */
-* { scrollbar-width: none; -ms-overflow-style: none; }
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
 
-/* Responsive rules: scale hero and move navbar icons to bottom on smaller screens */
-
-/* Tablet: scale down slightly and keep layout */
 @media (max-width: 1024px) {
   .hero-section {
     transform: scale(0.92);
@@ -147,17 +138,16 @@ body {
     bottom: 16px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    background: rgba(0,0,0,0.35) !important;
+    background: rgba(0, 0, 0, 0.35) !important;
     backdrop-filter: blur(6px) !important;
     padding: 6px 10px !important;
     border-radius: 999px !important;
     gap: 0.5rem !important;
     z-index: 1200 !important;
     justify-content: center !important;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.35) !important;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35) !important;
   }
 
-  /* Icons only in pill, hide labels */
   .navbar-text {
     display: none !important;
   }
@@ -169,7 +159,6 @@ body {
     padding: 6px !important;
   }
 
-  /* Hide logo to save space (keeps top area cleaner) */
   .navbar-logo {
     display: none !important;
   }

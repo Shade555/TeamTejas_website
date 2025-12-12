@@ -62,7 +62,9 @@ export default function Footer() {
           <div className={styles.centerInner}>
             <div className={styles.divider} aria-hidden />
             <div className={styles.centerText}>
-              St. Francis Institute Of Technology<br></br>Wing B, Room No. 011
+              St. Francis Institute Of Technology
+              <br />
+              Wing B, Room No. 011
             </div>
           </div>
         </div>
