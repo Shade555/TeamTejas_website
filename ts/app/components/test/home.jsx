@@ -6,11 +6,18 @@ import sponsor2 from "../sponsor/image-removebg-preview (20).png";
 import sponsor3 from "../sponsor/image-removebg-preview (21).png";
 import sponsor4 from "../sponsor/image-removebg-preview (22).png";
 import sponsor5 from "../sponsor/image-removebg-preview (23).png";
-import Testimonials from "../testimonials/testimonials";
 
 const Home = () => {
   const logos = [sponsor1, sponsor2, sponsor3, sponsor4, sponsor5];
   const sectionRef = useRef(null);
+  const scrollerRef = useRef(null);
+  const testimonials = [
+    { quote: "Being on the committee taught me leadership and resilience. The team felt like family.", name: 'Aisha Khan', role: 'Former Team Lead' },
+    { quote: "We learned practical engineering under real constraints — an experience I still use daily.", name: 'Ravi Patel', role: 'Ex-Avionics' },
+    { quote: "Designing and building the aircraft pushed my creativity and collaboration skills.", name: 'Lina Gomez', role: 'Past Fabrication Head' },
+    { quote: "Great mentorship and hands-on opportunities. Highly recommended to students.", name: 'Marcus Lee', role: 'Alumnus - Systems' },
+    { quote: "The committee prepared me for industry-level design reviews and teamwork.", name: 'Emily Chen', role: 'Former Project Manager' }
+  ];
 
   useEffect(() => {
     const container = sectionRef.current;
@@ -45,7 +52,54 @@ const Home = () => {
     };
   }, []);
 
-  
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+
+    const singleSet = scroller.querySelector('.test-set');
+    if (!singleSet) return;
+
+    let setWidth = singleSet.offsetWidth;
+    // place viewport at the middle copy
+    scroller.scrollLeft = setWidth;
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      window.requestAnimationFrame(() => {
+        if (scroller.scrollLeft <= 0) {
+          scroller.scrollLeft += setWidth;
+        } else if (scroller.scrollLeft >= setWidth * 2) {
+          scroller.scrollLeft -= setWidth;
+        }
+        ticking = false;
+      });
+      ticking = true;
+    };
+
+    const onKey = (e) => {
+      if (e.key === 'ArrowRight') scroller.scrollBy({ left: 320, behavior: 'smooth' });
+      if (e.key === 'ArrowLeft') scroller.scrollBy({ left: -320, behavior: 'smooth' });
+    };
+
+    const onResize = () => {
+      const newSingle = scroller.querySelector('.test-set');
+      if (newSingle) {
+        setWidth = newSingle.offsetWidth;
+        scroller.scrollLeft = setWidth;
+      }
+    };
+
+    scroller.addEventListener('scroll', onScroll);
+    scroller.addEventListener('keydown', onKey);
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      scroller.removeEventListener('scroll', onScroll);
+      scroller.removeEventListener('keydown', onKey);
+      window.removeEventListener('resize', onResize);
+    };
+  }, []);
 
   return (
     <>
@@ -248,7 +302,85 @@ const Home = () => {
     </section>
 
 
-    <Testimonials />
+    {/* Testimonials section */}
+    <section className="testimonials-section">
+      <div className="testimonials-inner">
+        <h2>Testimonials</h2>
+        <p className="lead">Quotes and thoughts from people who were previously in the committee.</p>
+
+        <div className="test-scroller" tabIndex={0} aria-label="Testimonials carousel" ref={scrollerRef}>
+          <div className="test-track">
+            {[0,1,2].map(copyIdx => (
+              <div className="test-set" key={copyIdx}>
+                {testimonials.map((t, i) => (
+                  <div className="test-card" key={`${copyIdx}-${i}`}>
+                    <div className="quote">“{t.quote}”</div>
+                    <div className="attribution">{t.name}</div>
+                    <div className="role">{t.role}</div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .testimonials-section{
+          padding: 3.5rem 4rem;
+          background-color: #050a12;
+          /* dark overlay + image: overlay reduces visible opacity of image */
+          background-image: linear-gradient(rgba(5,10,18,0.70), rgba(5,10,18,0.70)), url('/testimonials/testimo_bg.png');
+          /* reduce image size (60% width, auto height) so it appears smaller */
+          background-size: 80% auto;
+          background-position: center;
+          background-repeat: no-repeat;
+          color: #e6fbff;
+        }
+        .testimonials-inner{ max-width: 1100px; margin: 0 auto; }
+        .testimonials-inner h2{ text-align: center; font-size: 2.2rem; margin: 0; color: #fff; }
+        .testimonials-inner .lead{ text-align: center; color: rgba(230,251,255,0.9); margin: 0.85rem auto 1.6rem; max-width: 920px; }
+
+        .test-scroller{ 
+          overflow-x: auto; 
+          -webkit-overflow-scrolling: touch; 
+          scroll-behavior: smooth; 
+          /* soft fade at edges so cards appear to disappear into fog */
+          -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 16%, black 84%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0%, black 16%, black 84%, transparent 100%);
+        }
+        .test-track{ display: flex; gap: 24px; align-items: stretch; padding: 1rem 0 2rem; }
+
+        .test-set{ display: flex; gap: 24px; flex: 0 0 auto; }
+
+        .test-card{
+          min-width: 320px;
+          max-width: 360px;
+          padding: 1.4rem 1.6rem;
+          border-radius: 14px;
+          background: linear-gradient(180deg, rgba(0,0,0,0.03), rgba(255,255,255,0.02));
+          border: 1px solid rgba(255,255,255,0.06);
+          box-shadow: 0 10px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+          backdrop-filter: blur(8px) saturate(120%);
+          -webkit-backdrop-filter: blur(8px) saturate(120%);
+          color: #eafcff;
+          display: flex;
+          flex-direction: column;
+          gap: 0.8rem;
+        }
+        .quote{ font-size: 1rem; line-height: 1.45; color: rgba(235,251,255,0.95); }
+        .attribution{ margin-top: auto; font-weight: 700; color: #bfeefc; }
+        .role{ font-weight: 400; color: rgba(190,238,252,0.85); font-size: 0.92rem; }
+
+        .test-card:hover{ transform: translateY(-6px); transition: transform 180ms ease; }
+        .test-scroller:focus{ outline: 2px solid rgba(117,251,253,0.14); outline-offset: 6px; }
+
+        @media (max-width: 720px){
+          .test-card{ min-width: 280px; }
+          .testimonials-section{ padding: 2.2rem 1.2rem; }
+        }
+      `}</style>
+    </section>
     </>
   );
 };
