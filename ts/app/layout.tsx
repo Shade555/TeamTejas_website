@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/navbar/navbar";
 import Footer from "./components/footer/footer";
+import ScrollPlane from "./components/scrollbar/ScrollPlane";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,9 +36,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
       >
-        <Navbar />
-        <main style={{ flex: 1 }}>{children}</main>
-        <Footer />
+  <Navbar />
+  {/* global custom plane scrollbar overlay */}
+  <ScrollPlane />
+  <main style={{ flex: 1 }}>{children}</main>
+  <Footer />
       </body>
     </html>
   );

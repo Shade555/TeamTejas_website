@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import initSponsorAnimations from "./sponsorAnimations";
 import ShinyText from "../../../components/ShinyText";
 import LightRays from "../LightRays/page";
 import NextImage from "next/image";
@@ -10,6 +11,16 @@ import sponsor4 from "./image-removebg-preview (22).png";
 import sponsor5 from "./image-removebg-preview (23).png";
 
 const Sponsor = () => {
+  const containerRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+    const cleanup = initSponsorAnimations(containerRef.current);
+    return () => {
+      if (cleanup) cleanup();
+    };
+  }, []);
+
   return (
     <main
       style={{
@@ -22,8 +33,12 @@ const Sponsor = () => {
       {/* Background light rays - absolutely positioned and non-interactive */}
       <div
         style={{
-          position: "absolute",
-          inset: 0,
+          /* place the light rays relative to the viewport so they start at the very top of the site */
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100vh",
           zIndex: 0,
           pointerEvents: "none",
         }}
@@ -37,8 +52,8 @@ const Sponsor = () => {
         />
       </div>
 
-      <div style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>
+      <div ref={containerRef} style={{ position: "relative", zIndex: 1 }}>
+        <div className="sponsor-heading" style={{ fontSize: "2rem", marginBottom: "1rem" }}>
           <ShinyText text={"Sponsors and Partners"} speed={5} />
         </div>
 
@@ -50,55 +65,49 @@ const Sponsor = () => {
             lineHeight: 1.6,
             color: "#b3cfe5",
           }}
+          className="sponsor-desc"
         >
           We're a student-led team focused on building innovative projects and
           giving students hands-on experience. Your support helps us cover costs
           for equipment and development resources.
         </p>
 
-        <section style={{ maxWidth: 760, margin: "0 auto" }}>
+  <section className="sponsor-intro" style={{ maxWidth: 760, margin: "0 auto" }}>
           <div style={{ marginTop: "1rem" }}>
             <a href="/sponsor/form" style={{ textDecoration: "none" }}>
               <button
                 style={{
-                  background: "#0f2230",
+                  background: "rgba(59,130,246,0.25)",
                   color: "#66f0ff",
                   padding: "0.6rem 1rem",
-                  border: "1px solid rgba(102,240,255,0.08)",
+                  border: "none",
                   borderRadius: "999px",
                   cursor: "pointer",
                   fontSize: "1rem",
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "0.6rem",
-                  /* base: inner depth + subtle cyan ambient glow */
-                  boxShadow:
-                    "inset 0 -8px 16px rgba(0,0,0,0.25), 0 6px 18px rgba(2,8,16,0.6), 0 0 18px rgba(102,240,255,0.06)",
-                  transition: "transform 120ms ease, box-shadow 120ms ease",
+                  /* remove ambient/glow */
+                  boxShadow: "none",
+                  transition: "transform 160ms cubic-bezier(.2,.9,.2,1)",
+                  transform: "translateY(0) scale(1)",
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                  e.currentTarget.style.boxShadow =
-                    "inset 0 -6px 12px rgba(0,0,0,0.2), 0 10px 24px rgba(6,22,32,0.8), 0 0 30px rgba(102,240,255,0.16)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow =
-                    "inset 0 -8px 16px rgba(0,0,0,0.25), 0 6px 18px rgba(2,8,16,0.6), 0 0 18px rgba(102,240,255,0.06)";
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    "inset 0 -6px 12px rgba(0,0,0,0.2), 0 10px 24px rgba(6,22,32,0.9), 0 0 34px rgba(102,240,255,0.22)";
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    "inset 0 -8px 16px rgba(0,0,0,0.25), 0 6px 18px rgba(2,8,16,0.6), 0 0 18px rgba(102,240,255,0.06)";
-                }}
+                className="sponsor-cta"
               >
                 <span style={{ display: "inline-block", padding: "0 6px" }}>
                   Sponsor Us
                 </span>
               </button>
+              <style jsx>{`
+                .sponsor-cta{ will-change: transform; }
+                .sponsor-cta:hover{
+                  transform: translateY(-6px) scale(1.02);
+                }
+                /* Slight adjustment for active/press feedback */
+                .sponsor-cta:active{
+                  transform: translateY(-2px) scale(0.995);
+                }
+              `}</style>
             </a>
           </div>
         </section>
@@ -137,6 +146,7 @@ const Sponsor = () => {
                     position: "relative",
                     flex: "0 0 auto",
                   }}
+                  className="sponsor-logo sponsor-logo-top"
                 >
                   <NextImage
                     src={src}
@@ -151,7 +161,7 @@ const Sponsor = () => {
         </div>
 
         {/* 2025-26 Production and Program Sponsors (right-aligned) */}
-        <section style={{ marginTop: 40, maxWidth: 860, marginLeft: "auto" }}>
+  <section className="sponsor-year" style={{ marginTop: 40, maxWidth: 860, marginLeft: "auto" }}>
           <div
             style={{
               textAlign: "right",
@@ -205,6 +215,7 @@ const Sponsor = () => {
                       position: "relative",
                       flex: "0 0 auto",
                     }}
+                    className="sponsor-logo sponsor-logo-right"
                   >
                     <NextImage
                       src={src}
@@ -220,7 +231,7 @@ const Sponsor = () => {
         </section>
 
         {/* 2024-25 Production and Program Sponsors (left-aligned) */}
-        <section style={{ marginTop: 40, maxWidth: 860 }}>
+  <section className="sponsor-year" style={{ marginTop: 40, maxWidth: 860 }}>
           <div
             style={{
               textAlign: "left",
@@ -275,6 +286,7 @@ const Sponsor = () => {
                       position: "relative",
                       flex: "0 0 auto",
                     }}
+                    className="sponsor-logo sponsor-logo-left"
                   >
                     <NextImage
                       src={src}
@@ -290,7 +302,7 @@ const Sponsor = () => {
         </section>
 
         {/* 2023-24 Production and Program Sponsors (right-aligned) */}
-        <section style={{ marginTop: 40, maxWidth: 860, marginLeft: "auto" }}>
+  <section className="sponsor-year" style={{ marginTop: 40, maxWidth: 860, marginLeft: "auto" }}>
           <div
             style={{
               textAlign: "right",
@@ -344,6 +356,7 @@ const Sponsor = () => {
                       position: "relative",
                       flex: "0 0 auto",
                     }}
+                    className="sponsor-logo sponsor-logo-right"
                   >
                     <NextImage
                       src={src}

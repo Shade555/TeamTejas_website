@@ -1,0 +1,81 @@
+:root{
+  /* accent color available to override */
+  --accent-color: #75FBFD;
+}
+
+.overlay{
+  position:fixed;
+  /* place at extreme right of viewport like a normal scrollbar */
+  right:0;
+  top:0;
+  height:100vh;
+  width:25px; /* overall overlay width; visual track centered inside */
+  z-index:99999;
+  pointer-events:none; /* overlay only */
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+}
+
+.track{
+  position:relative;
+  height:100%;
+  width:6px;
+  border-radius:4px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+}
+
+.trail{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  width:4px;
+  top:6px;
+  background:linear-gradient(180deg, rgba(117,251,253,0.95), rgba(117,251,253,0.14));
+  border-radius:2px;
+  box-shadow:0 8px 18px rgba(117,251,253,0.12);
+  /* height driven by CSS variable set by React */
+  height: calc(var(--scroll-progress, 0) * 100%);
+  transition: height 120ms linear;
+  pointer-events:none;
+}
+
+.planeContainer{
+  position:absolute;
+  left:50%;
+  /* center horizontally and vertically relative to 'top' */
+  transform:translateX(-50%) translateY(-50%);
+  /* top is controlled by scroll progress (0..1 -> 0%..100%) */
+  top: calc(var(--scroll-progress, 0) * 100%);
+  width:40px;
+  height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  transition: top 120ms linear;
+}
+
+.plane{
+  width:28px;
+  height:28px;
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,0.35));
+  /* keep the plane visually centered on its container; no rotation */
+  transform: translateY(0);
+  /* no transform transition needed since we no longer rotate */
+}
+
+/* make sure at top/bottom the plane/trail don't overflow visually */
+.overlay::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;height:6px;
+}
+
+.overlay::after{
+  content:"";
+  position:absolute;
+  bottom:0;left:0;right:0;height:6px;
+}
