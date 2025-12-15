@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import initSponsorAnimations from "./sponsorAnimations";
-import ShinyText from "../../../components/ShinyText";
+// ShinyText removed — replace with plain heading text
 import LightRays from "../LightRays/page";
 import NextImage from "next/image";
 import sponsor1 from "./image-removebg-preview (19).png";
@@ -53,8 +53,16 @@ const Sponsor = () => {
       </div>
 
       <div ref={containerRef} style={{ position: "relative", zIndex: 1 }}>
-        <div className="sponsor-heading" style={{ fontSize: "2rem", marginBottom: "1rem" }}>
-          <ShinyText text={"Sponsors and Partners"} speed={5} />
+        <div
+          className="sponsor-heading"
+          style={{
+            fontSize: "2rem",
+            marginBottom: "1rem",
+            color: "#ffffff",
+            fontWeight: 700,
+          }}
+        >
+          Sponsors and Partners
         </div>
 
         <p
@@ -72,7 +80,10 @@ const Sponsor = () => {
           for equipment and development resources.
         </p>
 
-  <section className="sponsor-intro" style={{ maxWidth: 760, margin: "0 auto" }}>
+        <section
+          className="sponsor-intro"
+          style={{ maxWidth: 760, margin: "0 auto" }}
+        >
           <div style={{ marginTop: "1rem" }}>
             <a href="/sponsor/form" style={{ textDecoration: "none" }}>
               <button
@@ -99,12 +110,14 @@ const Sponsor = () => {
                 </span>
               </button>
               <style jsx>{`
-                .sponsor-cta{ will-change: transform; }
-                .sponsor-cta:hover{
+                .sponsor-cta {
+                  will-change: transform;
+                }
+                .sponsor-cta:hover {
                   transform: translateY(-6px) scale(1.02);
                 }
                 /* Slight adjustment for active/press feedback */
-                .sponsor-cta:active{
+                .sponsor-cta:active {
                   transform: translateY(-2px) scale(0.995);
                 }
               `}</style>
@@ -161,7 +174,10 @@ const Sponsor = () => {
         </div>
 
         {/* 2025-26 Production and Program Sponsors (right-aligned) */}
-  <section className="sponsor-year" style={{ marginTop: 40, maxWidth: 860, marginLeft: "auto" }}>
+        <section
+          className="sponsor-year"
+          style={{ marginTop: 40, maxWidth: 860, marginLeft: "auto" }}
+        >
           <div
             style={{
               textAlign: "right",
@@ -231,7 +247,10 @@ const Sponsor = () => {
         </section>
 
         {/* 2024-25 Production and Program Sponsors (left-aligned) */}
-  <section className="sponsor-year" style={{ marginTop: 40, maxWidth: 860 }}>
+        <section
+          className="sponsor-year"
+          style={{ marginTop: 40, maxWidth: 860 }}
+        >
           <div
             style={{
               textAlign: "left",
@@ -302,7 +321,10 @@ const Sponsor = () => {
         </section>
 
         {/* 2023-24 Production and Program Sponsors (right-aligned) */}
-  <section className="sponsor-year" style={{ marginTop: 40, maxWidth: 860, marginLeft: "auto" }}>
+        <section
+          className="sponsor-year"
+          style={{ marginTop: 40, maxWidth: 860, marginLeft: "auto" }}
+        >
           <div
             style={{
               textAlign: "right",
