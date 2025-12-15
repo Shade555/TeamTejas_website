@@ -20,6 +20,7 @@ const Home = () => {
     if (!container) return;
     const cta = container.querySelector(".sponsor-cta");
     let hoverTween = null;
+
     const onEnter = () => {
       if (!cta) return;
       hoverTween && hoverTween.kill();
@@ -29,6 +30,7 @@ const Home = () => {
         ease: "power1.out",
       });
     };
+
     const onLeave = () => {
       if (!cta) return;
       hoverTween && hoverTween.reverse();
@@ -59,6 +61,75 @@ const Home = () => {
         <AboutUs />
       </div>
       <MissionVision />
+
+      {/* ✅ MOVED STYLES HERE (only change made) */}
+      <style jsx>{`
+        .marquee {
+          width: 100%;
+          position: relative;
+        }
+
+        .marquee {
+          -webkit-mask-image: linear-gradient(
+            90deg,
+            transparent 0%,
+            black 16%,
+            black 84%,
+            transparent 100%
+          );
+          mask-image: linear-gradient(
+            90deg,
+            transparent 0%,
+            black 16%,
+            black 84%,
+            transparent 100%
+          );
+        }
+
+        .marquee-track {
+          display: flex;
+          gap: 28px;
+          align-items: center;
+        }
+
+        .marquee-item {
+          flex: 0 0 auto;
+          width: 260px;
+          height: 200px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .marquee-track {
+          animation: slideLR 20s linear infinite;
+        }
+
+        @keyframes slideLR {
+          0% {
+            transform: translateX(-50%);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .marquee-track {
+            animation: none;
+          }
+        }
+
+        .sponsor-cta {
+          will-change: transform;
+        }
+        .sponsor-cta:hover {
+          transform: translateY(-6px) scale(1.02);
+        }
+        .sponsor-cta:active {
+          transform: translateY(-2px) scale(0.995);
+        }
+      `}</style>
 
       {/* Sponsor Us section */}
       <section
@@ -99,7 +170,7 @@ const Home = () => {
             media handles.
           </p>
 
-          {/* Logos marquee (fade sequence via GSAP) */}
+          {/* Logos marquee */}
           <div style={{ marginTop: "2rem", overflow: "hidden" }}>
             <div className="marquee" aria-hidden>
               <div className="marquee-track">
@@ -108,7 +179,10 @@ const Home = () => {
                     <NextImage
                       src={src}
                       alt={`sponsor-${(idx % logos.length) + 1}`}
-                      style={{ objectFit: "contain", objectPosition: "center" }}
+                      style={{
+                        objectFit: "contain",
+                        objectPosition: "center",
+                      }}
                       width={260}
                       height={140}
                     />
@@ -132,9 +206,7 @@ const Home = () => {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "0.6rem",
-                  boxShadow: "none",
                   transition: "transform 160ms cubic-bezier(.2,.9,.2,1)",
-                  transform: "translateY(0) scale(1)",
                 }}
                 className="sponsor-cta"
               >
@@ -145,78 +217,6 @@ const Home = () => {
             </a>
           </div>
         </div>
-
-        <style jsx>{`
-          .marquee {
-            width: 100%;
-            position: relative;
-          }
-
-          /* soft fade at edges using mask
-           Increased so logos reach full opacity a bit later and begin fading a bit earlier
-           (16% / 84%). */
-          .marquee {
-            -webkit-mask-image: linear-gradient(
-              90deg,
-              transparent 0%,
-              black 16%,
-              black 84%,
-              transparent 100%
-            );
-            mask-image: linear-gradient(
-              90deg,
-              transparent 0%,
-              black 16%,
-              black 84%,
-              transparent 100%
-            );
-          }
-
-          .marquee-track {
-            display: flex;
-            gap: 28px;
-            align-items: center;
-          }
-          .marquee-item {
-            flex: 0 0 auto;
-            width: 260px;
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-
-          /* sliding animation: move the duplicated track from -50% to 0 so logos travel left->right */
-          .marquee-track {
-            animation: slideLR 20s linear infinite;
-          }
-
-          @keyframes slideLR {
-            0% {
-              transform: translateX(-50%);
-            }
-            100% {
-              transform: translateX(0);
-            }
-          }
-
-          /* Reduce motion for users who prefer reduced motion */
-          @media (prefers-reduced-motion: reduce) {
-            .marquee-track {
-              animation: none;
-            }
-          }
-          /* Sponsor CTA subtle pop-up (matches sponsor page) */
-          .sponsor-cta {
-            will-change: transform;
-          }
-          .sponsor-cta:hover {
-            transform: translateY(-6px) scale(1.02);
-          }
-          .sponsor-cta:active {
-            transform: translateY(-2px) scale(0.995);
-          }
-        `}</style>
       </section>
 
       <Testimonials />

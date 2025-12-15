@@ -24,7 +24,7 @@ const navItems = [
     href: "/milestones",
   },
   {
-    name: "Newsletter",
+    name: "Competitions",
     icon: "/newsletter.svg",
     iconLight: "/light/newsletter_light.svg",
     href: "/newsletter",
