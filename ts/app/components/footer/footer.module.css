@@ -1,0 +1,127 @@
+.footer {
+  background: rgba(255, 255, 255, 0.068); /* semi-transparent white */
+  color: #cfefff;
+  padding: 15px 0;
+  text-align: center;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  gap: 6px; /* tightened more so center moves even closer to left */
+  align-items: center; /* vertically center columns */
+  justify-content: space-between;
+}
+.left,
+.center,
+.right {
+  display: flex;
+  flex-direction: column;
+}
+.left {
+  padding-left: 0; /* keep logo + icons flush left */
+  align-items: flex-start; /* ensure left column content is left-aligned */
+}
+.center {
+  padding-left: 0; /* move center area flush against the left column */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.right {
+  padding-left: 26px; /* indent right text to the right as well */
+  align-items: flex-end;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brandName {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.socials {
+  margin-top: 8px;
+  display: flex;
+  gap: 10px;
+}
+.icon {
+  color: #cfefff;
+  opacity: 0.95;
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+.icon:hover {
+  transform: translateY(-2px);
+  opacity: 1;
+}
+.center {
+  align-items: flex-start; /* left-align center column text while keeping its indent */
+}
+.center h4 {
+  margin: 0 0 6px 0;
+  font-size: 1rem;
+}
+.email {
+  color: #bfefff;
+  text-decoration: none;
+  margin-bottom: 6px;
+}
+.address {
+  color: #94b8c8;
+  font-size: 0.94rem;
+}
+.right {
+  align-items: flex-end;
+}
+.faqLink {
+  color: #cfefff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .right {
+    align-items: center;
+  }
+  .center {
+    margin-top: 12px;
+  }
+}
+
+/* New center divider and vertical text */
+.centerInner {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* tighten gap so divider and text are closer */
+}
+.divider {
+  width: 1px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.08);
+}
+.centerText {
+  color: #cfefff;
+  font-size: 0.95rem;
+  margin-left: 20px; /* slightly closer to the divider */
+}
+
+@media (max-width: 720px) {
+  .centerInner {
+    flex-direction: row;
+    transform: none;
+  }
+  .centerText {
+    text-align: center;
+    margin-left: 8px;
+  }
+}
