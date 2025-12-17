@@ -1,6 +1,7 @@
 import Hero from "../hero/hero";
 import MissionVision from "../mission/mission";
 import AboutUs from "../about/about";
+import MVVG from "../MVVG/mvvg";
 import NextImage from "next/image";
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
@@ -60,6 +61,9 @@ const Home = () => {
       <div style={{ marginTop: "-6rem" }}>
         <AboutUs />
       </div>
+
+      <MVVG />
+
       <MissionVision />
 
       {/* ✅ MOVED STYLES HERE (only change made) */}
