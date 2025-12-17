@@ -33,7 +33,7 @@
   transform:translateX(-50%);
   width:4px;
   top:6px;
-  background:linear-gradient(180deg, rgba(117,251,253,0.95), rgba(117,251,253,0.14));
+  background: linear-gradient(180deg, rgba(59,130,185,0.14), rgba(59,130,185,0.95));
   border-radius:2px;
   box-shadow:0 8px 18px rgba(117,251,253,0.12);
   /* height driven by CSS variable set by React */
@@ -64,6 +64,8 @@
   filter:drop-shadow(0 6px 12px rgba(0,0,0,0.35));
   /* keep the plane visually centered on its container; no rotation */
   transform: translateY(0);
+  /* slight opacity so the plane sits subtly over content */
+  opacity: 1;
   /* no transform transition needed since we no longer rotate */
 }
 
