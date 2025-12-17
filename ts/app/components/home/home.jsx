@@ -150,7 +150,11 @@ const Home = () => {
             style={{
               fontSize: "2.2rem",
               margin: 0,
-              color: "#ffffff",
+              backgroundImage:
+                "linear-gradient(135deg, #00103c 0%, #0a3990 35%, #79a1c0 55%, #a0d8f4 80%, #4fa1eb 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
               fontWeight: 700,
               textAlign: "center",
             }}

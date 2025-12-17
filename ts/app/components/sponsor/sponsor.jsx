@@ -58,8 +58,11 @@ const Sponsor = () => {
           style={{
             fontSize: "2rem",
             marginBottom: "1rem",
-            color: "#ffffff",
-            fontWeight: 700,
+            background:
+              "linear-gradient(135deg, #7096d1 0%, #D0E3FF 30%, #BAD6EB 55%, #FFF9F0 80%, #4fa1eb 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
           }}
         >
           Sponsors and Partners
@@ -85,7 +88,12 @@ const Sponsor = () => {
           style={{ maxWidth: 760, margin: "0 auto" }}
         >
           <div style={{ marginTop: "1rem" }}>
-            <a href="/sponsor/form" style={{ textDecoration: "none" }}>
+            <a
+              href="https://forms.gle/GjqHTB4qxVBsjVa1A"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none" }}
+            >
               <button
                 style={{
                   background: "rgba(59,130,246,0.25)",
@@ -127,7 +135,7 @@ const Sponsor = () => {
         <div
           style={{
             textAlign: "center",
-            marginTop: "1.5rem",
+            marginTop: "2rem",
             color: "#ffffff",
           }}
         >
@@ -135,7 +143,7 @@ const Sponsor = () => {
         </div>
 
         <div
-          style={{ marginTop: -25, display: "flex", justifyContent: "center" }}
+          style={{ marginTop: 16, display: "flex", justifyContent: "center" }}
         >
           <div
             style={{
