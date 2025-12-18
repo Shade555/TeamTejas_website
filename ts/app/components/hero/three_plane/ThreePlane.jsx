@@ -57,9 +57,8 @@ export default function ThreePlane() {
         dir.position.set(5, 5, 5);
         scene.add(dir);
 
-        // Mouse interaction: update a target rotation and move the light.
-        // This does NOT directly overwrite the model rotation; the render loop
-        // will interpolate the model.rotation toward `targetRot`.
+        // Mouse interaction: move only the light. The plane's rotation remains
+        // fixed at MODEL_BASE_ROT (it will interpolate to that and not follow cursor).
         const handleMouse = (e) => {
           if (!mountRef.current) return;
           const rect = mountRef.current.getBoundingClientRect();
@@ -77,12 +76,6 @@ export default function ThreePlane() {
           const dist = Math.sqrt(dx * dx + dy * dy);
           const influence = Math.max(0, 1 - dist * 2);
           dir.intensity = 0.35 + influence * 0.75;
-
-          // set mouse-driven rotation offsets (do not override base)
-          mouseOffset.x = (x - 0.5) * 0.28; // yaw offset
-          mouseOffset.y = (0.5 - y) * 0.12; // pitch offset
-          targetRot.x = MODEL_BASE_ROT.x + mouseOffset.y;
-          targetRot.y = MODEL_BASE_ROT.y + mouseOffset.x;
         };
         window.addEventListener("mousemove", handleMouse);
 
