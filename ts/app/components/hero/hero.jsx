@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import HeroPlane from "./HeroSectionPlane.png";
+import ThreePlane from "./three_plane/ThreePlane";
 
 const Hero = () => {
   return (
@@ -16,6 +17,9 @@ const Hero = () => {
         padding: "6rem 8rem",
       }}
     >
+      <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+        <ThreePlane />
+      </div>
       {/* LEFT COLUMN */}
       <div
         className="hero-left"

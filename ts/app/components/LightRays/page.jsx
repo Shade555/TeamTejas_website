@@ -49,11 +49,13 @@ const LightRays = ({
   const containerRef = useRef(null);
   const uniformsRef = useRef(null);
   const rendererRef = useRef(null);
+  const loopRef = useRef(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
   const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
   const animationIdRef = useRef(null);
   const meshRef = useRef(null);
   const cleanupFunctionRef = useRef(null);
+  const isVisibleRef = useRef(false);
   const [isVisible, setIsVisible] = useState(false);
   const observerRef = useRef(null);
 
@@ -64,6 +66,7 @@ const LightRays = ({
       entries => {
         const entry = entries[0];
         setIsVisible(entry.isIntersecting);
+        isVisibleRef.current = entry.isIntersecting;
       },
       { threshold: 0.1 }
     );
@@ -79,13 +82,7 @@ const LightRays = ({
   }, []);
 
   useEffect(() => {
-    if (!isVisible || !containerRef.current) return;
-
-    if (cleanupFunctionRef.current) {
-      cleanupFunctionRef.current();
-      cleanupFunctionRef.current = null;
-    }
-
+    // Initialize WebGL once on mount and keep the canvas mounted.
     const initializeWebGL = async () => {
       if (!containerRef.current) return;
 
@@ -103,10 +100,13 @@ const LightRays = ({
       gl.canvas.style.width = '100%';
       gl.canvas.style.height = '100%';
 
-      while (containerRef.current.firstChild) {
-        containerRef.current.removeChild(containerRef.current.firstChild);
+      // If there's an existing canvas, don't remove it; otherwise append.
+      if (!containerRef.current.contains(gl.canvas)) {
+        while (containerRef.current.firstChild) {
+          containerRef.current.removeChild(containerRef.current.firstChild);
+        }
+        containerRef.current.appendChild(gl.canvas);
       }
-      containerRef.current.appendChild(gl.canvas);
 
       const vert = `
 attribute vec2 position;
@@ -277,6 +277,8 @@ void main() {
 
         try {
           renderer.render({ scene: mesh });
+          // schedule next frame only when running; the controller effect
+          // manages start/stop by cancelling/creating the RAF.
           animationIdRef.current = requestAnimationFrame(loop);
         } catch (error) {
           console.warn('WebGL rendering error:', error);
@@ -284,9 +286,15 @@ void main() {
         }
       };
 
+      // expose loop so other effects can start it when visible
+      loopRef.current = loop;
+
       window.addEventListener('resize', updatePlacement);
       updatePlacement();
-      animationIdRef.current = requestAnimationFrame(loop);
+      // start rendering only if currently visible
+      if (isVisibleRef.current) {
+        animationIdRef.current = requestAnimationFrame(loop);
+      }
 
       cleanupFunctionRef.current = () => {
         if (animationIdRef.current) {
@@ -303,7 +311,7 @@ void main() {
             if (loseContextExt) {
               loseContextExt.loseContext();
             }
-
+            // remove canvas only on full cleanup (unmount)
             if (canvas && canvas.parentNode) {
               canvas.parentNode.removeChild(canvas);
             }
@@ -316,31 +324,34 @@ void main() {
         uniformsRef.current = null;
         meshRef.current = null;
       };
-    };
+      };
 
-    initializeWebGL();
+      initializeWebGL();
 
-    return () => {
-      if (cleanupFunctionRef.current) {
-        cleanupFunctionRef.current();
-        cleanupFunctionRef.current = null;
+      return () => {
+        if (cleanupFunctionRef.current) {
+          cleanupFunctionRef.current();
+          cleanupFunctionRef.current = null;
+        }
+      };
+    }, []);
+
+  // Control rendering start/stop based on visibility without destroying canvas
+  useEffect(() => {
+    if (!loopRef.current) return;
+
+    if (isVisible) {
+      if (!animationIdRef.current) {
+        animationIdRef.current = requestAnimationFrame(loopRef.current);
       }
-    };
-  }, [
-    isVisible,
-    raysOrigin,
-    raysColor,
-    raysSpeed,
-    lightSpread,
-    rayLength,
-    pulsating,
-    fadeDistance,
-    saturation,
-    followMouse,
-    mouseInfluence,
-    noiseAmount,
-    distortion
-  ]);
+    } else {
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+        animationIdRef.current = null;
+      }
+    }
+    // no cleanup here; canvas lifetime handled by mount effect
+  }, [isVisible]);
 
   useEffect(() => {
     if (!uniformsRef.current || !containerRef.current || !rendererRef.current) return;

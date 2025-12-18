@@ -8,31 +8,26 @@ const navItems = [
   {
     name: "Home",
     icon: "/home.svg",
-    iconLight: "/light/home_light.svg",
     href: "/",
   },
   {
     name: "Our Teams",
     icon: "/team.svg",
-    iconLight: "/light/team_light.svg",
     href: "/teamR",
   },
   {
     name: "Milestones",
     icon: "/milestone.svg",
-    iconLight: "/light/milestone_light.svg",
     href: "/milestones",
   },
   {
-    name: "Competitions",
-    icon: "/newsletter.svg",
-    iconLight: "/light/newsletter_light.svg",
-    href: "/newsletter",
+    name: "Gallery",
+    icon: "/gallery.svg",
+    href: "/gallery",
   },
   {
     name: "Sponsor Us",
     icon: "/sponsor.svg",
-    iconLight: "/light/sponsor_light.svg",
     href: "/sponsor",
   },
 ];
@@ -40,60 +35,28 @@ const navItems = [
 const Navbar = () => {
   const pathname = usePathname() || "/";
   const [hovered, setHovered] = useState(null);
-  const [mode, setMode] = useState("dark");
-  const [showNightGif, setShowNightGif] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   React.useEffect(() => {
     setHovered(null);
   }, [pathname]);
 
-  const handleToggle = () => {
-    if (mode === "light") {
-      setShowNightGif(true);
-      setTimeout(() => setShowNightGif(false), 1200);
-    }
-    setMode(mode === "dark" ? "light" : "dark");
-  };
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Light-mode toggle removed: navbar is dark-only
 
   return (
-    <nav className="navbar-container">
+    <nav className="navbar-container" style={{ visibility: mounted ? "visible" : "hidden" }}>
       <div className="navbar-logo">
         <NextImage src="/logo.png" alt="Logo" width={60} height={32} />
       </div>
       <ul className="navbar-list">
-        <li className="navbar-toggle">
-          <button
-            className="toggle-switch"
-            onClick={handleToggle}
-            aria-label="Toggle dark/light mode"
-          >
-            <span className={`switch-track ${mode}`}></span>
-            <span className={`switch-thumb ${mode}`}>
-              {mode === "dark" ? (
-                <NextImage
-                  src="/dark/half-moon.png"
-                  alt="Moon"
-                  width={20}
-                  height={20}
-                />
-              ) : (
-                <NextImage
-                  src="/light/sun.png"
-                  alt="Sun"
-                  width={20}
-                  height={20}
-                />
-              )}
-            </span>
-          </button>
-        </li>
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           const isHovered = hovered === item.name;
-          const pillColor =
-            mode === "dark"
-              ? "rgba(59, 130, 246, 0.25)"
-              : "rgba(255,255,255,0.5)";
+          const pillColor = "rgba(59, 130, 246, 0.25)";
           const showPill = isActive || isHovered;
           const iconWidth = 22;
           const labelWidth = item.name.length * 8;
@@ -148,12 +111,7 @@ const Navbar = () => {
                 }}
               >
                 <span className="navbar-icon">
-                  <NextImage
-                    src={mode === "dark" ? item.icon : item.iconLight}
-                    alt={item.name + " icon"}
-                    width={22}
-                    height={22}
-                  />
+                  <NextImage src={item.icon} alt={item.name + " icon"} width={22} height={22} />
                 </span>
                 <span
                   className={`navbar-text${showPill ? " show" : ""}`}
@@ -220,18 +178,11 @@ const Navbar = () => {
           justify-content: center;
           overflow: hidden;
         }
-        .switch-thumb.light {
-          background: transparent;
-          transform: translateY(-50%) translateX(0);
-        }
         .switch-thumb.dark {
           background: transparent;
           transform: translateY(-50%) translateX(24px);
         }
         .navbar-container.dark {
-          background: transparent;
-        }
-        .navbar-container.light {
           background: transparent;
         }
         .navbar-logo {
@@ -255,7 +206,7 @@ const Navbar = () => {
           border: none;
           font-size: 1.5rem;
           cursor: pointer;
-          color: ${mode === "dark" ? "#fff" : "#222"};
+          color: #fff;
           transition: color 0.2s;
         }
         .navbar-item {
@@ -290,7 +241,7 @@ const Navbar = () => {
           padding: 0.5rem 1rem;
           border-radius: 2rem;
           background: transparent;
-          color: ${mode === "light" ? "#111" : "#2ad4ff"};
+          color: #2ad4ff;
           font-weight: 500;
           transition: background 0.2s, color 0.2s;
         }
@@ -312,14 +263,14 @@ const Navbar = () => {
           overflow: hidden;
           white-space: nowrap;
           margin-left: 0.5rem;
-          color: ${mode === "light" ? "#111" : "#75FBFD"};
+          color: #75FBFD;
           transition: max-width 0.4s cubic-bezier(0.77, 0, 0.18, 1),
             opacity 0.3s;
         }
         .navbar-text.show {
           max-width: 120px;
           opacity: 1;
-          color: ${mode === "light" ? "#111" : "#75FBFD"};
+          color: #75FBFD;
         }
       `}</style>
     </nav>
