@@ -1,6 +1,6 @@
 import React from "react";
-import Image from "next/image";
-import HeroPlane from "./HeroSectionPlane.png";
+import Image from "next/image";                 //to remove this
+import HeroPlane from "./HeroSectionPlane.png"; //to remove this
 import ThreePlane from "./three_plane/ThreePlane";
 
 const Hero = () => {
