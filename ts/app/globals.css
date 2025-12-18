@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+/* Cormorant SC Bold font (used for hero accents) */
+@font-face {
+  font-family: 'Cormorant_SC';
+  src: url('./components/hero/Cormorant_SC/CormorantSC-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+.cormorant-bold {
+  font-family: 'Cormorant_SC', serif;
+  font-weight: 700;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

@@ -27,6 +27,16 @@ export default function ThreePlane() {
     // Target rotation the model should interpolate toward. Update via mouse or manually.
     let targetRot = { ...MODEL_BASE_ROT };
     let mouseOffset = { x: 0, y: 0 };
+    // Entry animation: start the model offset from its base position and
+    // animate into place along that vector. Edit `MODEL_ENTRY_OFFSET`
+    // to change the incoming direction (matches your red arrow).
+    // Reverse direction so the plane approaches from forward (camera side)
+    // Flip the offset vector to make the motion come from the front.
+    const MODEL_ENTRY_OFFSET = { x: 1.6, y: 0.8, z: -1.2 };
+    const ENTRY_DURATION_MS = 1200;
+    let entryStartTime = null;
+    let entryStartPos = null;
+    let entryDone = false;
     // ======================================================================
 
     (async () => {
@@ -88,7 +98,16 @@ export default function ThreePlane() {
           (gltf) => {
             model = gltf.scene;
             // position/scale adjustments — tweak using the constants above
-            model.position.set(MODEL_BASE_POS.x, MODEL_BASE_POS.y, MODEL_BASE_POS.z);
+            // set initial entry position offset so the plane flies into place
+            entryStartPos = {
+              x: MODEL_BASE_POS.x + MODEL_ENTRY_OFFSET.x,
+              y: MODEL_BASE_POS.y + MODEL_ENTRY_OFFSET.y,
+              z: MODEL_BASE_POS.z + MODEL_ENTRY_OFFSET.z,
+            };
+            // start at the entry position
+            model.position.set(entryStartPos.x, entryStartPos.y, entryStartPos.z);
+            // start with the base rotation (you can change this if you want
+            // a rotation during entry)
             model.rotation.set(MODEL_BASE_ROT.x, MODEL_BASE_ROT.y, MODEL_BASE_ROT.z);
             model.scale.set(MODEL_BASE_SCALE, MODEL_BASE_SCALE, MODEL_BASE_SCALE);
 
@@ -104,6 +123,10 @@ export default function ThreePlane() {
                 }
               }
             });
+
+            // start the entry timer
+            entryStartTime = performance.now();
+            entryDone = false;
 
             scene.add(model);
           },
@@ -125,9 +148,20 @@ export default function ThreePlane() {
         const animate = () => {
           if (!mounted) return;
           if (model) {
-            // Interpolate model.rotation toward targetRot. To manually set a
-            // fixed orientation, edit MODEL_BASE_ROT above; the model will
-            // smoothly move to those values and then stay there.
+            // Entry animation: if not done, interpolate position from entryStartPos
+            // to MODEL_BASE_POS over ENTRY_DURATION_MS using an ease-out curve.
+            const now = performance.now();
+            if (!entryDone && entryStartTime != null) {
+              const tRaw = Math.min((now - entryStartTime) / ENTRY_DURATION_MS, 1);
+              const t = 1 - Math.pow(1 - tRaw, 3); // ease-out cubic
+              model.position.x = entryStartPos.x + (MODEL_BASE_POS.x - entryStartPos.x) * t;
+              model.position.y = entryStartPos.y + (MODEL_BASE_POS.y - entryStartPos.y) * t;
+              model.position.z = entryStartPos.z + (MODEL_BASE_POS.z - entryStartPos.z) * t;
+              if (tRaw >= 1) entryDone = true;
+            }
+
+            // Interpolate model.rotation toward targetRot. The model keeps the
+            // base rotation but will smoothly approach it (no mouse-driven rotation).
             const lerp = 0.08;
             model.rotation.x += (targetRot.x - model.rotation.x) * lerp;
             model.rotation.y += (targetRot.y - model.rotation.y) * lerp;

@@ -56,13 +56,13 @@ const Hero = () => {
             fontWeight: 600,
             color: "white",
             textAlign: "left",
-            fontFamily:
-              'Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
           }}
         >
-          Engineering
-          <br />
-          the Sky
+          <span className="cormorant-bold">
+            Engineering
+            <br />
+            the Sky
+          </span>
         </div>
 
         {/* Bottom Button: TEJAS */}
@@ -132,12 +132,10 @@ const Hero = () => {
             lineHeight: 0.95,
             margin: 0,
             fontWeight: 600,
-            fontFamily:
-              'Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
             textAlign: "right",
           }}
         >
-          Ahead
+          <span className="cormorant-bold">Ahead</span>
         </h1>
       </div>
     </section>
