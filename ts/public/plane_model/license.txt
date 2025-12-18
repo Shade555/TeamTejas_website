@@ -1,0 +1,11 @@
+Model Information:
+* title:	Sukhoi Su-25UBP
+* source:	https://sketchfab.com/3d-models/sukhoi-su-25ubp-6bd99040ee94407f8165fa87497ccecf
+* author:	42manako (https://sketchfab.com/42manako)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Sukhoi Su-25UBP" (https://sketchfab.com/3d-models/sukhoi-su-25ubp-6bd99040ee94407f8165fa87497ccecf) by 42manako (https://sketchfab.com/42manako) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
