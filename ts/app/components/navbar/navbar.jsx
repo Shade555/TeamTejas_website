@@ -35,15 +35,20 @@ const navItems = [
 const Navbar = () => {
   const pathname = usePathname() || "/";
   const [hovered, setHovered] = useState(null);
+  const [mounted, setMounted] = useState(false);
 
   React.useEffect(() => {
     setHovered(null);
   }, [pathname]);
 
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Light-mode toggle removed: navbar is dark-only
 
   return (
-    <nav className="navbar-container">
+    <nav className="navbar-container" style={{ visibility: mounted ? "visible" : "hidden" }}>
       <div className="navbar-logo">
         <NextImage src="/logo.png" alt="Logo" width={60} height={32} />
       </div>
