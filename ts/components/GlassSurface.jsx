@@ -144,6 +144,7 @@ const GlassSurface = ({
   }, [width, height]);
 
   const [svgSupported, setSvgSupported] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
   const supportsSVGFilters = () => {
     if (typeof navigator === "undefined" || typeof document === "undefined")
@@ -164,6 +165,8 @@ const GlassSurface = ({
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    // mark hydrated first to avoid showing the fallback during initial paint
+    setHydrated(true);
     setSvgSupported(supportsSVGFilters());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -182,8 +185,8 @@ const GlassSurface = ({
     <div
       ref={containerRef}
       className={`glass-surface ${
-        svgSupported ? "glass-surface--svg" : "glass-surface--fallback"
-      } ${className}`}
+          svgSupported ? "glass-surface--svg" : "glass-surface--fallback"
+        } ${hydrated ? 'glass-surface--hydrated' : ''} ${className}`}
       style={containerStyle}
     >
       <svg className="glass-surface__filter" xmlns="http://www.w3.org/2000/svg">

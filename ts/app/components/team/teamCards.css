@@ -1,0 +1,116 @@
+.team-section {
+  margin: 2.25rem 0;
+}
+
+.team-title {
+  font-size: 2rem;
+  color: rgb(179, 207, 229);
+  margin: 0 0 1rem 0;
+  text-align: left;
+  font-family: 'Cormorant SC', 'Cormorant', serif;
+  font-weight: 700;
+}
+
+@media (min-width: 1200px) {
+  .team-title { font-size: 2.25rem; }
+}
+
+/* group rows center their children; allow wrap; max 4 per row via flex-basis */
+.group-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+/* ensure a clear separation between the heads row and the members row */
+.heads-row {
+  margin-bottom: 2.5rem;
+}
+
+.members-row {
+  margin-top: 0.5rem;
+}
+
+.member-card {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.25rem;
+  background: linear-gradient(180deg, rgba(10,18,30,0.55), rgba(7,12,22,0.45));
+  border-radius: 18px;
+  border: 1px solid rgba(117, 251, 253, 0.18); /* #75fbfd tint */
+  box-shadow: 0 18px 40px rgba(2,6,23,0.35), 0 6px 30px rgba(117,251,253,0.03);
+  color: #eaf6ff;
+  position: relative;
+  overflow: hidden;
+}
+
+.member-card.large {
+  max-width: 420px;
+  padding-bottom: 2.2rem;
+}
+
+.member-card.placeholder {
+  opacity: 0.75;
+  border: 1px dashed rgba(255,255,255,0.06);
+}
+
+.avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4) inset;
+  margin-top: 1rem;
+  flex: 0 0 auto;
+}
+
+.avatar.large {
+  width: 220px;
+  height: 220px;
+  border-radius: 14px;
+}
+
+.member-info { text-align: center; margin-bottom: 1rem; }
+
+.member-name { font-weight: 700; font-size: 1.5rem; color: #d9e8ff; }
+
+.member-name.large { font-size: 2rem; }
+
+.member-role { font-size: 0.95rem; color: rgba(255,255,255,0.7); margin-top: 6px }
+
+/* footer overlay */
+.card-footer {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 12px;
+  width: calc(100% - 36px);
+  max-width: calc(100% - 36px);
+  background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: rgba(255,255,255,0.9);
+  backdrop-filter: blur(6px);
+}
+
+.card-footer.small { padding: 8px 12px; bottom: 8px; }
+
+.handle { font-weight: 600; color: #bfeff0 }
+
+.icons { opacity: 0.9 }
+
+/* responsive: ensure at most 4 cards per row visually by constraining flex-basis */
+.group-row .member-card {
+  flex: 1 1 220px;
+}
+
+@media (min-width: 1200px) {
+  .group-row .member-card { flex-basis: calc((100% - 3rem*3)/4); }
+}
