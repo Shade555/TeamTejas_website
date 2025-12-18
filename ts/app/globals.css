@@ -14,6 +14,34 @@
   font-weight: 700;
 }
 
+/* Cormorant SC Light */
+@font-face {
+  font-family: 'Cormorant_SC';
+  src: url('./components/hero/Cormorant_SC/CormorantSC-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+.cormorant-light {
+  font-family: 'Cormorant_SC', serif;
+  font-weight: 300;
+}
+
+/* Cormorant SC SemiBold */
+@font-face {
+  font-family: 'Cormorant_SC';
+  src: url('./components/hero/Cormorant_SC/CormorantSC-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+.cormorant-semibold {
+  font-family: 'Cormorant_SC', serif;
+  font-weight: 600;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

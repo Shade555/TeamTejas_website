@@ -45,7 +45,7 @@ const Hero = () => {
             textTransform: "uppercase",
           }}
         >
-          TOGETHER
+          <span className="cormorant-semibold">TOGETHER</span>
         </div>
 
         {/* Main Left Headline */}
@@ -82,7 +82,7 @@ const Hero = () => {
               padding: 0,
             }}
           >
-            Tejas
+            <span className="cormorant-semibold">Tejas</span>
           </button>
         </div>
       </div>
@@ -112,6 +112,7 @@ const Hero = () => {
           }}
         >
           <p
+            className="cormorant-light"
             style={{
               margin: 0,
               fontSize: "1rem",
