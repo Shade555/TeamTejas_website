@@ -68,13 +68,10 @@ const MVVG = () => {
 
       <style jsx>{`
         .mvvg-section {
-          padding: 6rem 2rem;
-          background-color: #050a14;
-          background-image: radial-gradient(
-            circle at 50% 50%,
-            #0a162b 0%,
-            #050a14 100%
-          );
+          padding: 4rem 6rem;
+          background: transparent;
+          color: #e8fbff;
+          min-height: 60vh;
         }
         .inner {
           max-width: 1200px;

@@ -53,19 +53,22 @@ const Sponsor = () => {
       </div>
 
       <div ref={containerRef} style={{ position: "relative", zIndex: 1 }}>
-        <div
-          className="sponsor-heading"
-          style={{
-            fontSize: "2rem",
-            marginBottom: "1rem",
-            background:
-              "linear-gradient(135deg, #7096d1 0%, #D0E3FF 30%, #BAD6EB 55%, #FFF9F0 80%, #4fa1eb 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}
-        >
-          Sponsors and Partners
+        <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem' }}>
+          <span style={{ flex: '0 0 150px', height: '2px', maxWidth: '150px', background: 'linear-gradient(90deg, transparent 0%, #0a3990 20%, #4fa1eb 50%, #79a1c0 80%, transparent 100%)' }}></span>
+          <h1 style={{
+            fontFamily: 'Cormorant_SC, serif',
+            fontSize: '2.25rem',
+            fontWeight: 700,
+            margin: 0,
+            textAlign: 'center',
+            letterSpacing: '1.5px',
+            textTransform: 'uppercase',
+            background: 'linear-gradient(135deg,#00103c 0%,#0a3990 10%,#4fa1eb 50%,#79a1c0 80%,#a0d8f4 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
+          }}>Sponsors and Partners</h1>
+          <span style={{ flex: '0 0 150px', height: '2px', maxWidth: '150px', background: 'linear-gradient(90deg, transparent 0%, #79a1c0 20%, #4fa1eb 50%, #0a3990 80%, transparent 100%)' }}></span>
         </div>
 
         <p
