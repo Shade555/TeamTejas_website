@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import GlassSurface from '../../../components/GlassSurface';
+import members2025 from './members2025.json';
 import './teamCards.css';
 
 const Team = () => {
@@ -9,8 +10,7 @@ const Team = () => {
     { key: 'fabrication', label: 'Fabrication' },
     { key: 'design', label: 'Design' },
     { key: 'avionics', label: 'Avionics' },
-    { key: 'graphics', label: 'Graphics' },
-    { key: 'marketing', label: 'Marketing' },
+    { key: 'graphics_marketing', label: 'Graphics & Marketing' },
     { key: 'webmasters', label: 'Webmasters' },
   ];
 
@@ -35,6 +35,77 @@ const Team = () => {
   const yearButtonRefs = useRef([]);
   const [yearPillStyle, setYearPillStyle] = useState({ opacity: 0 });
   usePillPosition(activeYearIndex, yearBarRef, yearButtonRefs, setYearPillStyle, { heightScale: 0.72, centerVertical: true });
+
+  // focused member (modal) state + rotation drag handling
+  const [focusedMember, setFocusedMember] = useState(null);
+  const [modalRot, setModalRot] = useState({ x: 0, y: 0 });
+  const dragRef = useRef({ down: false, startX: 0, startY: 0 });
+
+  function openMember(member, teamKey) {
+    setFocusedMember({ ...member, teamKey });
+    setModalRot({ x: 0, y: 0 });
+  }
+  function closeMember() {
+    setFocusedMember(null);
+    setModalRot({ x: 0, y: 0 });
+  }
+
+  function onModalPointerDown(e) {
+    dragRef.current.down = true;
+    dragRef.current.startX = e.clientX;
+    dragRef.current.startY = e.clientY;
+    e.currentTarget.setPointerCapture(e.pointerId);
+  }
+  function onModalPointerMove(e) {
+    if (!dragRef.current.down) return;
+    const dx = e.clientX - dragRef.current.startX;
+    const dy = e.clientY - dragRef.current.startY;
+    // gentle rotation mapping
+    const rotY = Math.max(-25, Math.min(25, dx * 0.12));
+    const rotX = Math.max(-25, Math.min(25, -dy * 0.12));
+    setModalRot({ x: rotX, y: rotY });
+  }
+  function onModalPointerUp(e) {
+    dragRef.current.down = false;
+    try { e.currentTarget.releasePointerCapture(e.pointerId); } catch (err) {}
+    // animate back to neutral rotation when user releases
+    setModalRot({ x: 0, y: 0 });
+  }
+
+  useEffect(() => {
+    if (!focusedMember) return;
+    function onKey(e) { if (e.key === 'Escape') closeMember(); }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [focusedMember]);
+
+  // observe member cards entering the viewport and animate footer down
+  useEffect(() => {
+    const cards = Array.from(document.querySelectorAll('.member-card'));
+    if (!cards.length) return;
+
+    const io = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        const el = entry.target;
+        const footer = el.querySelector('.card-footer');
+        if (!footer) return;
+        if (entry.isIntersecting) {
+          const cardRect = el.getBoundingClientRect();
+          const footerRect = footer.getBoundingClientRect();
+          const finalBottom = 12; // desired bottom offset in px (matches CSS)
+          const translate = Math.max(0, Math.round(cardRect.height - (footerRect.top - cardRect.top) - footerRect.height - finalBottom));
+          el.style.setProperty('--footer-translate', `${translate}px`);
+          el.classList.add('in-view');
+          // stop observing this element so animation only runs once
+          try { observer.unobserve(el); } catch (err) {}
+        }
+      });
+    }, { threshold: 0.6 });
+
+    cards.forEach((c) => io.observe(c));
+    // clean up
+    return () => io.disconnect();
+  }, [activeIndex, activeYearIndex]);
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
@@ -113,8 +184,36 @@ const Team = () => {
       </div>
       {/* team cards section */}
       <div style={{ marginTop: '2rem', maxWidth: 1200, marginLeft: 'auto', marginRight: 'auto', padding: '0 1rem' }}>
-        <TeamSections filters={filters} activeIndex={activeIndex} selectedYearKey={yearFilters[activeYearIndex].key} membersByYear={membersByYear} />
+        <TeamSections filters={filters} activeIndex={activeIndex} selectedYearKey={yearFilters[activeYearIndex].key} membersByYear={membersByYear} onOpenMember={openMember} />
       </div>
+
+      {/* modal overlay for focused member */}
+      {focusedMember && (
+        <div className="member-modal-overlay" onClick={closeMember} role="dialog" aria-modal="true">
+          <div
+            className="member-modal"
+            onClick={(e) => e.stopPropagation()}
+            onPointerDown={onModalPointerDown}
+            onPointerMove={onModalPointerMove}
+            onPointerUp={onModalPointerUp}
+            style={{ transform: `rotateX(${modalRot.x}deg) rotateY(${modalRot.y}deg)` }}
+          >
+            <article className="member-card modal">
+              {focusedMember.image ? (
+                <img className="avatar-img large" src={focusedMember.image} alt={focusedMember.name} />
+              ) : (
+                <div className="avatar large" aria-hidden="true" />
+              )}
+              <div className="card-footer">
+                <div className="meta">
+                  <div className="member-name large">{focusedMember.name}</div>
+                  <div className="member-role">{focusedMember.role}</div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -214,7 +313,7 @@ const members = {
 
 // simple mapping of year -> members dataset (placeholder). Real data can replace these objects.
 const membersByYear = {
-  '2025': members,
+  '2025': members2025,
   '2024': {
     core: [
       { name: 'Old Alice', role: 'Head' },
@@ -233,6 +332,8 @@ const membersByYear = {
 };
 
 function TeamSections({ filters, activeIndex, selectedYearKey, membersByYear }) {
+  // accept open handler passed from parent
+  const onOpenMember = arguments[0].onOpenMember;
   const showAll = filters[activeIndex]?.key === 'all';
   const teamsToShow = showAll ? filters.filter(f => f.key !== 'all') : [filters[activeIndex]];
 
@@ -240,8 +341,10 @@ function TeamSections({ filters, activeIndex, selectedYearKey, membersByYear }) 
     <div>
       {teamsToShow.map((f) => {
         const teamMembers = (membersByYear && membersByYear[selectedYearKey] && membersByYear[selectedYearKey][f.key]) || members[f.key] || [];
-        const heads = teamMembers.filter(m => /head|lead/i.test(m.role));
-        const others = teamMembers.filter(m => !/head|lead/i.test(m.role));
+        // treat roles that indicate leadership as "heads" (include Captain, Manager, Webmaster)
+        const leadershipRegex = /(head|lead|captain|manager|webmaster)/i;
+        const heads = teamMembers.filter(m => leadershipRegex.test(m.role));
+        const others = teamMembers.filter(m => !leadershipRegex.test(m.role));
 
         return (
           <section key={f.key} className="team-section">
@@ -251,46 +354,41 @@ function TeamSections({ filters, activeIndex, selectedYearKey, membersByYear }) 
             {heads.length > 0 && (
               <div className="group-row heads-row">
                 {heads.map((m) => (
-                  <article key={m.name} className="member-card large">
-                    <div className="member-info center">
-                      <div className="member-name large">{m.name}</div>
-                      <div className="member-role">{m.role}</div>
-                    </div>
-                    <div className="avatar large" aria-hidden="true" />
+                  <article key={m.name} className="member-card large" onClick={() => onOpenMember && onOpenMember(m, f.key)} tabIndex={0} role="button">
+                    {m.image ? (
+                      <img className="avatar-img large" src={m.image} alt={m.name} />
+                    ) : (
+                      <div className="avatar large" aria-hidden="true" />
+                    )}
                     <div className="card-footer">
-                      <div className="handle">@{m.name.split(' ')[0].toLowerCase()}</div>
-                      <div className="icons">🔗 ✉️</div>
+                      <div className="meta">
+                        <div className="member-name large">{m.name}</div>
+                        <div className="member-role">{m.role}</div>
+                      </div>
                     </div>
                   </article>
                 ))}
               </div>
             )}
 
-            {/* members grid - centered rows with max 4 per row */}
-            {others.length > 0 ? (
+            {/* members grid - centered rows with max 3 per row */}
+            {others.length > 0 && (
               <div className="group-row members-row">
                 {others.map((m) => (
-                  <article key={m.name} className="member-card">
-                    <div className="member-info">
-                      <div className="member-name">{m.name}</div>
-                      <div className="member-role">{m.role}</div>
-                    </div>
-                    <div className="avatar" aria-hidden="true" />
+                  <article key={m.name} className="member-card" onClick={() => onOpenMember && onOpenMember(m, f.key)} tabIndex={0} role="button">
+                    {m.image ? (
+                      <img className="avatar-img" src={m.image} alt={m.name} />
+                    ) : (
+                      <div className="avatar" aria-hidden="true" />
+                    )}
                     <div className="card-footer small">
-                      <div className="handle">@{m.name.split(' ')[0].toLowerCase()}</div>
+                      <div className="meta">
+                        <div className="member-name">{m.name}</div>
+                        <div className="member-role">{m.role}</div>
+                      </div>
                     </div>
                   </article>
                 ))}
-              </div>
-            ) : (
-              <div className="group-row members-row">
-                <article className="member-card placeholder large">
-                  <div className="member-info center">
-                    <div className="member-name large">Vacant</div>
-                    <div className="member-role">No member yet</div>
-                  </div>
-                  <div className="avatar large" />
-                </article>
               </div>
             )}
           </section>

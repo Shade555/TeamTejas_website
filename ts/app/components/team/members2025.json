@@ -1,0 +1,48 @@
+{
+  "core": [
+    { "name": "Bhaskar Singh", "role": "Captain" },
+    { "name": "Vivek Waghela", "role": "Manager" }
+  ],
+  "fabrication": [
+    { "name": "Pratham Jhondhale", "role": "Head" },
+    { "name": "Jiya Acharya", "role": "Executive" },
+    { "name": "Lakshya Relan", "role": "Executive" },
+    { "name": "Lohitaksh Tiku", "role": "Executive" },
+    { "name": "Patick Dias", "role": "Executive" },
+    { "name": "Parth Parab", "role": "Executive" },
+    { "name": "Sarang Vaghani", "role": "Executive" },
+    { "name": "Aman Gupta", "role": "Executive" },
+    { "name": "Rohit Gaikwad", "role": "Executive" },
+    { "name": "Yug Tambe", "role": "Executive" },
+    { "name": "Dhairyash Awasthi", "role": "Executive" },
+    { "name": "Kishan Chauhan", "role": "Executive" }
+  ],
+  "design": [
+    { "name": "Aditya Das", "role": "Head" },
+    { "name": "Darryn Fereira", "role": "Executive" },
+    { "name": "Oswald Pereira", "role": "Executive" },
+    { "name": "Tia Chauhan", "role": "Executive" },
+    { "name": "Lavanya Karekar", "role": "Executive" }
+  ],
+  "avionics": [
+    { "name": "Anlea Maria Jose", "role": "Executive" },
+    { "name": "San Rodrigues", "role": "Executive" },
+    { "name": "Sahil Pawar", "role": "Executive" },
+    { "name": "Sarvesh Saboji", "role": "Executive" },
+    { "name": "Rajan Zagde", "role": "Executive" },
+    { "name": "Callistus Nadar", "role": "Executive" },
+    { "name": "Atharva Kanade", "role": "Executive" }
+  ],
+  "graphics_marketing": [
+    { "name": "Ayush Nikam", "role": "Head" },
+    { "name": "Shravan More", "role": "Executive" },
+    { "name": "Himanshu Mhatre", "role": "Executive" },
+    { "name": "Devesh Kulkarni", "role": "Executive" },
+    { "name": "Sradha Das", "role": "Executive" },
+    { "name": "Bhumika Dhotre", "role": "Executive" }
+  ],
+  "webmasters": [
+    { "name": "Slevin Cordeiro", "role": "Webmaster" },
+    { "name": "Anzila Khan", "role": "Webmaster" }
+  ]
+}
