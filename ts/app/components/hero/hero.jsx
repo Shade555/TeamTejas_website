@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";                 //to remove this
+import Image from "next/image"; //to remove this
 import HeroPlane from "./HeroSectionPlane.png"; //to remove this
 import ThreePlane from "./three_plane/ThreePlane";
 
@@ -17,7 +17,14 @@ const Hero = () => {
         padding: "6rem 8rem",
       }}
     >
-      <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
+      >
         <ThreePlane />
       </div>
       {/* LEFT COLUMN */}
@@ -45,7 +52,7 @@ const Hero = () => {
             textTransform: "uppercase",
           }}
         >
-          <span className="cormorant-semibold">TOGETHER</span>
+          TOGETHER
         </div>
 
         {/* Main Left Headline */}
@@ -82,7 +89,7 @@ const Hero = () => {
               padding: 0,
             }}
           >
-            <span className="cormorant-semibold">Tejas</span>
+            Tejas
           </button>
         </div>
       </div>
@@ -112,7 +119,6 @@ const Hero = () => {
           }}
         >
           <p
-            className="cormorant-light"
             style={{
               margin: 0,
               fontSize: "1rem",
