@@ -43,7 +43,7 @@ export default function ThreePlane() {
       try {
         const THREE = await import("three");
         const { GLTFLoader } = await import(
-          "three/addons/loaders/GLTFLoader.js"
+          "three/examples/jsm/loaders/GLTFLoader.js"
         );
 
         const width = mountRef.current.clientWidth || window.innerWidth;
@@ -58,7 +58,11 @@ export default function ThreePlane() {
 
         camera = new THREE.PerspectiveCamera(40, width / height, 0.01, 1000);
         // use CAMERA_BASE_POS so you can edit camera viewpoint above
-        camera.position.set(CAMERA_BASE_POS.x, CAMERA_BASE_POS.y, CAMERA_BASE_POS.z);
+        camera.position.set(
+          CAMERA_BASE_POS.x,
+          CAMERA_BASE_POS.y,
+          CAMERA_BASE_POS.z
+        );
 
         const ambient = new THREE.AmbientLight(0xffffff, 0.9);
         scene.add(ambient);
@@ -105,11 +109,23 @@ export default function ThreePlane() {
               z: MODEL_BASE_POS.z + MODEL_ENTRY_OFFSET.z,
             };
             // start at the entry position
-            model.position.set(entryStartPos.x, entryStartPos.y, entryStartPos.z);
+            model.position.set(
+              entryStartPos.x,
+              entryStartPos.y,
+              entryStartPos.z
+            );
             // start with the base rotation (you can change this if you want
             // a rotation during entry)
-            model.rotation.set(MODEL_BASE_ROT.x, MODEL_BASE_ROT.y, MODEL_BASE_ROT.z);
-            model.scale.set(MODEL_BASE_SCALE, MODEL_BASE_SCALE, MODEL_BASE_SCALE);
+            model.rotation.set(
+              MODEL_BASE_ROT.x,
+              MODEL_BASE_ROT.y,
+              MODEL_BASE_ROT.z
+            );
+            model.scale.set(
+              MODEL_BASE_SCALE,
+              MODEL_BASE_SCALE,
+              MODEL_BASE_SCALE
+            );
 
             // ensure opaque materials
             model.traverse((c) => {
@@ -152,11 +168,17 @@ export default function ThreePlane() {
             // to MODEL_BASE_POS over ENTRY_DURATION_MS using an ease-out curve.
             const now = performance.now();
             if (!entryDone && entryStartTime != null) {
-              const tRaw = Math.min((now - entryStartTime) / ENTRY_DURATION_MS, 1);
+              const tRaw = Math.min(
+                (now - entryStartTime) / ENTRY_DURATION_MS,
+                1
+              );
               const t = 1 - Math.pow(1 - tRaw, 3); // ease-out cubic
-              model.position.x = entryStartPos.x + (MODEL_BASE_POS.x - entryStartPos.x) * t;
-              model.position.y = entryStartPos.y + (MODEL_BASE_POS.y - entryStartPos.y) * t;
-              model.position.z = entryStartPos.z + (MODEL_BASE_POS.z - entryStartPos.z) * t;
+              model.position.x =
+                entryStartPos.x + (MODEL_BASE_POS.x - entryStartPos.x) * t;
+              model.position.y =
+                entryStartPos.y + (MODEL_BASE_POS.y - entryStartPos.y) * t;
+              model.position.z =
+                entryStartPos.z + (MODEL_BASE_POS.z - entryStartPos.z) * t;
               if (tRaw >= 1) entryDone = true;
             }
 

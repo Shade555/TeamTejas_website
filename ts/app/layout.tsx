@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["300","400","500","600","700"],
-  variable: "--font-inter"
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -36,21 +36,21 @@ export default function RootLayout({
       <head>
         <script type="importmap">
           {`{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.182.0/examples/jsm/"
-  }
-}`}
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.module.js",
+      "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.182.0/examples/jsm/"
+    }
+  }`}
         </script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
       >
-  <Navbar />
-  {/* global custom plane scrollbar overlay */}
-  <ScrollPlane />
-  <main style={{ flex: 1 }}>{children}</main>
-  <Footer />
+        <Navbar />
+        {/* global custom plane scrollbar overlay */}
+        <ScrollPlane />
+        <main style={{ flex: 1 }}>{children}</main>
+        <Footer />
       </body>
     </html>
   );

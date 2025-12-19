@@ -23,7 +23,7 @@ const navItems = [
   {
     name: "Gallery",
     icon: "/gallery.svg",
-    href: "/gallery",
+    href: "/galleryR",
   },
   {
     name: "Sponsor Us",
@@ -48,7 +48,10 @@ const Navbar = () => {
   // Light-mode toggle removed: navbar is dark-only
 
   return (
-    <nav className="navbar-container" style={{ visibility: mounted ? "visible" : "hidden" }}>
+    <nav
+      className="navbar-container"
+      style={{ visibility: mounted ? "visible" : "hidden" }}
+    >
       <div className="navbar-logo">
         <NextImage src="/logo.png" alt="Logo" width={60} height={32} />
       </div>
@@ -111,7 +114,12 @@ const Navbar = () => {
                 }}
               >
                 <span className="navbar-icon">
-                  <NextImage src={item.icon} alt={item.name + " icon"} width={22} height={22} />
+                  <NextImage
+                    src={item.icon}
+                    alt={item.name + " icon"}
+                    width={22}
+                    height={22}
+                  />
                 </span>
                 <span
                   className={`navbar-text${showPill ? " show" : ""}`}
@@ -263,14 +271,14 @@ const Navbar = () => {
           overflow: hidden;
           white-space: nowrap;
           margin-left: 0.5rem;
-          color: #75FBFD;
+          color: #75fbfd;
           transition: max-width 0.4s cubic-bezier(0.77, 0, 0.18, 1),
             opacity 0.3s;
         }
         .navbar-text.show {
           max-width: 120px;
           opacity: 1;
-          color: #75FBFD;
+          color: #75fbfd;
         }
       `}</style>
     </nav>
