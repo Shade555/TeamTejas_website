@@ -1,0 +1,213 @@
+.team-section {
+  margin: 2.25rem 0;
+}
+
+.team-title {
+  font-size: 2rem;
+  color: rgb(179, 207, 229);
+  margin: 0 0 1rem 0;
+  text-align: left;
+  font-family: 'Cormorant SC', 'Cormorant', serif;
+  font-weight: 700;
+}
+
+@media (min-width: 1200px) {
+  .team-title { font-size: 2.25rem; }
+}
+
+/* group rows center their children; allow wrap; max 3 per row via flex-basis */
+.group-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+/* ensure a clear separation between the heads row and the members row */
+.heads-row {
+  margin-bottom: 2.5rem;
+}
+
+.members-row {
+  margin-top: 0.5rem;
+}
+
+.member-card {
+  width: 100%;
+  max-width: 300px; /* narrower */
+  min-height: 360px; /* reduced height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.75rem 1.25rem; /* more vertical padding */
+  background: linear-gradient(180deg, rgba(10,18,30,0.55), rgba(7,12,22,0.45));
+  border-radius: 18px;
+  border: 1px solid rgba(117, 251, 253, 0.18); /* #75fbfd tint */
+  box-shadow: 0 18px 40px rgba(2,6,23,0.35), 0 6px 30px rgba(117,251,253,0.03);
+  color: #eaf6ff;
+  position: relative;
+  overflow: hidden;
+  transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease, z-index 0.01s;
+}
+
+.member-card.large {
+  max-width: 360px;
+  min-height: 440px;
+  padding-bottom: 2rem;
+}
+
+/* hover lift */
+.member-card:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 30px 60px rgba(2,6,23,0.5), 0 10px 50px rgba(117,251,253,0.06);
+}
+
+/* modal (focused) state - bring forward */
+.member-card.modal {
+  /* keep same size as normal cards; only bring forward visually */
+  z-index: 1300;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.55), 0 14px 60px rgba(117,251,253,0.06);
+}
+
+/* Ensure modal footer looks like the original card footer (pinned to bottom)
+   and does not participate in the reveal animation. */
+.member-card.modal .card-footer {
+  top: auto;
+  bottom: 12px;
+  transform: translateX(-50%) translateY(0) !important;
+  opacity: 1 !important;
+  transition: none !important;
+  justify-content: center;
+}
+
+/* overlay */
+.member-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  backdrop-filter: blur(4px);
+}
+
+.member-modal {
+  will-change: transform;
+  transition: transform 200ms ease;
+  touch-action: none;
+}
+
+.member-card.placeholder {
+  opacity: 0.75;
+  border: 1px dashed rgba(255,255,255,0.06);
+}
+
+.avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4) inset;
+  margin-top: 1rem;
+  flex: 0 0 auto;
+}
+
+.avatar.large {
+  width: 180px;
+  height: 180px;
+  border-radius: 14px;
+}
+
+/* image avatar that matches the sizing/shape of .avatar */
+.avatar-img {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-top: 1rem;
+  flex: 0 0 auto;
+  display: block;
+}
+.avatar-img.large {
+  width: 180px;
+  height: 180px;
+  border-radius: 14px;
+}
+
+/* start avatar image blurred and unblur when card comes into view */
+.avatar-img {
+  filter: blur(8px);
+  transition: filter 1000ms cubic-bezier(.16,.9,.24,1) 300ms, opacity 700ms ease 300ms;
+}
+.member-card.in-view .avatar-img {
+  filter: blur(0);
+  opacity: 1;
+}
+
+/* modal should show image sharp immediately */
+.member-card.modal .avatar-img {
+  filter: none !important;
+  transition: none !important;
+}
+
+.member-info { text-align: center; margin-bottom: 1rem; }
+
+.member-name { font-weight: 700; font-size: 1.5rem; color: #d9e8ff; }
+
+.member-name.large { font-size: 2rem; }
+
+.member-role { font-size: 0.95rem; color: rgba(255,255,255,0.7); margin-top: 6px }
+
+.card-footer .meta { text-align: center; display: flex; flex-direction: column; align-items: center; }
+.card-footer .meta .member-name { font-size: 1rem; margin: 0; }
+.card-footer .meta .member-role { font-size: 0.8rem; color: rgba(255,255,255,0.72); margin-top: 3px }
+.card-footer.small .meta .member-name { font-size: 0.95rem }
+.card-footer.small .meta .member-role { font-size: 0.74rem }
+
+/* footer overlay: start at the top and animate down into place when card becomes visible */
+.card-footer {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  top: 12px; /* initial position */
+  width: calc(100% - 36px);
+  max-width: calc(100% - 36px);
+  background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: rgba(255,255,255,0.9);
+  backdrop-filter: blur(6px);
+  transition: transform 1200ms cubic-bezier(.16,.9,.24,1) 300ms, box-shadow 700ms ease, opacity 700ms ease;
+  will-change: transform;
+}
+
+.card-footer.small { padding: 8px 12px; }
+
+.handle { font-weight: 600; color: #bfeff0 }
+
+.icons { opacity: 0.9 }
+
+/* when card receives in-view, translate the footer down by the computed --footer-translate */
+.member-card.in-view .card-footer {
+  transform: translateX(-50%) translateY(var(--footer-translate, 0px));
+}
+
+/* center footer content for normal cards (but keep modal footers spaced) */
+.member-card:not(.modal) .card-footer {
+  justify-content: center;
+}
+.member-card:not(.modal) .card-footer .meta { align-items: center; text-align: center; }
+
+/* responsive: ensure at most 4 cards per row visually by constraining flex-basis */
+.group-row .member-card {
+  flex: 1 1 220px;
+}
+
+@media (min-width: 1200px) {
+  /* subtract two gaps (gap * (3 - 1) = 2.5rem) then divide into 3 columns */
+  .group-row .member-card { flex-basis: calc((100% - 2.5rem)/3); }
+}

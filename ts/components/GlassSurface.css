@@ -57,6 +57,13 @@
     inset 0 -1px 0 0 rgba(255, 255, 255, 0.2);
 }
 
+/* Hide the fallback visual until JS has hydrated and determined support.
+   This prevents a flash of the fallback before the SVG-backed glass is applied. */
+.glass-surface--fallback:not(.glass-surface--hydrated) {
+  opacity: 0;
+  pointer-events: none;
+}
+
 @media (prefers-color-scheme: dark) {
   .glass-surface--fallback {
     background: rgba(255, 255, 255, 0.1);
@@ -118,4 +125,64 @@
     inset 0 0 5px rgba(255, 255, 255, 0.074);
   background-color: rgb(255, 255, 255, 0.02);
   mix-blend-mode: screen;
+}
+
+/* Team filter bar inside the glass surface */
+.team-filter-bar {
+  display: inline-flex;
+  gap: 18px;
+  align-items: center;
+  white-space: nowrap;
+  padding: 6px 12px;
+  width: auto;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  align-items: center;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.team-filter-bar::-webkit-scrollbar { display: none; }
+
+.team-filter-button {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background: transparent;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 1rem;
+  color: #75fbfd;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  position: relative;
+  z-index: 2; /* sit above the sliding pill */
+}
+
+.team-filter-button:focus {
+  outline: none;
+}
+
+.team-filter-button:focus-visible {
+  outline: 2px solid rgba(59,130,246,0.15);
+  outline-offset: 4px;
+}
+
+.team-filter-button.is-active {
+  transform: translateY(-1px);
+}
+
+/* sliding pill */
+.team-filter-pill {
+  position: absolute;
+  left: 0;
+  top: 12px;
+  height: 40px;
+  background: rgba(59, 130, 246, 0.25);
+  border-radius: 999px;
+  transition: transform 260ms cubic-bezier(.2,.9,.2,1), width 260ms cubic-bezier(.2,.9,.2,1), height 200ms ease, opacity 160ms ease;
+  z-index: 1;
+  pointer-events: none;
 }
