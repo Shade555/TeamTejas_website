@@ -18,7 +18,12 @@ const navItems = [
   {
     name: "Milestones",
     icon: "/milestone.svg",
-    href: "/milestones",
+    href: "/milestonesR",
+  },
+  {
+    name: "Events",
+    icon: "/events.svg",
+    href: "/eventsR",
   },
   {
     name: "Gallery",
