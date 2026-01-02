@@ -144,9 +144,12 @@ const Navbar = () => {
           align-items: center;
           justify-content: space-between;
           padding: 0.5rem 2rem;
-          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+          box-shadow: none; /* removed shadow so navbar blends with page */
           min-height: 64px;
+          height: 64px; /* enforce fixed height to avoid page-specific overrides */
+          box-sizing: border-box;
           background: transparent;
+          border-bottom: none; /* ensure no divider line appears */
         }
         .toggle-switch {
           position: relative;
