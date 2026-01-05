@@ -3,7 +3,6 @@ import React from "react";
 import initSponsorAnimations from "./sponsorAnimations";
 // ShinyText removed — replace with plain heading text
 import LightRays from "../LightRays/page";
-import NextImage from "next/image";
 import sponsor1 from "./image-removebg-preview (19).png";
 import sponsor2 from "./image-removebg-preview (20).png";
 import sponsor3 from "./image-removebg-preview (21).png";
@@ -53,22 +52,51 @@ const Sponsor = () => {
       </div>
 
       <div ref={containerRef} style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem' }}>
-          <span style={{ flex: '0 0 150px', height: '2px', maxWidth: '150px', background: 'linear-gradient(90deg, transparent 0%, #0a3990 20%, #4fa1eb 50%, #79a1c0 80%, transparent 100%)' }}></span>
-          <h1 style={{
-            fontFamily: 'Cormorant_SC, serif',
-            fontSize: '2.25rem',
-            fontWeight: 700,
-            margin: 0,
-            textAlign: 'center',
-            letterSpacing: '1.5px',
-            textTransform: 'uppercase',
-            background: 'linear-gradient(135deg,#00103c 0%,#0a3990 10%,#4fa1eb 50%,#79a1c0 80%,#a0d8f4 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text'
-          }}>Sponsors and Partners</h1>
-          <span style={{ flex: '0 0 150px', height: '2px', maxWidth: '150px', background: 'linear-gradient(90deg, transparent 0%, #79a1c0 20%, #4fa1eb 50%, #0a3990 80%, transparent 100%)' }}></span>
+        <div
+          style={{
+            marginBottom: "1rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "1.5rem",
+          }}
+        >
+          <span
+            style={{
+              flex: "0 0 150px",
+              height: "2px",
+              maxWidth: "150px",
+              background:
+                "linear-gradient(90deg, transparent 0%, #0a3990 20%, #4fa1eb 50%, #79a1c0 80%, transparent 100%)",
+            }}
+          ></span>
+          <h1
+            style={{
+              fontFamily: "Cormorant_SC, serif",
+              fontSize: "2.25rem",
+              fontWeight: 700,
+              margin: 0,
+              textAlign: "center",
+              letterSpacing: "1.5px",
+              textTransform: "uppercase",
+              background:
+                "linear-gradient(135deg,#00103c 0%,#0a3990 10%,#4fa1eb 50%,#79a1c0 80%,#a0d8f4 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            Sponsors and Partners
+          </h1>
+          <span
+            style={{
+              flex: "0 0 150px",
+              height: "2px",
+              maxWidth: "150px",
+              background:
+                "linear-gradient(90deg, transparent 0%, #79a1c0 20%, #4fa1eb 50%, #0a3990 80%, transparent 100%)",
+            }}
+          ></span>
         </div>
 
         <p
@@ -120,18 +148,7 @@ const Sponsor = () => {
                   Sponsor Us
                 </span>
               </button>
-              <style jsx>{`
-                .sponsor-cta {
-                  will-change: transform;
-                }
-                .sponsor-cta:hover {
-                  transform: translateY(-6px) scale(1.02);
-                }
-                /* Slight adjustment for active/press feedback */
-                .sponsor-cta:active {
-                  transform: translateY(-2px) scale(0.995);
-                }
-              `}</style>
+              {/* CTA hover/active handled in component-scoped styles below */}
             </a>
           </div>
         </section>
@@ -148,35 +165,14 @@ const Sponsor = () => {
         <div
           style={{ marginTop: 16, display: "flex", justifyContent: "center" }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexWrap: "nowrap",
-              maxWidth: "100%",
-            }}
-          >
+          <div className="sponsor-logos align-center">
             {[sponsor1, sponsor2, sponsor3, sponsor4, sponsor5].map(
               (src, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    width: 250,
-                    height: 240,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    position: "relative",
-                    flex: "0 0 auto",
-                  }}
-                  className="sponsor-logo sponsor-logo-top"
-                >
-                  <NextImage
-                    src={src}
+                <div key={idx} className="sponsor-card sponsor-logo-top">
+                  <img
+                    src={src.src}
                     alt={`sponsor-${idx + 1}`}
-                    fill
-                    style={{ objectFit: "contain" }}
+                    className="sponsor-img"
                   />
                 </div>
               )
@@ -219,36 +215,17 @@ const Sponsor = () => {
               marginTop: 8,
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                gap: 16,
-                alignItems: "center",
-                justifyContent: "flex-end",
-                flexWrap: "nowrap",
-                maxWidth: "100%",
-              }}
-            >
+            <div className="sponsor-logos align-right">
               {[sponsor1, sponsor2, sponsor3, sponsor4, sponsor5].map(
                 (src, idx) => (
                   <div
                     key={`y-${idx}`}
-                    style={{
-                      width: 230,
-                      height: 240,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      position: "relative",
-                      flex: "0 0 auto",
-                    }}
-                    className="sponsor-logo sponsor-logo-right"
+                    className="sponsor-card sponsor-logo-right"
                   >
-                    <NextImage
-                      src={src}
+                    <img
+                      src={src.src}
                       alt={`sponsor-2025-${idx + 1}`}
-                      fill
-                      style={{ objectFit: "contain" }}
+                      className="sponsor-img"
                     />
                   </div>
                 )
@@ -293,36 +270,17 @@ const Sponsor = () => {
               marginTop: 8,
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                gap: 16,
-                alignItems: "center",
-                justifyContent: "flex-start",
-                flexWrap: "nowrap",
-                maxWidth: "100%",
-              }}
-            >
+            <div className="sponsor-logos align-left">
               {[sponsor1, sponsor2, sponsor3, sponsor4, sponsor5].map(
                 (src, idx) => (
                   <div
                     key={`24-${idx}`}
-                    style={{
-                      width: 230,
-                      height: 240,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      position: "relative",
-                      flex: "0 0 auto",
-                    }}
-                    className="sponsor-logo sponsor-logo-left"
+                    className="sponsor-card sponsor-logo-left"
                   >
-                    <NextImage
-                      src={src}
+                    <img
+                      src={src.src}
                       alt={`sponsor-2024-${idx + 1}`}
-                      fill
-                      style={{ objectFit: "contain" }}
+                      className="sponsor-img"
                     />
                   </div>
                 )
@@ -366,36 +324,17 @@ const Sponsor = () => {
               marginTop: 8,
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                gap: 16,
-                alignItems: "center",
-                justifyContent: "flex-end",
-                flexWrap: "nowrap",
-                maxWidth: "100%",
-              }}
-            >
+            <div className="sponsor-logos align-right">
               {[sponsor1, sponsor2, sponsor3, sponsor4, sponsor5].map(
                 (src, idx) => (
                   <div
                     key={`23-${idx}`}
-                    style={{
-                      width: 230,
-                      height: 240,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      position: "relative",
-                      flex: "0 0 auto",
-                    }}
-                    className="sponsor-logo sponsor-logo-right"
+                    className="sponsor-card sponsor-logo-right"
                   >
-                    <NextImage
-                      src={src}
+                    <img
+                      src={src.src}
                       alt={`sponsor-2023-${idx + 1}`}
-                      fill
-                      style={{ objectFit: "contain" }}
+                      className="sponsor-img"
                     />
                   </div>
                 )
@@ -403,6 +342,103 @@ const Sponsor = () => {
             </div>
           </div>
         </section>
+
+        <style jsx>{`
+          /* Desktop (default): restore original flex-based layout used previously */
+          .sponsor-logos {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: nowrap;
+            width: 100%;
+            box-sizing: border-box;
+          }
+
+          .sponsor-logos.align-center {
+            justify-content: center;
+          }
+          .sponsor-logos.align-right {
+            justify-content: flex-end;
+            justify-items: end;
+          }
+          .sponsor-logos.align-left {
+            justify-content: flex-start;
+            justify-items: start;
+          }
+
+          /* Desktop: fixed-size logo cards to match previous appearance */
+          .sponsor-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            box-sizing: border-box;
+            flex: 0 0 auto;
+            width: 250px;
+            height: 240px;
+          }
+
+          /* Right/left rows originally used slightly smaller cards */
+          .sponsor-card.sponsor-logo-right,
+          .sponsor-card.sponsor-logo-left {
+            width: 230px;
+          }
+
+          .sponsor-img {
+            width: 100%;
+            height: auto;
+            max-height: 240px;
+            object-fit: contain;
+            display: block;
+          }
+
+          .sponsor-cta {
+            will-change: transform;
+          }
+          .sponsor-cta:hover {
+            transform: translateY(-6px) scale(1.02);
+          }
+          .sponsor-cta:active {
+            transform: translateY(-2px) scale(0.995);
+          }
+
+          /* Tablet: 2 columns (reduce gap) */
+          @media (max-width: 1024px) {
+            .sponsor-logos {
+              display: grid;
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+              gap: 12px;
+            }
+            .sponsor-card {
+              /* switch to responsive card sizing on tablet */
+              width: 100%;
+              max-width: 260px;
+              height: auto;
+            }
+          }
+
+          /* Mobile: single column (more compact gap) */
+          @media (max-width: 768px) {
+            .sponsor-logos {
+              display: grid;
+              grid-template-columns: 1fr;
+              gap: 6px;
+            }
+            .sponsor-card {
+              width: 100%;
+              max-width: 100%;
+              height: auto;
+              padding-left: 0;
+              padding-right: 0;
+            }
+            .sponsor-logos.align-right,
+            .sponsor-logos.align-left,
+            .sponsor-logos.align-center {
+              justify-items: center;
+            }
+          }
+        `}</style>
       </div>
     </main>
   );
