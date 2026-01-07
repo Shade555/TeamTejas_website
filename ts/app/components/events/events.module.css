@@ -1,0 +1,272 @@
+/* Events section styles for wireframe layout */
+.eventSection {
+  width: 100%;
+  padding: 2rem 0;
+  background: transparent;
+  text-align: center;
+}
+.eventInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 20px;
+  align-items: start;
+}
+.leftImage {
+  width: 100%;
+  height: 220px;
+  border-radius: 8px;
+  background: linear-gradient(135deg,#0a3990 0%,#4fa1eb 60%);
+}
+.descBox {
+  background: transparent;
+  padding: 0 18px 18px 18px; /* remove top padding so text starts at top */
+  border-radius: 8px;
+  color: var(--foreground);
+  box-shadow: none;
+  border: none;
+  text-align: justify; /* justify description text */
+}
+
+.descBox h3 {
+  text-align: left; /* keep the main title left-aligned */
+  margin-top: 0;
+}
+.contentColumn{
+  position: relative;
+}
+
+.floatRight {
+  float: right;
+  width: 300px;
+  margin-left: 16px;
+  background: rgba(10,18,30,0.06);
+  padding: 10px;
+  border-radius: 6px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  position: relative;
+}
+.floatRight .col{font-size:0.95rem;line-height:1.4;color:var(--foreground)}
+
+.floatRight::before{
+  display: none; /* replaced by .floatDivider element for animatable divider */
+}
+
+/* Title line initial state for GSAP animation */
+.titleLine{
+  height: 2px;
+  width: 150px;
+  max-width: 150px;
+  background: linear-gradient(90deg, transparent 0%, #0a3990 20%, #4fa1eb 50%, #79a1c0 80%, transparent 100%);
+  transform-origin: left center;
+  transform: scaleX(0);
+  will-change: transform;
+}
+.titleLineRight{transform-origin: right center;background: linear-gradient(90deg, transparent 0%, #79a1c0 20%, #4fa1eb 50%, #0a3990 80%, transparent 100%)}
+
+.titleText{opacity:0}
+
+/* Hidden section to animate in */
+.sectionHidden{opacity:0; transform: translateY(20px);}
+
+/* animated divider inside floatRight */
+.floatDivider{
+  position: absolute;
+  top: 8px;
+  left: calc(50% - 1px);
+  width: 1px;
+  height: 0%;
+  background: #75fbfd;
+  border-radius: 1px;
+}
+
+/* Big text entry initial state */
+.bigTextAnimated{/* removed - big text will be static; kept for compatibility */}
+.airplaneIcon{display:none}
+
+.clearFloat{clear: both}
+.bigTextFull {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+}
+.bigTextInner {
+  display: inline-block;
+  max-width: 1200px; /* constrain width so extra text wraps to new lines */
+  padding: 12px 18px; /* adjust left/right background space */
+  background: rgba(59, 130, 246, 0.25);
+  font-family: Cormorant_SC, serif;
+  font-size: 4.2rem;
+  line-height: 1.05;
+  color: #070e1c; /* darker text color */
+  letter-spacing: 1px;
+  font-weight: 700;
+  white-space: normal; /* allow wrapping */
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px){
+  .eventInner{grid-template-columns:1fr;}
+  .leftImage{height:160px}
+  .floatRight{width:100%;display:block;}
+  .floatRight::before{display:none}
+}
+
+/* Section 2: vertical big-word left, description center, image top-right */
+.section2 {
+  width: 100%;
+  padding: 2rem 0;
+  background: transparent;
+}
+.section2Inner{
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 160px 1fr 320px;
+  gap: 20px;
+  align-items: start;
+}
+.verticalWord{
+  font-family: Cormorant_SC, serif;
+  font-weight: 900;
+  font-size: 5.2rem;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  color: #070e1c;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(59, 130, 246, 0.25);
+  padding: 10px 12px;
+}
+.section2Desc{
+  position: relative;
+  padding: 0 4px;
+  text-align: justify;
+}
+.descImageLarge{
+  width: 320px;
+  height: 200px;
+  background: linear-gradient(135deg,#e0d7c9 0%, #c7bfae 100%);
+  border-radius:8px;
+  align-self: start;
+  justify-self: end;
+}
+.rightTextColumn{
+  margin-top: 12px;
+  max-width: 320px;
+  text-align: left;
+  line-height: 1.45;
+  color: var(--foreground);
+}
+
+@media (max-width: 900px){
+  .section2Inner{grid-template-columns:1fr;}
+  .verticalWord{writing-mode: horizontal-tb; font-size:2.4rem;}
+  .descImageLarge{float:none;width:100%;height:160px;margin:12px 0}
+  .rightTextColumn{max-width:100%;}
+}
+
+/* Section 3 styles */
+.section3{
+  width:100%;
+  padding:2.5rem 0;
+}
+.section3Inner{
+  max-width:1200px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:32px;
+  align-items:start;
+}
+.col{
+  position:relative;
+  /* Ensure paragraph text in these columns is fully justified */
+  text-align: justify;
+  text-justify: inter-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+.columnImage{
+  width:100%;
+  height:150px;
+  background: linear-gradient(135deg,#e9eef6 0%, #d7d0c3 100%);
+  border-radius:6px;
+  margin-bottom:12px;
+}
+.bigWordFloat{
+  float:left;
+  display:inline-block;
+  font-family: Cormorant_SC, serif;
+  font-weight:900;
+  font-size:4.6rem;
+  line-height:0.95;
+  color:rgba(59, 130, 246, 0.25);
+  padding:6px 10px;
+  margin-right:14px;
+  margin-top:6px;
+  border-radius:4px;
+  -webkit-writing-mode: horizontal-tb;
+  writing-mode: horizontal-tb !important; /* force horizontal */
+  text-orientation: mixed;
+  /* constrain width so long words wrap and letters flow downward */
+  max-width: 80px;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  text-align: center;
+}
+
+.bigWordRight{
+  float: right;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-family: Cormorant_SC, serif;
+  font-weight: 900;
+  font-size: 4.6rem;
+  line-height: 1;
+  color: #070e1c;
+
+  background: rgba(59, 130, 246, 0.25);
+  padding: 10px 8px;
+  margin-left: 14px;
+  margin-top: 6px;
+}
+
+.bigWordRight span{
+  display: block;
+  transform: rotate(90deg);
+  line-height: 0.7;
+}
+
+
+
+.bigLetter{
+  display:block;
+  font-family: Cormorant_SC, serif;
+  font-weight:900;
+  font-size:3.6rem;
+  line-height:1;
+  text-align:center;
+  padding:2px 6px;
+}
+
+@media (max-width:900px){
+  .bigLetter{font-size:1.6rem}
+}
+
+@media (max-width:900px){
+  .section3Inner{grid-template-columns:1fr;}
+  .bigWordFloat{float:none;display:inline-block;margin-right:8px;font-size:2rem}
+  .bigWordRight{float:none;display:inline-block;margin-left:0;margin-top:12px;font-size:2rem}
+  .columnImage{height:140px}
+}
+
