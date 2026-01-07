@@ -67,7 +67,7 @@
   gap: 24px;
   margin-top: auto;
   padding: 28px 4px 14px 4px;
-  transform: translateY(220%);
+  transform: translateY(250%);
 }
 
 .leftLabel, .rightLabel{
@@ -336,6 +336,7 @@
 
 .columnRight{
   align-items: flex-start;
+  position: relative;
 }
 
 .cardTopText{
@@ -353,20 +354,30 @@
   transform: translateX(-125%) translateY(70px);
 }
 
+.rightColumnContent{
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
 .rightTopText{
   color: rgba(255, 255, 255, 0.8);
   font-family: 'Cormorant Garamond', 'Cormorant_SC', serif;
   font-size: clamp(1rem, 1.5vw, 1.3rem);
-  margin: 0;
+  margin: 0 0 20px 0;
   letter-spacing: 3px;
   text-transform: uppercase;
   z-index: 3;
   font-weight: 400;
   max-width: 300px;
   line-height: 1.4;
-  position: absolute;
-  top: -60px;
-  right: 0;
+  position: relative;
+  top: auto;
+  right: auto;
+}
+
+.rightTopText span {
+  font-size: 1.3em;
 }
 
 .cardBottomText{
@@ -418,8 +429,9 @@
 .listContent{
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding-top: 30px;
+  gap: 3px;
+  padding-top: 0;
+  transform: translateY(10px);
 }
 
 .listItem{
@@ -435,6 +447,7 @@
 .section5{
   position: relative;
   width: 100%;
+  overflow: hidden;
   background: transparent;
   display: flex;
   align-items: center;
