@@ -15,8 +15,62 @@ const Hero = () => {
         display: "flex",
         alignItems: "center",
         padding: "6rem 8rem",
+        boxSizing: "border-box",
       }}
     >
+      <style>{`
+        @media (max-width: 768px) {
+          .hero-logo-mobile {
+            display: block !important;
+          }
+          .hero-section {
+            padding: 3rem 1.5rem !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            align-items: flex-start !important;
+            padding-top: 2.5rem !important;
+          }
+          .hero-left {
+            flex: none !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            text-align: center !important;
+            transform: translateY(-2rem) !important;
+          }
+          .hero-left > div:first-child {
+            text-align: center !important;
+            font-size: 1.1rem !important;
+          }
+          .hero-left > div:nth-child(2) {
+            text-align: center !important;
+            font-size: 3.5rem !important;
+          }
+          .hero-left .ahead-mobile {
+            display: inline !important;
+          }
+          .hero-right {
+            flex: none !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 0 !important;
+            align-items: center !important;
+            margin-top: 2rem !important;
+          }
+          .hero-right > div {
+            text-align: center !important;
+            transform: none !important;
+            max-width: 100% !important;
+          }
+          .hero-right h1 {
+            display: none !important;
+          }
+        }
+        @media (min-width: 769px) {
+          .hero-left .ahead-mobile {
+            display: none !important;
+          }
+        }
+      `}</style>
       <div
         style={{
           position: "absolute",
@@ -26,6 +80,29 @@ const Hero = () => {
         }}
       >
         <ThreePlane />
+      </div>
+      {/* LOGO FOR MOBILE */}
+      <div
+        className="hero-logo-mobile"
+        style={{
+          display: "none",
+          marginBottom: "2rem",
+          textAlign: "center",
+          width: "100%",
+          paddingTop: "2rem",
+          paddingBottom: "2rem",
+        }}
+      >
+        <img
+          src="/logo.png"
+          alt="Logo"
+          style={{
+            height: "80px",
+            width: "auto",
+            margin: "0 auto",
+            display: "block",
+          }}
+        />
       </div>
       {/* LEFT COLUMN */}
       <div
@@ -68,7 +145,7 @@ const Hero = () => {
           <span className="cormorant-bold">
             Engineering
             <br />
-            the Sky
+            the Sky<span className="ahead-mobile"> Ahead</span>
           </span>
         </div>
 

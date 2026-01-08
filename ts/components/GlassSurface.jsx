@@ -22,6 +22,7 @@ const GlassSurface = ({
   mixBlendMode = "difference",
   className = "",
   style = {},
+  forceFallback = false,
 }) => {
   const uniqueId = useId().replace(/:/g, "-");
   const filterId = `glass-filter-${uniqueId}`;
@@ -185,7 +186,7 @@ const GlassSurface = ({
     <div
       ref={containerRef}
       className={`glass-surface ${
-          svgSupported ? "glass-surface--svg" : "glass-surface--fallback"
+          forceFallback || !svgSupported ? "glass-surface--fallback" : "glass-surface--svg"
         } ${hydrated ? 'glass-surface--hydrated' : ''} ${className}`}
       style={containerStyle}
     >

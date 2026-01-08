@@ -125,7 +125,7 @@ body {
 /* Mobile / small tablets: scale more and center critical elements visually */
 @media (max-width: 768px) {
   .hero-section {
-    transform: scale(0.78);
+    transform: scale(1);
     transform-origin: left center;
     padding: 3rem 1.5rem !important;
   }

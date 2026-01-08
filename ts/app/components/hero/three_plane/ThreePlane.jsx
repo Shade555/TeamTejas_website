@@ -12,13 +12,14 @@ export default function ThreePlane() {
 
     // === Configurable values: edit these to position/orient the plane ===
     // Position (x, y, z) in world units
-    const MODEL_BASE_POS = { x: 0, y: 0.1, z: 0 };
+    const isMobile = window.innerWidth <= 768;
+    const MODEL_BASE_POS = { x: isMobile ? -0.2 : 0, y: 0.1, z: 0 };
     // Rotation in radians: pitch (x), yaw (y), roll (z)
     // change these numbers to orient the plane. Example: degrees * Math.PI/180
     // Example: -8 degrees pitch -> -8 * Math.PI / 180 === -0.1396
     const MODEL_BASE_ROT = { x: 0.7, y: -0.6, z: -0.3 };
-    // Uniform scale
-    const MODEL_BASE_SCALE = 0.92;
+    // Uniform scale - reduced for mobile
+    const MODEL_BASE_SCALE = isMobile ? 0.55 : 0.92;
 
     // Camera position - move this to adjust viewpoint
     // Suggested camera for reference screenshot (closer, slightly right)

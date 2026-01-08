@@ -151,6 +151,22 @@ const Navbar = () => {
           background: transparent;
           border-bottom: none; /* ensure no divider line appears */
         }
+        @media (max-width: 768px) {
+          .navbar-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: auto;
+            min-height: auto;
+            padding: 1rem 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            z-index: 1000;
+          }
+        }
         .toggle-switch {
           position: relative;
           width: 48px;

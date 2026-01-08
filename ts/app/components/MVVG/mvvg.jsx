@@ -51,6 +51,7 @@ const MVVG = () => {
                 greenOffset={0}
                 blueOffset={0}
                 mixBlendMode="normal"
+                forceFallback={true}
               >
                 <div className="card-content">
                   {/* Updated to use Material Symbols Outlined */}

@@ -148,9 +148,56 @@ const AboutUs = ({ stats = defaultStats }) => {
         background: "transparent", // match hero / page background
         color: "#e8fbff",
         minHeight: "60vh",
+        display: "flex",
+        justifyContent: "center",
+        width: "100%",
+        boxSizing: "border-box",
       }}
     >
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+      <style>{`
+        @media (max-width: 768px) {
+          section {
+            padding: 2rem 1.5rem !important;
+          }
+          .about-section {
+            width: 100% !important;
+            padding: 0 !important;
+          }
+          .about-container {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+            width: 100% !important;
+          }
+          .about-text {
+            width: 100% !important;
+            flex: none !important;
+          }
+          .about-text h2 {
+            font-size: 1.8rem !important;
+          }
+          .about-text p {
+            max-width: 100% !important;
+          }
+          .about-stats {
+            width: 100% !important;
+            flex: none !important;
+            grid-template-columns: 1fr !important;
+            gap: 1.5rem !important;
+          }
+          .about-stat-item {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+          }
+          .about-stat-item > div:first-child {
+            align-items: center !important;
+          }
+        }
+      `}</style>
+      <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%", boxSizing: "border-box" }} className="about-section">
         <div
           style={{
             display: "flex",
@@ -158,9 +205,10 @@ const AboutUs = ({ stats = defaultStats }) => {
             alignItems: "stretch",
             flexWrap: "wrap",
           }}
+          className="about-container"
         >
           {/* Left Column: Text */}
-          <div style={{ flex: "1 1 420px", minWidth: 320 }}>
+          <div style={{ flex: "1 1 420px", minWidth: 320 }} className="about-text">
             <h2
               id="about-heading"
               style={{ fontSize: "2.6rem", margin: 0, fontWeight: 700 }}
@@ -213,6 +261,7 @@ const AboutUs = ({ stats = defaultStats }) => {
               gridTemplateColumns: "1fr 1fr",
               gap: "1.4rem",
             }}
+            className="about-stats"
           >
             {items.map((it, idx) => (
               <div
@@ -223,6 +272,7 @@ const AboutUs = ({ stats = defaultStats }) => {
                   flexDirection: "column",
                   gap: ".5rem",
                 }}
+                className="about-stat-item"
               >
                 <div
                   style={{
