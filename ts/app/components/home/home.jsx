@@ -3,7 +3,7 @@ import MissionVision from "../mission/mission";
 import AboutUs from "../about/about";
 import MVVG from "../MVVG/mvvg";
 import NextImage from "next/image";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import sponsor1 from "../sponsor/image-removebg-preview (19).png";
 import sponsor2 from "../sponsor/image-removebg-preview (20).png";
@@ -15,6 +15,8 @@ import Testimonials from "../testimonials/testimonials";
 const Home = () => {
   const logos = [sponsor1, sponsor2, sponsor3, sponsor4, sponsor5];
   const sectionRef = useRef(null);
+  const marqueeTrackRef = useRef(null);
+  const animationRef = useRef(null);
 
   useEffect(() => {
     const container = sectionRef.current;
@@ -55,6 +57,94 @@ const Home = () => {
     };
   }, []);
 
+  // Auto-scroll animation with local dragging
+  useEffect(() => {
+    const track = marqueeTrackRef.current;
+    if (!track) return;
+
+    let currentX = 0;
+    let isDraggingLocal = false;
+    let dragStartX = 0;
+
+    const startAutoScroll = () => {
+      if (animationRef.current) {
+        animationRef.current.kill();
+      }
+
+      animationRef.current = gsap.to(track, {
+        x: -track.offsetWidth / 2,
+        duration: 12,
+        ease: "none",
+        repeat: -1,
+        onRepeat: () => {
+          gsap.set(track, { x: 0 });
+          currentX = 0;
+        },
+        onUpdate: () => {
+          if (!isDraggingLocal) {
+            currentX = gsap.getProperty(track, "x");
+          }
+        },
+      });
+    };
+
+    const handlePointerDown = (e) => {
+      isDraggingLocal = true;
+      dragStartX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+      if (animationRef.current) {
+        animationRef.current.pause();
+      }
+      track.style.cursor = 'grabbing';
+    };
+
+    const handlePointerMove = (e) => {
+      if (!isDraggingLocal || !track) return;
+      
+      // Prevent default only when actively dragging
+      if (e.cancelable && e.type === 'touchmove') {
+        e.preventDefault();
+      }
+      
+      const currentXPos = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+      const diff = currentXPos - dragStartX;
+      currentX += diff;
+      gsap.set(track, { x: currentX });
+      dragStartX = currentXPos;
+    };
+
+    const handlePointerUp = () => {
+      isDraggingLocal = false;
+      track.style.cursor = 'grab';
+      startAutoScroll();
+    };
+
+    startAutoScroll();
+    
+    // Start drag on track element
+    track.addEventListener("pointerdown", handlePointerDown, { passive: true });
+    track.addEventListener("touchstart", handlePointerDown, { passive: true });
+    
+    // Move/up handlers on document for smoother dragging
+    document.addEventListener("pointermove", handlePointerMove, { passive: true });
+    document.addEventListener("touchmove", handlePointerMove, { passive: false });
+    document.addEventListener("pointerup", handlePointerUp, { passive: true });
+    document.addEventListener("touchend", handlePointerUp, { passive: true });
+    document.addEventListener("pointercancel", handlePointerUp, { passive: true });
+    document.addEventListener("touchcancel", handlePointerUp, { passive: true });
+
+    return () => {
+      track.removeEventListener("pointerdown", handlePointerDown);
+      track.removeEventListener("touchstart", handlePointerDown);
+      document.removeEventListener("pointermove", handlePointerMove);
+      document.removeEventListener("touchmove", handlePointerMove);
+      document.removeEventListener("pointerup", handlePointerUp);
+      document.removeEventListener("touchend", handlePointerUp);
+      document.removeEventListener("pointercancel", handlePointerUp);
+      document.removeEventListener("touchcancel", handlePointerUp);
+      if (animationRef.current) animationRef.current.kill();
+    };
+  }, []);
+
   return (
     <main>
       <Hero />
@@ -71,6 +161,12 @@ const Home = () => {
         .marquee {
           width: 100%;
           position: relative;
+          overflow: hidden;
+          cursor: grab;
+        }
+
+        .marquee:active {
+          cursor: grabbing;
         }
 
         .marquee {
@@ -94,6 +190,8 @@ const Home = () => {
           display: flex;
           gap: 28px;
           align-items: center;
+          will-change: transform;
+          user-select: none;
         }
 
         .marquee-item {
@@ -105,16 +203,31 @@ const Home = () => {
           justify-content: center;
         }
 
-        .marquee-track {
-          animation: slideLR 20s linear infinite;
-        }
-
-        @keyframes slideLR {
-          0% {
-            transform: translateX(-50%);
+        @media (max-width: 768px) {
+          .marquee-item {
+            width: 160px;
+            height: 120px;
           }
-          100% {
-            transform: translateX(0);
+          
+          .marquee-track {
+            gap: 12px;
+          }
+          
+          .marquee {
+            -webkit-mask-image: linear-gradient(
+              90deg,
+              transparent 0%,
+              black 12%,
+              black 88%,
+              transparent 100%
+            );
+            mask-image: linear-gradient(
+              90deg,
+              transparent 0%,
+              black 12%,
+              black 88%,
+              transparent 100%
+            );
           }
         }
 
@@ -181,7 +294,7 @@ const Home = () => {
           {/* Logos marquee */}
           <div style={{ marginTop: "2rem", overflow: "hidden" }}>
             <div className="marquee" aria-hidden>
-              <div className="marquee-track">
+              <div className="marquee-track" ref={marqueeTrackRef}>
                 {[...logos, ...logos].map((src, idx) => (
                   <div key={idx} className="marquee-item">
                     <NextImage
@@ -190,9 +303,11 @@ const Home = () => {
                       style={{
                         objectFit: "contain",
                         objectPosition: "center",
+                        pointerEvents: "none",
                       }}
                       width={260}
                       height={140}
+                      draggable={true}
                     />
                   </div>
                 ))}

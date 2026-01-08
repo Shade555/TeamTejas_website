@@ -172,6 +172,9 @@ const MVVG = () => {
           }
         }
         @media (max-width: 700px) {
+          h2 {
+            font-size: 2.3rem;
+          }
           .grid {
             grid-template-columns: 1fr;
             max-width: 400px;

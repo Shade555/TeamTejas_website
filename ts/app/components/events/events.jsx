@@ -115,8 +115,8 @@ export default function Events2() {
     timeline.add(() => {
       gsap.to([line1Ref.current, line2Ref.current, leftLabelRef.current, rightLabelRef.current, centerLineRef.current, heroSectionRef.current], {
         scrollTrigger: {
-          trigger: section2Ref.current,
-          start: 'top 100%',
+          trigger: window.innerWidth <= 640 ? document.querySelector(`.${styles.mobileTheSection}`) : section2Ref.current,
+          start: 'top 90%',
           end: 'top 60%',
           scrub: 1,
           markers: false,
@@ -127,6 +127,45 @@ export default function Events2() {
         ease: 'power2.in'
       })
     })
+
+    // ============ MOBILE ANIMATIONS: THE AND FLIGHT SECTIONS ============
+    if (window.innerWidth <= 640) {
+      // THE text - letter by letter animation
+      const theTextEl = document.querySelector(`.${styles.mobileTheText}`)
+      if (theTextEl) {
+        const letters = theTextEl.querySelectorAll(`.${styles.letter}`)
+        gsap.to(letters, {
+          scrollTrigger: {
+            trigger: document.querySelector(`.${styles.mobileTheSection}`),
+            start: 'top center',
+            end: 'bottom center',
+            scrub: 1,
+            markers: false
+          },
+          opacity: 1,
+          ease: 'power2.out',
+          stagger: 0.1
+        })
+      }
+
+      // FLIGHT text - letter by letter animation
+      const flightTextEl = document.querySelector(`.${styles.mobileFlightText}`)
+      if (flightTextEl) {
+        const letters = flightTextEl.querySelectorAll(`.${styles.letter}`)
+        gsap.to(letters, {
+          scrollTrigger: {
+            trigger: document.querySelector(`.${styles.mobileFlightSection}`),
+            start: 'top center',
+            end: 'bottom center',
+            scrub: 1,
+            markers: false
+          },
+          opacity: 1,
+          ease: 'power2.out',
+          stagger: 0.1
+        })
+      }
+    }
 
     // ============ SECTION 2 SCROLL ANIMATIONS ============
 
@@ -168,8 +207,8 @@ export default function Events2() {
     gsap.to(cardLeftRef.current, {
       scrollTrigger: {
         trigger: section2Ref.current,
-        start: 'top 20%',
-        end: 'top 5%',
+        start: window.innerWidth <= 640 ? 'top 60%' : 'top 20%',
+        end: window.innerWidth <= 640 ? 'top 50%' : 'top 5%',
         scrub: 1,
         markers: false
       },
@@ -182,8 +221,8 @@ export default function Events2() {
     gsap.to(cardRightRef.current, {
       scrollTrigger: {
         trigger: section2Ref.current,
-        start: 'top 30%',
-        end: 'top 10%',
+        start: window.innerWidth <= 640 ? 'top 50%' : 'top 30%',
+        end: window.innerWidth <= 640 ? 'top 40%' : 'top 10%',
         scrub: 1,
         markers: false
       },
@@ -196,8 +235,8 @@ export default function Events2() {
     gsap.to(cardCenterRef.current, {
       scrollTrigger: {
         trigger: section2Ref.current,
-        start: 'top 30%',
-        end: 'top 10%',
+        start: window.innerWidth <= 640 ? 'top 40%' : 'top 30%',
+        end: window.innerWidth <= 640 ? 'top 30%' : 'top 10%',
         scrub: 1,
         markers: false
       },
@@ -217,8 +256,8 @@ export default function Events2() {
     gsap.to(section3CardRef.current, {
       scrollTrigger: {
         trigger: section3Ref.current,
-        start: 'top 20%',
-        end: 'top 5%',
+        start: window.innerWidth <= 640 ? 'top 80%' : 'top 20%',
+        end: window.innerWidth <= 640 ? 'top 60%' : 'top 5%',
         scrub: 1,
         markers: false
       },
@@ -230,8 +269,8 @@ export default function Events2() {
     gsap.to(section3TextLeftRef.current, {
       scrollTrigger: {
         trigger: section3Ref.current,
-        start: 'top 20%',
-        end: 'top 5%',
+        start: window.innerWidth <= 640 ? 'top 80%' : 'top 20%',
+        end: window.innerWidth <= 640 ? 'top 60%' : 'top 5%',
         scrub: 1,
         markers: false
       },
@@ -244,8 +283,8 @@ export default function Events2() {
     gsap.to(section3TextRightRef.current, {
       scrollTrigger: {
         trigger: section3Ref.current,
-        start: 'top 20%',
-        end: 'top 5%',
+        start: window.innerWidth <= 640 ? 'top 80%' : 'top 20%',
+        end: window.innerWidth <= 640 ? 'top 60%' : 'top 5%',
         scrub: 1,
         markers: false
       },
@@ -343,9 +382,15 @@ export default function Events2() {
     // Right top text fades in (same timing as list items)
     gsap.to(section4RightTopTextRef.current, {
       scrollTrigger: {
-        trigger: section4Ref.current,
-        start: 'top 30%',
-        end: 'top 10%',
+        trigger: (() => {
+          const isMobile = window.innerWidth <= 640
+          if (isMobile) {
+            return document.querySelector(`.${styles.dropCapContainer}`)
+          }
+          return section4Ref.current
+        })(),
+        start: window.innerWidth <= 640 ? 'top 80%' : 'top 30%',
+        end: window.innerWidth <= 640 ? 'bottom 20%' : 'top 10%',
         scrub: 1,
         markers: false
       },
@@ -355,16 +400,20 @@ export default function Events2() {
 
     // List items appear one by one
     section4ListItemsRef.current.forEach((item, index) => {
+      const isMobile = window.innerWidth <= 640
+      const dropCapContainer = document.querySelector(`.${styles.dropCapContainer}`)
+      
       gsap.to(item, {
         scrollTrigger: {
-          trigger: section4Ref.current,
-          start: `top ${30 - index * 2}%`,
-          end: `top ${10 - index * 2}%`,
+          trigger: isMobile ? dropCapContainer : section4Ref.current,
+          start: isMobile ? 'top 80%' : `top ${30 - index * 2}%`,
+          end: isMobile ? 'bottom 20%' : `top ${10 - index * 2}%`,
           scrub: 1,
           markers: false
         },
         opacity: 1,
-        ease: 'power2.out'
+        ease: 'power2.out',
+        stagger: isMobile ? 0.15 : 0
       })
     })
 
@@ -544,6 +593,15 @@ export default function Events2() {
         </div>
       </section>
 
+      {/* Mobile: THE text section */}
+      <div className={styles.mobileTheSection}>
+        <div className={styles.mobileTheText}>
+          {'THE'.split('').map((letter, i) => (
+            <span key={i} className={styles.letter}>{letter}</span>
+          ))}
+        </div>
+      </div>
+
       <section className={styles.section2} ref={section2Ref}>
         <div className={styles.section2Inner}>
           <p className={styles.section2Description} ref={section2DescriptionRef}>
@@ -555,9 +613,19 @@ export default function Events2() {
             <div className={styles.card + ' ' + styles.cardCenter} ref={cardCenterRef} />
             <div className={styles.card + ' ' + styles.cardRight} ref={cardRightRef} />
           </div>
+          {/* Desktop view: THE FLIGHT text */}
           <h2 className={styles.flightText} ref={flightTextRef}>THE FLIGHT</h2>
         </div>
       </section>
+
+      {/* Mobile: FLIGHT text section */}
+      <div className={styles.mobileFlightSection}>
+        <div className={styles.mobileFlightText}>
+          {'FLIGHT'.split('').map((letter, i) => (
+            <span key={i} className={styles.letter}>{letter}</span>
+          ))}
+        </div>
+      </div>
 
       <section className={styles.section3} ref={section3Ref}>
         <div className={styles.section3Inner}>
@@ -609,16 +677,7 @@ export default function Events2() {
             ref={section5PlaneRef}
             src="/events_plane.png"
             alt=""
-            style={{
-              position: 'absolute',
-              left: 0,
-              top: '50%',
-              transform: 'translateY(-50%) rotate(-90deg)',
-              width: '550px',
-              height: '550px',
-              zIndex: 4,
-              pointerEvents: 'none'
-            }}
+            className={styles.section5Plane}
           />
         )}
         <div ref={section5InnerRef} className={styles.section5Inner}>
