@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import gsap from "gsap";
 import initSponsorAnimations from "./sponsorAnimations";
 // ShinyText removed — replace with plain heading text
 import LightRays from "../LightRays/page";
@@ -11,6 +12,9 @@ import sponsor5 from "./image-removebg-preview (23).png";
 
 const Sponsor = () => {
   const containerRef = React.useRef(null);
+  const leftLineRef = React.useRef(null);
+  const rightLineRef = React.useRef(null);
+  const titleRef = React.useRef(null);
 
   React.useEffect(() => {
     if (!containerRef.current) return;
@@ -18,6 +22,19 @@ const Sponsor = () => {
     return () => {
       if (cleanup) cleanup();
     };
+  }, []);
+
+  React.useEffect(() => {
+    if (!leftLineRef.current || !rightLineRef.current || !titleRef.current) return;
+
+    const tl = gsap.timeline();
+
+    // Title lines expand (scaleX) and title fades in
+    tl.to(leftLineRef.current, { scaleX: 1, duration: 0.6, ease: 'power2.out' })
+      .to(rightLineRef.current, { scaleX: 1, duration: 0.6, ease: 'power2.out' }, '<')
+      .to(titleRef.current, { opacity: 1, duration: 0.6, ease: 'power2.out' }, '-=0.3');
+
+    return () => tl.kill();
   }, []);
 
   return (
@@ -52,6 +69,28 @@ const Sponsor = () => {
       </div>
 
       <div ref={containerRef} style={{ position: "relative", zIndex: 1 }}>
+        <style jsx>{`
+          .sponsor-header-line {
+            transform-origin: left center;
+            transform: scaleX(0);
+            will-change: transform;
+          }
+          .sponsor-header-line-right {
+            transform-origin: right center;
+          }
+          .sponsor-header-title {
+            opacity: 0;
+          }
+          @media (max-width: 768px) {
+            .sponsor-header-line {
+              max-width: 80px !important;
+              flex: 0 0 80px !important;
+            }
+            .sponsor-header-title {
+              font-size: 1.85rem !important;
+            }
+          }
+        `}</style>
         <div
           style={{
             marginBottom: "1rem",
@@ -62,6 +101,8 @@ const Sponsor = () => {
           }}
         >
           <span
+            ref={leftLineRef}
+            className="sponsor-header-line"
             style={{
               flex: "0 0 150px",
               height: "2px",
@@ -71,6 +112,8 @@ const Sponsor = () => {
             }}
           ></span>
           <h1
+            ref={titleRef}
+            className="sponsor-header-title"
             style={{
               fontFamily: "Cormorant_SC, serif",
               fontSize: "2.25rem",
@@ -89,6 +132,8 @@ const Sponsor = () => {
             Sponsors and Partners
           </h1>
           <span
+            ref={rightLineRef}
+            className="sponsor-header-line sponsor-header-line-right"
             style={{
               flex: "0 0 150px",
               height: "2px",

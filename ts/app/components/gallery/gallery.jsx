@@ -1,5 +1,6 @@
 "use client";
 import React, { useRef, useCallback, useState, useEffect } from "react";
+import gsap from "gsap";
 import styles from "./gallery.module.css";
 
 // ============================================
@@ -67,6 +68,14 @@ const Gallery = () => {
   // Ref for carousel section to attach wheel listener
   const carouselRef = useRef(null);
 
+  // Title animation refs
+  const highlightsLineLeftRef = useRef(null);
+  const highlightsLineRightRef = useRef(null);
+  const highlightsTitleRef = useRef(null);
+  const momentsLineLeftRef = useRef(null);
+  const momentsLineRightRef = useRef(null);
+  const momentsTitleRef = useRef(null);
+
   // Handle previous - move active index left
   const handlePrev = useCallback(() => {
     setActiveIndex((prev) => (prev > 0 ? prev - 1 : carouselImages.length - 1));
@@ -75,6 +84,32 @@ const Gallery = () => {
   // Handle next - move active index right
   const handleNext = useCallback(() => {
     setActiveIndex((prev) => (prev < carouselImages.length - 1 ? prev + 1 : 0));
+  }, []);
+
+  // Title animations
+  useEffect(() => {
+    const animateTitles = () => {
+      const tl = gsap.timeline();
+
+      // Highlights animation
+      if (highlightsLineLeftRef.current && highlightsLineRightRef.current && highlightsTitleRef.current) {
+        tl.to(highlightsLineLeftRef.current, { scaleX: 1, duration: 0.6, ease: 'power2.out' })
+          .to(highlightsLineRightRef.current, { scaleX: 1, duration: 0.6, ease: 'power2.out' }, '<')
+          .to(highlightsTitleRef.current, { opacity: 1, duration: 0.6, ease: 'power2.out' }, '-=0.3');
+      }
+
+      // Our Moments animation (staggered)
+      if (momentsLineLeftRef.current && momentsLineRightRef.current && momentsTitleRef.current) {
+        tl.to(momentsLineLeftRef.current, { scaleX: 1, duration: 0.6, ease: 'power2.out' }, '-=0.6')
+          .to(momentsLineRightRef.current, { scaleX: 1, duration: 0.6, ease: 'power2.out' }, '<')
+          .to(momentsTitleRef.current, { opacity: 1, duration: 0.6, ease: 'power2.out' }, '-=0.3');
+      }
+
+      return () => tl.kill();
+    };
+
+    const cleanup = animateTitles();
+    return cleanup;
   }, []);
 
   // Wheel event handler for horizontal scrolling (only responds to horizontal swipes)
@@ -142,15 +177,28 @@ const Gallery = () => {
 
   return (
     <div className={styles.galleryContainer}>
+      <style jsx>{`
+        .gallery-header-line {
+          transform-origin: left center;
+          transform: scaleX(0);
+          will-change: transform;
+        }
+        .gallery-header-line-right {
+          transform-origin: right center;
+        }
+        .gallery-header-title {
+          opacity: 0;
+        }
+      `}</style>
       {/* ================================== */}
       {/* Top Section - Highlights Carousel */}
       {/* ================================== */}
       <div className={styles.carouselContainer}>
         {/* Heading above carousel */}
         <div className={styles.headingWrapper}>
-          <span className={styles.gradientLine}></span>
-          <h2 className={styles.carouselHeading}>Highlights</h2>
-          <span className={styles.gradientLineRight}></span>
+          <span ref={highlightsLineLeftRef} className={`${styles.gradientLine} gallery-header-line`}></span>
+          <h2 ref={highlightsTitleRef} className={`${styles.carouselHeading} gallery-header-title`}>Highlights</h2>
+          <span ref={highlightsLineRightRef} className={`${styles.gradientLineRight} gallery-header-line gallery-header-line-right`}></span>
         </div>
 
         <div className={styles.carouselSection} ref={carouselRef}>
@@ -189,9 +237,9 @@ const Gallery = () => {
       {/* ================================== */}
       <div className={styles.gridSection}>
         <div className={styles.headingWrapper}>
-          <span className={styles.gradientLine}></span>
-          <h2 className={styles.gridTitle}>Our Moments</h2>
-          <span className={styles.gradientLineRight}></span>
+          <span ref={momentsLineLeftRef} className={`${styles.gradientLine} gallery-header-line`}></span>
+          <h2 ref={momentsTitleRef} className={`${styles.gridTitle} gallery-header-title`}>Our Moments</h2>
+          <span ref={momentsLineRightRef} className={`${styles.gradientLineRight} gallery-header-line gallery-header-line-right`}></span>
         </div>
         <p className={styles.gridDescription}>
           A raw collection of memories, candid frames, and behind-the-scenes

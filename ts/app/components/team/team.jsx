@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import GlassSurface from '../../../components/GlassSurface';
+import gsap from 'gsap';
 import members2025 from './members2025.json';
 import './teamCards.css';
 
@@ -14,12 +15,31 @@ const Team = () => {
     { key: 'webmasters', label: 'Webmasters' },
   ];
 
+  // Title animation refs
+  const leftLineRef = useRef(null);
+  const rightLineRef = useRef(null);
+  const titleRef = useRef(null);
+
   const [activeIndex, setActiveIndex] = useState(0);
   const barRef = useRef(null);
   const buttonRefs = useRef([]);
   const [pillStyle, setPillStyle] = useState({ opacity: 0 });
   // attach pill-position hook inside the component so hooks work in component scope
   usePillPosition(activeIndex, barRef, buttonRefs, setPillStyle);
+
+  // Title animation
+  useEffect(() => {
+    if (!leftLineRef.current || !rightLineRef.current || !titleRef.current) return;
+
+    const tl = gsap.timeline();
+
+    // Title lines expand (scaleX) and title fades in
+    tl.to(leftLineRef.current, { scaleX: 1, duration: 0.6, ease: 'power2.out' })
+      .to(rightLineRef.current, { scaleX: 1, duration: 0.6, ease: 'power2.out' }, '<')
+      .to(titleRef.current, { opacity: 1, duration: 0.6, ease: 'power2.out' }, '-=0.3');
+
+    return () => tl.kill();
+  }, []);
 
   // year selector (small bar underneath)
   const yearFilters = [
@@ -109,9 +129,31 @@ const Team = () => {
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .team-header-line {
+            max-width: 80px !important;
+            flex: 0 0 80px !important;
+          }
+          .team-header-title {
+            font-size: 1.85rem !important;
+          }
+        }
+        .team-header-line {
+          transform-origin: left center;
+          transform: scaleX(0);
+          will-change: transform;
+        }
+        .team-header-line-right {
+          transform-origin: right center;
+        }
+        .team-header-title {
+          opacity: 0;
+        }
+      `}</style>
       <div style={{ margin: '0 0 0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem' }}>
-        <span style={{ flex: '0 0 150px', height: '2px', maxWidth: '150px', background: 'linear-gradient(90deg, transparent 0%, #0a3990 20%, #4fa1eb 50%, #79a1c0 80%, transparent 100%)' }}></span>
-        <h1 style={{
+        <span ref={leftLineRef} className="team-header-line" style={{ flex: '0 0 150px', height: '2px', maxWidth: '150px', background: 'linear-gradient(90deg, transparent 0%, #0a3990 20%, #4fa1eb 50%, #79a1c0 80%, transparent 100%)' }}></span>
+        <h1 ref={titleRef} className="team-header-title" style={{
           fontFamily: 'Cormorant_SC, serif',
           fontSize: '2.5rem',
           fontWeight: 700,
@@ -125,7 +167,7 @@ const Team = () => {
           backgroundClip: 'text',
           color: 'transparent'
         }}>Meet Our Team</h1>
-        <span style={{ flex: '0 0 150px', height: '2px', maxWidth: '150px', background: 'linear-gradient(90deg, transparent 0%, #79a1c0 20%, #4fa1eb 50%, #0a3990 80%, transparent 100%)' }}></span>
+        <span ref={rightLineRef} className="team-header-line team-header-line-right" style={{ flex: '0 0 150px', height: '2px', maxWidth: '150px', background: 'linear-gradient(90deg, transparent 0%, #79a1c0 20%, #4fa1eb 50%, #0a3990 80%, transparent 100%)' }}></span>
       </div>
       <p style={{ maxWidth: 900, margin: '0 auto', fontSize: '1.125rem', color: 'rgb(179, 207, 229)' }}>
         A team's success is dependent on the members that work together to achieve its goals. Meet our team who have been pushing themselves to reach new heights constantly.
