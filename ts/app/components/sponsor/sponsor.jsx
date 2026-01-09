@@ -147,7 +147,7 @@ const Sponsor = () => {
         <p
           style={{
             maxWidth: 760,
-            fontSize: "1.1rem",
+            fontSize: "0.92rem",
             margin: "0 auto 1.5rem",
             lineHeight: 1.6,
             color: "#b3cfe5",
