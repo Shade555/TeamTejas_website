@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from "react";
-import GlassSurface from '../../../components/GlassSurface';
 
 const Testimonials = () => {
   const scrollerRef = useRef(null);
@@ -41,11 +40,11 @@ const Testimonials = () => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
 
-    const singleSet = scroller.querySelector('.test-set');
+    const singleSet = scroller.querySelector('.testimonials-track');
     if (!singleSet) return;
 
     let setWidth = singleSet.offsetWidth;
-    scroller.scrollLeft = setWidth; // start in the middle copy
+    scroller.scrollLeft = setWidth;
 
     let ticking = false;
     const onScroll = () => {
@@ -61,13 +60,8 @@ const Testimonials = () => {
       ticking = true;
     };
 
-    const onKey = (e) => {
-      if (e.key === 'ArrowRight') scroller.scrollBy({ left: 320, behavior: 'smooth' });
-      if (e.key === 'ArrowLeft') scroller.scrollBy({ left: -320, behavior: 'smooth' });
-    };
-
     const onResize = () => {
-      const newSingle = scroller.querySelector('.test-set');
+      const newSingle = scroller.querySelector('.testimonials-track');
       if (newSingle) {
         setWidth = newSingle.offsetWidth;
         scroller.scrollLeft = setWidth;
@@ -75,152 +69,253 @@ const Testimonials = () => {
     };
 
     scroller.addEventListener('scroll', onScroll);
-    scroller.addEventListener('keydown', onKey);
     window.addEventListener('resize', onResize);
 
     return () => {
       scroller.removeEventListener('scroll', onScroll);
-      scroller.removeEventListener('keydown', onKey);
       window.removeEventListener('resize', onResize);
     };
   }, []);
 
   return (
     <section className="testimonials-section">
-      <div className="inner">
+      <div className="background-wrapper">
+        <div className="gradient-bg" />
+        <div className="image-bg" />
+      </div>
+      
+      <div className="content-wrapper">
         <h2>What our members say</h2>
 
-        <div className="scroller-wrap">
+        <div className="scroller-container">
           <div
             className="scroller"
             ref={scrollerRef}
             tabIndex={0}
             aria-label="Testimonials carousel"
           >
-          {Array.from({ length: 3 }).map((_, copyIdx) => (
-            <div className="test-set" key={copyIdx}>
-              {testimonials.map((t, i) => (
-                <div className="card" key={`${copyIdx}-${i}`}>
-                  <GlassSurface
-                    width={500}
-                    height={360}
-                    borderRadius={16}
-                    className="testimonial-surface"
-                    displace={2.5}             // was 10  → LESS blur
-                    distortionScale={2}     // was 40 → still distorted but softer
-                    redOffset={0}
-                    greenOffset={0}         // slightly lower
-                    blueOffset={0}          // slightly lower
-                    brightness={25}          // was 40 → less washed out
-                    opacity={0.78}           // was 0.85 → clearer card
-                    mixBlendMode="screen"
-                  >
-                    <div className="card-inner">
-                      <p className="quote">“{t.quote}”</p>
-                      <div className="meta">
-                        <div className="name">{t.name}</div>
-                        <div className="role">{t.role}</div>
-                      </div>
+            {Array.from({ length: 3 }).map((_, copyIdx) => (
+              <div className="testimonials-track" key={copyIdx}>
+                {testimonials.map((t, i) => (
+                  <div className="testimonial-card" key={`${copyIdx}-${i}`}>
+                    <p className="quote">"{t.quote}"</p>
+                    <div className="author">
+                      <div className="name">{t.name}</div>
+                      <div className="role">{t.role}</div>
                     </div>
-                  </GlassSurface>
-                </div>
-              ))}
-            </div>
-          ))}
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
-          <div className="scroller-fog scroller-fog--left" aria-hidden="true" />
-          <div className="scroller-fog scroller-fog--right" aria-hidden="true" />
+          
+          <div className="fog-left" aria-hidden="true" />
+          <div className="fog-right" aria-hidden="true" />
         </div>
       </div>
 
       <style jsx>{`
-        .testimonials-section{
-          padding: 4rem 6rem;
-          background-color: #050a12;
-          color: #e9fbff;
-          position: relative; /* allow pseudo-element for image */
-          overflow: visible;
+        .testimonials-section {
+          padding: 4rem 2rem;
+          background: #050a12;
+          position: relative;
+          isolation: isolate;
+          transform: translateZ(0);
         }
-        /* move bg image to pseudo-element so we can control image opacity independently */
-        .testimonials-section::before{
-          content: '';
+
+        .background-wrapper {
           position: absolute;
-          inset: 0;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 0;
+        }
+
+        .gradient-bg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: #050a12;
+        }
+
+        .image-bg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
           background-image: url('/testimonials/testimo_bg.png');
           background-size: 76% auto;
           background-position: center center;
           background-repeat: no-repeat;
-          opacity: 0.70; /* adjust this to change image opacity only */
-          pointer-events: none;
-          z-index: 0;
+          opacity: 0.7;
         }
-        .inner{ max-width: 1100px; margin: 0 auto; position: relative; z-index: 1 }
-        h2{ text-align: center; font-size: 2.2rem; margin: 0 0 1.1rem; color: #ffffff }
 
-        .scroller-wrap{ position: relative; }
+        .content-wrapper {
+          position: relative;
+          z-index: 1;
+        }
 
-        .scroller{
+        h2 {
+          text-align: center;
+          font-size: 2.2rem;
+          margin: 0 0 2.5rem;
+          color: #ffffff;
+        }
+
+        .scroller-container {
+          position: relative;
+          max-width: 1400px;
+          margin: 0 auto;
+        }
+
+        .scroller {
           display: flex;
-          gap: 20px;
+          gap: 24px;
           overflow-x: auto;
-          padding: 2rem 0;
+          overflow-y: hidden;
           scroll-behavior: smooth;
           -webkit-overflow-scrolling: touch;
-          outline: none;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          padding: 2rem 0;
         }
 
-        /* fog overlays to mask card edges (DOM elements) */
-        .scroller-fog{
+        .scroller::-webkit-scrollbar {
+          display: none;
+        }
+
+        .testimonials-track {
+          display: flex;
+          gap: 24px;
+          flex-shrink: 0;
+        }
+
+        .testimonial-card {
+          width: 500px;
+          min-height: 370px;
+          flex-shrink: 0;
+          background: rgba(255, 255, 255, 0.01);
+
+          -webkit-backdrop-filter: blur(3px);
+          backdrop-filter: blur(3px);
+          
+          border: 1px solid rgba(255, 255, 255, 0.01);
+          border-radius: 16px;
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.3),
+            inset 0 0 20px rgba(255, 255, 255, 0.08);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          transform: translateZ(0);
+        }
+
+        .testimonial-card:hover {
+          transform: translateY(-4px) translateZ(0);
+          box-shadow: 
+            0 12px 48px rgba(0, 0, 0, 0.4),
+            inset 0 0 20px rgba(255, 255, 255, 0.12);
+        }
+
+        .quote {
+          font-size: 1rem;
+          line-height: 1.6;
+          color: #eafcff;
+          margin: 0 0 1.5rem 0;
+          flex-grow: 1;
+        }
+
+        .author {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          align-items: flex-end;
+        }
+
+        .name {
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: #ffffff;
+          text-align: right;
+        }
+
+        .role {
+          font-size: 0.85rem;
+          font-weight: 400;
+          color: rgba(255, 255, 255, 0.7);
+          text-align: right;
+        }
+
+        .fog-left,
+        .fog-right {
           position: absolute;
           top: 0;
           bottom: 0;
-          width: 96px;
+          width: 120px;
           pointer-events: none;
-          z-index: 6;
+          z-index: 10;
         }
 
-        .scroller-fog--left{ left: 0; background: linear-gradient(90deg, rgba(5,10,18,1) 0%, rgba(5,10,18,0.0) 55%); }
-        .scroller-fog--right{ right: 0; background: linear-gradient(270deg, rgba(5,10,18,1) 0%, rgba(5,10,18,0.0) 55%); }
-
-        .test-set{ display: flex; gap: 20px; }
-
-        .card{ flex: 0 0 360px; display: flex; align-items: stretch; }
-
-        /* style the glass surface content inside each card */
-        .card .glass-surface__content{
-          padding: 18px;
-          box-sizing: border-box;
-          display: flex;
-          width: 100%;
-          height: 100%;
+        .fog-left {
+          left: 0;
+          background: linear-gradient(
+            to right,
+            #050a12 0%,
+            rgba(5, 10, 18, 0.8) 30%,
+            rgba(5, 10, 18, 0) 100%
+          );
         }
 
-        /* subtle black tint and faint border (removed per request) */
-
-        .card-inner{ display:flex; flex-direction:column; justify-content:space-between; width:100%; }
-
-        .quote{ font-size: 1rem; line-height: 1.5; margin: 0 0 0.6rem; color: #eafcff; text-align: left; white-space: normal; display: block; overflow: visible; }
-
-        .meta{ display:flex; flex-direction: column; gap: 2px; font-size: 0.95rem; color: rgba(255,255,255,0.95); align-items: flex-end; }
-        .name{ font-weight: 800; }
-        .role{ font-weight: 500; color: rgba(255,255,255,0.8); }
-
-        /* hide native scrollbars but keep accessibility */
-        .scroller::-webkit-scrollbar{ height: 10px; }
-        .scroller::-webkit-scrollbar-thumb{ background: rgba(255,255,255,0.06); border-radius: 99px; }
-
-        .quote{ font-size: 1rem; line-height: 1.45; margin: 0 0 1rem; color: #eafcff; }
-        .meta{ display:flex; flex-direction: column; gap: 2px; font-size: 0.9rem; color: rgba(255,255,255,0.9); }
-        .name{ font-weight: 700; }
-        .role{ font-weight: 400; color: rgba(255,255,255,0.75); }
-
-        @media (max-width: 900px){
-          .card{ flex: 0 0 300px; }
-          .testimonials-section{ padding: 3rem 2rem; }
+        .fog-right {
+          right: 0;
+          background: linear-gradient(
+            to left,
+            #050a12 0%,
+            rgba(5, 10, 18, 0.8) 30%,
+            rgba(5, 10, 18, 0) 100%
+          );
         }
 
-        @media (prefers-reduced-motion: reduce){
-          .scroller{ scroll-behavior: auto; }
+        @media (max-width: 768px) {
+          .testimonials-section {
+            padding: 3rem 1rem;
+          }
+
+          h2 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+          }
+
+          .testimonial-card {
+            width: 300px;
+            min-height: 260px;
+            padding: 20px;
+          }
+
+          .fog-left,
+          .fog-right {
+            width: 80px;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .scroller {
+            scroll-behavior: auto;
+          }
+          
+          .testimonial-card {
+            transition: none;
+          }
+          
+          .testimonial-card:hover {
+            transform: translateZ(0);
+          }
         }
       `}</style>
     </section>
