@@ -163,7 +163,11 @@ const Testimonials = () => {
           text-align: center;
           font-size: 2.2rem;
           margin: 0 0 2.5rem;
-          color: #ffffff;
+          background-image: linear-gradient(135deg, #00103c 0%, #0a3990 35%, #79a1c0 55%, #a0d8f4 80%, #4fa1eb 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          font-weight: 700;
         }
 
         .scroller-container {
