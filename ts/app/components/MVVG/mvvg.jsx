@@ -73,6 +73,8 @@ const MVVG = () => {
           background: transparent;
           color: #e8fbff;
           min-height: 60vh;
+          position: relative;
+          z-index: 3;
         }
         .inner {
           max-width: 1200px;

@@ -121,22 +121,12 @@ const AboutUs = ({ stats = defaultStats }) => {
     const el = sectionRef.current;
     if (!el) return;
 
-    const obs = new IntersectionObserver(
-      (entries, observer) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // Start once and stop observing so the animation doesn't run again
-            setStarted(true);
-            observer.disconnect();
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
+    // Start counters only after the About section's fade-in completes.
+    const onVisible = () => setStarted(true);
+    el.addEventListener('about:visible', onVisible);
 
-    obs.observe(el);
-
-    return () => obs.disconnect();
+    // Clean up listener on unmount
+    return () => el.removeEventListener('about:visible', onVisible);
   }, []);
 
   return (
@@ -152,6 +142,8 @@ const AboutUs = ({ stats = defaultStats }) => {
         justifyContent: "center",
         width: "100%",
         boxSizing: "border-box",
+        position: 'relative',
+        zIndex: 3,
       }}
     >
       <style>{`

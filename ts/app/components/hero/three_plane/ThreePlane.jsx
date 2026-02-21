@@ -1,9 +1,15 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import styles from "./threeplane.module.css";
 
-export default function ThreePlane() {
+function ThreePlane(props, ref) {
   const mountRef = useRef(null);
+  const modelRef = useRef(null)
+  const entryStartPosRef = useRef(null)
+  const entryStartTimeRef = useRef(null)
+  const entryDoneRef = useRef(false)
+  const targetRotRef = useRef(null)
+  const targetPosRef = useRef(null)
 
   useEffect(() => {
     let renderer, scene, camera, model, frameId;
@@ -13,7 +19,7 @@ export default function ThreePlane() {
     // === Configurable values: edit these to position/orient the plane ===
     // Position (x, y, z) in world units
     const isMobile = window.innerWidth <= 768;
-    const MODEL_BASE_POS = { x: isMobile ? -0.2 : 0, y: 0.1, z: 0 };
+    const MODEL_BASE_POS = { x: isMobile ? -0.2 : 0, y: -0.06, z: 0 };
     // Rotation in radians: pitch (x), yaw (y), roll (z)
     // change these numbers to orient the plane. Example: degrees * Math.PI/180
     // Example: -8 degrees pitch -> -8 * Math.PI / 180 === -0.1396
@@ -26,7 +32,7 @@ export default function ThreePlane() {
     const CAMERA_BASE_POS = { x: -0.1, y: 0.12, z: 3.2 };
 
     // Target rotation the model should interpolate toward. Update via mouse or manually.
-    let targetRot = { ...MODEL_BASE_ROT };
+    targetRotRef.current = { ...MODEL_BASE_ROT }
     let mouseOffset = { x: 0, y: 0 };
     // Entry animation: start the model offset from its base position and
     // animate into place along that vector. Edit `MODEL_ENTRY_OFFSET`
@@ -104,16 +110,16 @@ export default function ThreePlane() {
             model = gltf.scene;
             // position/scale adjustments — tweak using the constants above
             // set initial entry position offset so the plane flies into place
-            entryStartPos = {
+            entryStartPosRef.current = {
               x: MODEL_BASE_POS.x + MODEL_ENTRY_OFFSET.x,
               y: MODEL_BASE_POS.y + MODEL_ENTRY_OFFSET.y,
               z: MODEL_BASE_POS.z + MODEL_ENTRY_OFFSET.z,
             };
             // start at the entry position
             model.position.set(
-              entryStartPos.x,
-              entryStartPos.y,
-              entryStartPos.z
+              entryStartPosRef.current.x,
+              entryStartPosRef.current.y,
+              entryStartPosRef.current.z
             );
             // start with the base rotation (you can change this if you want
             // a rotation during entry)
@@ -142,8 +148,11 @@ export default function ThreePlane() {
             });
 
             // start the entry timer
-            entryStartTime = performance.now();
-            entryDone = false;
+            entryStartTimeRef.current = performance.now();
+            entryDoneRef.current = false;
+            modelRef.current = model
+            // initial target position (will interpolate toward this)
+            targetPosRef.current = { ...MODEL_BASE_POS }
 
             scene.add(model);
           },
@@ -168,27 +177,36 @@ export default function ThreePlane() {
             // Entry animation: if not done, interpolate position from entryStartPos
             // to MODEL_BASE_POS over ENTRY_DURATION_MS using an ease-out curve.
             const now = performance.now();
-            if (!entryDone && entryStartTime != null) {
+            if (!entryDoneRef.current && entryStartTimeRef.current != null && entryStartPosRef.current) {
               const tRaw = Math.min(
-                (now - entryStartTime) / ENTRY_DURATION_MS,
+                (now - entryStartTimeRef.current) / ENTRY_DURATION_MS,
                 1
               );
               const t = 1 - Math.pow(1 - tRaw, 3); // ease-out cubic
               model.position.x =
-                entryStartPos.x + (MODEL_BASE_POS.x - entryStartPos.x) * t;
+                entryStartPosRef.current.x + (MODEL_BASE_POS.x - entryStartPosRef.current.x) * t;
               model.position.y =
-                entryStartPos.y + (MODEL_BASE_POS.y - entryStartPos.y) * t;
+                entryStartPosRef.current.y + (MODEL_BASE_POS.y - entryStartPosRef.current.y) * t;
               model.position.z =
-                entryStartPos.z + (MODEL_BASE_POS.z - entryStartPos.z) * t;
-              if (tRaw >= 1) entryDone = true;
+                entryStartPosRef.current.z + (MODEL_BASE_POS.z - entryStartPosRef.current.z) * t;
+              if (tRaw >= 1) entryDoneRef.current = true;
             }
 
             // Interpolate model.rotation toward targetRot. The model keeps the
-            // base rotation but will smoothly approach it (no mouse-driven rotation).
+            // base rotation but will smoothly approach it (mouse or debug-driven).
             const lerp = 0.08;
-            model.rotation.x += (targetRot.x - model.rotation.x) * lerp;
-            model.rotation.y += (targetRot.y - model.rotation.y) * lerp;
-            model.rotation.z += (targetRot.z - (model.rotation.z || 0)) * lerp;
+            const currentTarget = targetRotRef.current || MODEL_BASE_ROT
+            model.rotation.x += (currentTarget.x - model.rotation.x) * lerp;
+            model.rotation.y += (currentTarget.y - model.rotation.y) * lerp;
+            model.rotation.z += (currentTarget.z - (model.rotation.z || 0)) * lerp;
+
+            // If a debug-driven target position exists, softly interpolate toward it
+            if (targetPosRef.current && entryDoneRef.current) {
+              const plerp = 0.06
+              model.position.x += (targetPosRef.current.x - model.position.x) * plerp
+              model.position.y += (targetPosRef.current.y - model.position.y) * plerp
+              model.position.z += (targetPosRef.current.z - model.position.z) * plerp
+            }
           }
           renderer.render(scene, camera);
           frameId = requestAnimationFrame(animate);
@@ -218,5 +236,43 @@ export default function ThreePlane() {
     };
   }, []);
 
+  // expose imperative handle to allow restarting entry animation and debug control
+  function getState() {
+    const m = modelRef.current
+    if (!m) return null
+    return {
+      position: { x: m.position.x, y: m.position.y, z: m.position.z },
+      rotation: { x: m.rotation.x, y: m.rotation.y, z: m.rotation.z }
+    }
+  }
+
+  function setTargetRotation(rot = {}) {
+    targetRotRef.current = { ...(targetRotRef.current || { x: 0, y: 0, z: 0 }), ...rot }
+  }
+
+  function setTargetPosition(pos = {}) {
+    targetPosRef.current = { ...(targetPosRef.current || { x: 0, y: 0, z: 0 }), ...pos }
+  }
+
+  useImperativeHandle(ref, () => ({
+    restartEntry() {
+      if (modelRef.current && entryStartPosRef.current) {
+        // reset to entry start pos and restart timer
+        modelRef.current.position.set(
+          entryStartPosRef.current.x,
+          entryStartPosRef.current.y,
+          entryStartPosRef.current.z
+        );
+        entryStartTimeRef.current = performance.now();
+        entryDoneRef.current = false;
+      }
+    },
+    getState,
+    setTargetRotation,
+    setTargetPosition
+  }))
+
   return <div ref={mountRef} className={styles.container} />;
 }
+
+export default forwardRef(ThreePlane)

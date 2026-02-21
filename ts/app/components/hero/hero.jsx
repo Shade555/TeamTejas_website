@@ -1,17 +1,65 @@
-import React from "react";
+"use client"
+
+import React, { useEffect, useRef } from "react";
 import Image from "next/image"; //to remove this
 import HeroPlane from "./HeroSectionPlane.png"; //to remove this
 import ThreePlane from "./three_plane/ThreePlane";
+import PlaneDebug from './PlaneDebug'
+import animateHeroTexts, { animateTypewriter } from './heroAnimations'
 
 const Hero = () => {
+  const leftTextRef = useRef(null)
+  const rightTextRef = useRef(null)
+  const planeRef = useRef(null)
+  const togetherRef = useRef(null)
+  const tejasRef = useRef(null)
+  const descriptionRef = useRef(null)
+  const heroSectionRef = useRef(null)
+  const threePlaneRef = useRef(null)
+
+  const descriptionFullText = `On the ground in the lab and above\nthe horizon, we craft, test, and perfect advanced UAV systems\nfor global arenas`
+
+  useEffect(() => {
+    let cleanupTypewriter = null
+
+    const tl = animateHeroTexts({
+      leftEl: leftTextRef.current,
+      rightEl: rightTextRef.current,
+      planeEl: planeRef.current,
+      togetherEl: togetherRef.current,
+      tejasEl: tejasRef.current,
+      descriptionEl: descriptionRef.current,
+      threePlaneApi: threePlaneRef.current,
+      heroSectionEl: heroSectionRef.current,
+      onRightShown: () => {
+        cleanupTypewriter = animateTypewriter({ el: descriptionRef.current, fullText: descriptionFullText, startDelay: 50, wordDelay: 40 })
+      }
+    })
+
+    return () => {
+      if (cleanupTypewriter && typeof cleanupTypewriter === 'function') cleanupTypewriter()
+      if (tl && typeof tl.kill === 'function') tl.kill()
+      try {
+        // kill ScrollTriggers created by this component
+        const { ScrollTrigger } = require('gsap/ScrollTrigger')
+        if (ScrollTrigger && typeof ScrollTrigger.getAll === 'function') {
+          ScrollTrigger.getAll().forEach(t => t.kill())
+        }
+      } catch (e) {
+        // ignore if require not available
+      }
+    }
+  }, [])
+
   return (
     <section
+      ref={heroSectionRef}
       className="hero-section"
       style={{
         minHeight: "100vh",
         width: "100%",
         position: "relative",
-        zIndex: 1,
+        zIndex: 2,
         display: "flex",
         alignItems: "center",
         padding: "6rem 8rem",
@@ -22,18 +70,18 @@ const Hero = () => {
         @media (max-width: 768px) {
           .hero-logo-mobile {
             display: block !important;
-          }
-          .hero-section {
-            padding: 3rem 1.5rem !important;
-            flex-direction: column !important;
-            justify-content: flex-start !important;
-            align-items: flex-start !important;
-            padding-top: 2.5rem !important;
-          }
-          .hero-left {
-            flex: none !important;
-            max-width: 100% !important;
-            width: 100% !important;
+          <div
+            ref={planeRef}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: -1,
+              pointerEvents: "none",
+            }}
+          >
             text-align: center !important;
             transform: translateY(-2rem) !important;
           }
@@ -72,15 +120,20 @@ const Hero = () => {
         }
       `}</style>
       <div
+        ref={planeRef}
         style={{
-          position: "absolute",
-          inset: 0,
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
           zIndex: 0,
           pointerEvents: "none",
         }}
       >
-        <ThreePlane />
+        <ThreePlane ref={threePlaneRef} />
       </div>
+      <PlaneDebug threePlaneRef={threePlaneRef} />
       {/* LOGO FOR MOBILE */}
       <div
         className="hero-logo-mobile"
@@ -121,6 +174,7 @@ const Hero = () => {
       >
         {/* Top Label: TOGETHER */}
         <div
+          ref={togetherRef}
           style={{
             color: "rgba(255,255,255,0.75)",
             letterSpacing: "0.28rem",
@@ -134,6 +188,7 @@ const Hero = () => {
 
         {/* Main Left Headline */}
         <div
+          ref={leftTextRef}
           style={{
             fontSize: "6.5rem",
             lineHeight: 1.08,
@@ -154,6 +209,7 @@ const Hero = () => {
           {" "}
           {/* Adjusted to match top spacing */}
           <button
+            ref={tejasRef}
             style={{
               background: "transparent",
               border: "none",
@@ -196,21 +252,19 @@ const Hero = () => {
           }}
         >
           <p
+            ref={descriptionRef}
             style={{
               margin: 0,
               fontSize: "1rem",
               fontWeight: 300,
               lineHeight: 1.3,
             }}
-          >
-            On the ground in the lab and above <br />
-            the horizon, we craft, test, and perfect advanced UAV systems
-            <br /> for global arenas
-          </p>
+          />
         </div>
 
         {/* Big Headline: Ahead */}
         <h1
+          ref={rightTextRef}
           style={{
             fontSize: "7rem",
             lineHeight: 0.95,

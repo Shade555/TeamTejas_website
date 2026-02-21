@@ -17,6 +17,7 @@ const Home = () => {
   const sectionRef = useRef(null);
   const marqueeTrackRef = useRef(null);
   const animationRef = useRef(null);
+  
 
   useEffect(() => {
     const container = sectionRef.current;
@@ -342,7 +343,7 @@ const Home = () => {
         </div>
       </section>
 
-      <Testimonials />
+        <Testimonials />
     </main>
   );
 };
