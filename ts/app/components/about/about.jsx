@@ -197,7 +197,7 @@ const AboutUs = ({ stats = defaultStats }) => {
           }
         }
       `}</style>
-      <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%", boxSizing: "border-box" }} className="about-section">
+      <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%", boxSizing: "border-box", position: 'relative', zIndex: 2 }} className="about-section">
         <div
           style={{
             display: "flex",

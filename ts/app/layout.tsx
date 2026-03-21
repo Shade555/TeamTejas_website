@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/navbar/navbar";
+import ScrollToTopClient from "./components/ScrollToTopClient";
 import Footer from "./components/footer/footer";
 import ScrollPlane from "./components/scrollbar/ScrollPlane";
 
@@ -46,6 +47,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
       >
+        <ScrollToTopClient />
         <Navbar />
         {/* global custom plane scrollbar overlay */}
         <ScrollPlane />

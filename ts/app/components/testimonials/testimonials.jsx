@@ -1,4 +1,7 @@
 import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
 const Testimonials = () => {
   const scrollerRef = useRef(null);
@@ -77,6 +80,78 @@ const Testimonials = () => {
     };
   }, []);
 
+  // Fade the background image each time the section is scrolled down into view,
+  // but only after the 3D plane animation completes. If the plane hasn't
+  // completed yet, wait for the `planeAnimationComplete` event and then
+  // animate in when the section is entered. Reset on leave-back so it can
+  // replay on subsequent scrolls.
+  useEffect(() => {
+    const target = document.querySelector('.testimonials-section .image-bg');
+    if (!target) return;
+
+    gsap.set(target, { opacity: 0 });
+
+    let planeDone = false;
+    let pendingListener = null;
+
+    const animateIn = () => gsap.to(target, { opacity: 0.7, duration: 1.2, ease: 'power2.out' });
+
+    const st = ScrollTrigger.create({
+      trigger: '.testimonials-section',
+      start: 'top 70%',
+      onEnter: () => {
+        if (planeDone) {
+          animateIn();
+          return;
+        }
+        // wait for plane completion once while we're inside
+        if (!pendingListener) {
+          pendingListener = () => {
+            planeDone = true;
+            animateIn();
+            try { window.removeEventListener('planeAnimationComplete', pendingListener); } catch (e) {}
+            pendingListener = null;
+          };
+          window.addEventListener('planeAnimationComplete', pendingListener);
+        }
+      },
+      onLeaveBack: () => {
+        // reset so the animation can replay on next entry
+        gsap.set(target, { opacity: 0 });
+        if (pendingListener) {
+          try { window.removeEventListener('planeAnimationComplete', pendingListener); } catch (e) {}
+          pendingListener = null;
+        }
+      },
+    });
+
+    // Also mark planeDone if the plane finishes while we're away; if the
+    // section is currently visible, animate immediately.
+    const onPlaneCompleteGlobal = () => {
+      planeDone = true;
+      try {
+        const rect = document.querySelector('.testimonials-section')?.getBoundingClientRect();
+        if (rect) {
+          const startThreshold = window.innerHeight * 0.7;
+          const entered = rect.top <= startThreshold && rect.bottom >= 0;
+          if (entered) animateIn();
+        }
+      } catch (e) {}
+    };
+    window.addEventListener('planeAnimationComplete', onPlaneCompleteGlobal);
+
+    return () => {
+      try {
+        st.kill();
+      } catch (e) {}
+      if (pendingListener) {
+        try { window.removeEventListener('planeAnimationComplete', pendingListener); } catch (e) {}
+        pendingListener = null;
+      }
+      try { window.removeEventListener('planeAnimationComplete', onPlaneCompleteGlobal); } catch (e) {}
+    };
+  }, []);
+
   return (
     <section className="testimonials-section">
       <div className="background-wrapper">
@@ -151,12 +226,12 @@ const Testimonials = () => {
           background-size: 76% auto;
           background-position: center center;
           background-repeat: no-repeat;
-          opacity: 0.7;
+          opacity: 0; /* start hidden, fade in via GSAP */
         }
 
         .content-wrapper {
           position: relative;
-          z-index: 1;
+          z-index: 2;
         }
 
         h2 {

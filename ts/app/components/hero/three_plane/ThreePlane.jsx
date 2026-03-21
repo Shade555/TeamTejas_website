@@ -1,5 +1,8 @@
 "use client";
 import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 import styles from "./threeplane.module.css";
 
 export default function ThreePlane() {
@@ -7,38 +10,18 @@ export default function ThreePlane() {
 
   useEffect(() => {
     let renderer, scene, camera, model, frameId;
+    let mixer = null;
+    let gsapTween = null;
+    let actions = [];
+    let autoPlay = true;
+    let autoElapsed = 0;
+    const AUTO_DURATION = 2.1; // seconds to play automatically before scroll control
+    let planeCompleted = false;
+    let lastFrameTime = performance.now();
 
     let mounted = true;
-
-    // === Configurable values: edit these to position/orient the plane ===
-    // Position (x, y, z) in world units
-    const isMobile = window.innerWidth <= 768;
-    const MODEL_BASE_POS = { x: isMobile ? -0.2 : 0, y: 0.1, z: 0 };
-    // Rotation in radians: pitch (x), yaw (y), roll (z)
-    // change these numbers to orient the plane. Example: degrees * Math.PI/180
-    // Example: -8 degrees pitch -> -8 * Math.PI / 180 === -0.1396
-    const MODEL_BASE_ROT = { x: 0.7, y: -0.6, z: -0.3 };
-    // Uniform scale - reduced for mobile
-    const MODEL_BASE_SCALE = isMobile ? 0.55 : 0.92;
-
-    // Camera position - move this to adjust viewpoint
-    // Suggested camera for reference screenshot (closer, slightly right)
-    const CAMERA_BASE_POS = { x: -0.1, y: 0.12, z: 3.2 };
-
-    // Target rotation the model should interpolate toward. Update via mouse or manually.
-    let targetRot = { ...MODEL_BASE_ROT };
-    let mouseOffset = { x: 0, y: 0 };
-    // Entry animation: start the model offset from its base position and
-    // animate into place along that vector. Edit `MODEL_ENTRY_OFFSET`
-    // to change the incoming direction (matches your red arrow).
-    // Reverse direction so the plane approaches from forward (camera side)
-    // Flip the offset vector to make the motion come from the front.
-    const MODEL_ENTRY_OFFSET = { x: 1.6, y: 0.8, z: -1.2 };
-    const ENTRY_DURATION_MS = 1200;
-    let entryStartTime = null;
-    let entryStartPos = null;
-    let entryDone = false;
-    // ======================================================================
+    let originalModelScale = null;
+    let scaleResizeHandler = null;
 
     (async () => {
       try {
@@ -57,13 +40,9 @@ export default function ThreePlane() {
 
         scene = new THREE.Scene();
 
+        // Fallback camera — if the GLB contains a camera we'll replace this
         camera = new THREE.PerspectiveCamera(40, width / height, 0.01, 1000);
-        // use CAMERA_BASE_POS so you can edit camera viewpoint above
-        camera.position.set(
-          CAMERA_BASE_POS.x,
-          CAMERA_BASE_POS.y,
-          CAMERA_BASE_POS.z
-        );
+        camera.position.set(0, 0, 3.2);
 
         const ambient = new THREE.AmbientLight(0xffffff, 0.9);
         scene.add(ambient);
@@ -72,80 +51,89 @@ export default function ThreePlane() {
         dir.position.set(5, 5, 5);
         scene.add(dir);
 
-        // Mouse interaction: move only the light. The plane's rotation remains
-        // fixed at MODEL_BASE_ROT (it will interpolate to that and not follow cursor).
-        const handleMouse = (e) => {
-          if (!mountRef.current) return;
-          const rect = mountRef.current.getBoundingClientRect();
-          const x = (e.clientX - rect.left) / rect.width; // 0-1
-          const y = (e.clientY - rect.top) / rect.height; // 0-1
-
-          // move directional light softly in response to mouse
-          const lx = (x - 0.5) * 6;
-          const ly = (0.5 - y) * 4 + 1.8;
-          dir.position.set(lx, ly, 4.5);
-
-          // intensity based on proximity to center of screen
-          const dx = x - 0.5;
-          const dy = y - 0.5;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const influence = Math.max(0, 1 - dist * 2);
-          dir.intensity = 0.35 + influence * 0.75;
-        };
-        window.addEventListener("mousemove", handleMouse);
-
         mountRef.current.appendChild(renderer.domElement);
 
         const loader = new GLTFLoader();
-        // public/plane_model/scene.gltf
+        // Load the requested GLB (no entry animations or transforms)
         loader.load(
-          "/plane_model/scene.gltf",
+          "/plane_model/tejas_plane.glb",
           (gltf) => {
-            model = gltf.scene;
-            // position/scale adjustments — tweak using the constants above
-            // set initial entry position offset so the plane flies into place
-            entryStartPos = {
-              x: MODEL_BASE_POS.x + MODEL_ENTRY_OFFSET.x,
-              y: MODEL_BASE_POS.y + MODEL_ENTRY_OFFSET.y,
-              z: MODEL_BASE_POS.z + MODEL_ENTRY_OFFSET.z,
-            };
-            // start at the entry position
-            model.position.set(
-              entryStartPos.x,
-              entryStartPos.y,
-              entryStartPos.z
-            );
-            // start with the base rotation (you can change this if you want
-            // a rotation during entry)
-            model.rotation.set(
-              MODEL_BASE_ROT.x,
-              MODEL_BASE_ROT.y,
-              MODEL_BASE_ROT.z
-            );
-            model.scale.set(
-              MODEL_BASE_SCALE,
-              MODEL_BASE_SCALE,
-              MODEL_BASE_SCALE
-            );
+            model = gltf.scene || gltf.scenes?.[0];
+            if (model) scene.add(model);
 
-            // ensure opaque materials
-            model.traverse((c) => {
-              if (c.isMesh && c.material) {
+            // capture original scale and apply mobile scaling if needed
+            try {
+              originalModelScale = model.scale.clone();
+              const applyResponsiveScale = () => {
                 try {
-                  c.material.transparent = false;
-                  c.material.opacity = 1;
-                  c.material.depthWrite = true;
-                } catch (err) {
-                  // ignore
+                  const isMobile = (window.innerWidth || document.documentElement.clientWidth) <= 768;
+                  const factor = isMobile ? 0.6 : 1.0; // reduce to 60% on mobile
+                  // Scale the model directly for mobile
+                  if (model && originalModelScale) {
+                    model.scale.copy(originalModelScale).multiplyScalar(factor);
+                  }
+                } catch (e) {}
+              };
+              applyResponsiveScale();
+              // call on resize as well
+              window.addEventListener('resize', applyResponsiveScale);
+              // remember handler reference so we can clean up later
+              scaleResizeHandler = applyResponsiveScale;
+            } catch (e) {}
+
+            // Setup animations after model is added so tracks resolve correctly
+            if (gltf.animations && gltf.animations.length > 0) {
+              // Use scene as mixer root so camera clips affect scene camera too
+              mixer = new THREE.AnimationMixer(scene);
+              actions = gltf.animations.map((clip) => {
+                const action = mixer.clipAction(clip);
+                action.reset();
+                action.setLoop(THREE.LoopOnce, 0);
+                action.clampWhenFinished = true;
+                action.play();
+                return { clip, action, duration: clip.duration || 0 };
+              });
+
+              // dispatch event when mixer finishes (fallback)
+              try {
+                mixer.addEventListener && mixer.addEventListener('finished', () => {
+                  if (!planeCompleted) {
+                    planeCompleted = true;
+                    try { window.dispatchEvent(new CustomEvent('planeAnimationComplete')); } catch (e) {}
+                  }
+                });
+              } catch (e) {}
+
+              // debug info
+              console.log("GLTF animations:", gltf.animations.map((a) => ({ name: a.name, duration: a.duration })));
+            }
+
+            // If the GLB contains cameras, use the first one as active camera
+            if (gltf.cameras && gltf.cameras.length > 0) {
+              camera = gltf.cameras[0];
+              // ensure aspect correct for current mount size
+              camera.aspect =
+                (mountRef.current.clientWidth || window.innerWidth) /
+                (mountRef.current.clientHeight || window.innerHeight);
+              if (camera.updateProjectionMatrix) camera.updateProjectionMatrix();
+            } else {
+              // fallback: try to find a camera in scene graph
+              const camFromScene = scene.getObjectByProperty("type", "Camera");
+              if (camFromScene) camera = camFromScene;
+            }
+
+            // Ensure materials are opaque (no animations/transforms applied)
+            if (model) {
+              model.traverse((c) => {
+                if (c.isMesh && c.material) {
+                  try {
+                    c.material.transparent = false;
+                    c.material.opacity = 1;
+                    c.material.depthWrite = true;
+                  } catch (err) {}
                 }
-              }
-            });
-
-            // start the entry timer
-            entryStartTime = performance.now();
-            entryDone = false;
-
-            scene.add(model);
+              });
+            }
           },
           undefined,
           (err) => console.error("GLTF load error:", err)
@@ -155,41 +143,81 @@ export default function ThreePlane() {
           if (!mountRef.current) return;
           const w = mountRef.current.clientWidth;
           const h = mountRef.current.clientHeight;
-          camera.aspect = w / h;
-          camera.updateProjectionMatrix();
+          if (camera.isPerspectiveCamera || camera.isOrthographicCamera) {
+            camera.aspect = w / h;
+            if (camera.updateProjectionMatrix) camera.updateProjectionMatrix();
+          }
           renderer.setSize(w, h);
+          // if model scale responsiveness is set, re-apply based on new width
+          try {
+            if (originalModelScale && model) {
+              const isMobile = (window.innerWidth || document.documentElement.clientWidth) <= 768;
+              const factor = isMobile ? 0.6 : 1.0;
+              model.scale.copy(originalModelScale).multiplyScalar(factor);
+            }
+          } catch (e) {}
         }
 
         window.addEventListener("resize", onResize);
 
         const animate = () => {
           if (!mounted) return;
-          if (model) {
-            // Entry animation: if not done, interpolate position from entryStartPos
-            // to MODEL_BASE_POS over ENTRY_DURATION_MS using an ease-out curve.
-            const now = performance.now();
-            if (!entryDone && entryStartTime != null) {
-              const tRaw = Math.min(
-                (now - entryStartTime) / ENTRY_DURATION_MS,
-                1
-              );
-              const t = 1 - Math.pow(1 - tRaw, 3); // ease-out cubic
-              model.position.x =
-                entryStartPos.x + (MODEL_BASE_POS.x - entryStartPos.x) * t;
-              model.position.y =
-                entryStartPos.y + (MODEL_BASE_POS.y - entryStartPos.y) * t;
-              model.position.z =
-                entryStartPos.z + (MODEL_BASE_POS.z - entryStartPos.z) * t;
-              if (tRaw >= 1) entryDone = true;
-            }
+          const now = performance.now();
+          const delta = (now - lastFrameTime) / 1000;
+          lastFrameTime = now;
 
-            // Interpolate model.rotation toward targetRot. The model keeps the
-            // base rotation but will smoothly approach it (no mouse-driven rotation).
-            const lerp = 0.08;
-            model.rotation.x += (targetRot.x - model.rotation.x) * lerp;
-            model.rotation.y += (targetRot.y - model.rotation.y) * lerp;
-            model.rotation.z += (targetRot.z - (model.rotation.z || 0)) * lerp;
+          // During auto-play phase, advance mixer normally
+          if (mixer && autoPlay) {
+            try {
+              mixer.update(delta);
+            } catch (e) {
+              console.warn("mixer.update during autoplay failed", e);
+            }
+            autoElapsed += delta;
+            if (autoElapsed >= AUTO_DURATION) {
+              autoPlay = false;
+              // After auto phase, create ScrollTrigger scrub to control rest
+              if (actions && actions.length > 0) {
+                const scrubObj = { t: AUTO_DURATION };
+                const totalTarget = Math.max(...actions.map((a) => a.duration || AUTO_DURATION));
+                // create tween only once
+                gsapTween = gsap.to(scrubObj, {
+                  t: totalTarget,
+                  ease: "none",
+                  immediateRender: false,
+                  scrollTrigger: {
+                    trigger: mountRef.current || document.body,
+                    // end when Testimonials section reaches top of viewport
+                    endTrigger: ".testimonials-section",
+                    start: "top top",
+                    end: "top top",
+                    scrub: true,
+                  },
+                  onUpdate: () => {
+                    actions.forEach(({ action, duration }) => {
+                      const time = Math.min(scrubObj.t, duration || totalTarget);
+                      try {
+                        action.time = time;
+                      } catch (e) {
+                        console.warn("action.time set failed", e);
+                      }
+                    });
+                    try {
+                      mixer.update(0);
+                    } catch (e) {
+                      console.warn("mixer.update failed", e);
+                    }
+                    // if scrub reached end, mark plane completed and dispatch event
+                    if (scrubObj.t >= totalTarget && !planeCompleted) {
+                      planeCompleted = true;
+                      try { window.dispatchEvent(new CustomEvent('planeAnimationComplete')); } catch (e) {}
+                    }
+                  },
+                });
+              }
+            }
           }
+
           renderer.render(scene, camera);
           frameId = requestAnimationFrame(animate);
         };
@@ -201,7 +229,23 @@ export default function ThreePlane() {
           mounted = false;
           cancelAnimationFrame(frameId);
           window.removeEventListener("resize", onResize);
-          window.removeEventListener("mousemove", handleMouse);
+          if (gsapTween) {
+            try {
+              if (gsapTween.scrollTrigger) gsapTween.scrollTrigger.kill();
+              gsapTween.kill();
+            } catch (e) {}
+            gsapTween = null;
+          }
+          if (mixer) {
+            try {
+              mixer.stopAllAction();
+            } catch (e) {}
+            mixer = null;
+          }
+          if (scaleResizeHandler) {
+            try { window.removeEventListener('resize', scaleResizeHandler); } catch (e) {}
+            scaleResizeHandler = null;
+          }
           if (renderer) {
             renderer.dispose();
             if (renderer.domElement && renderer.domElement.parentNode)

@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image"; //to remove this
 import HeroPlane from "./HeroSectionPlane.png"; //to remove this
-import ThreePlane from "./three_plane/ThreePlane";
+// ThreePlane removed from hero; mounted at top-level home page
 
 const Hero = () => {
   return (
@@ -11,7 +11,7 @@ const Hero = () => {
         minHeight: "100vh",
         width: "100%",
         position: "relative",
-        zIndex: 1,
+        zIndex: 2,
         display: "flex",
         alignItems: "center",
         padding: "6rem 8rem",
@@ -35,7 +35,6 @@ const Hero = () => {
             max-width: 100% !important;
             width: 100% !important;
             text-align: center !important;
-            transform: translateY(-2rem) !important;
           }
           .hero-left > div:first-child {
             text-align: center !important;
@@ -71,16 +70,7 @@ const Hero = () => {
           }
         }
       `}</style>
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 0,
-          pointerEvents: "none",
-        }}
-      >
-        <ThreePlane />
-      </div>
+      {/* ThreePlane is mounted at the home page level so it stays on-screen */}
       {/* LOGO FOR MOBILE */}
       <div
         className="hero-logo-mobile"
@@ -116,7 +106,7 @@ const Hero = () => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          transform: "translateY(-5.5rem)",
+        
         }}
       >
         {/* Top Label: TOGETHER */}
@@ -192,7 +182,7 @@ const Hero = () => {
             color: "rgba(255,255,255,0.85)",
             textAlign: "right",
             marginBottom: "1rem",
-            transform: "translateX(-1.5rem)",
+            
           }}
         >
           <p

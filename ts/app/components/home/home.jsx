@@ -1,4 +1,5 @@
 import Hero from "../hero/hero";
+import ThreePlane from "../hero/three_plane/ThreePlane";
 import MissionVision from "../mission/mission";
 import AboutUs from "../about/about";
 import MVVG from "../MVVG/mvvg";
@@ -147,6 +148,10 @@ const Home = () => {
 
   return (
     <main>
+      {/* Global fixed plane overlay */}
+      <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+        <ThreePlane />
+      </div>
       <Hero />
       <div style={{ marginTop: "-6rem" }}>
         <AboutUs />
@@ -258,7 +263,7 @@ const Home = () => {
           color: "#dff6fb",
         }}
       >
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ maxWidth: 1100, margin: "0 auto", position: 'relative', zIndex: 2 }}>
           <h2
             style={{
               fontSize: "2.2rem",

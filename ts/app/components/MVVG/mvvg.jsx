@@ -77,6 +77,8 @@ const MVVG = () => {
         .inner {
           max-width: 1200px;
           margin: 0 auto;
+          position: relative;
+          z-index: 2;
         }
         h2 {
           text-align: center;
