@@ -64,6 +64,7 @@ export default function animateHeroTexts({ leftEl, rightEl, planeEl, togetherEl,
       ry: initial.rotation?.y ?? 0,
       rz: initial.rotation?.z ?? 0,
     }
+    // (no plane duration scale — use explicit per-key durations)
     
     // push initial proxy into the ThreePlane so its targets are established
     // before any scroll-driven tweens begin
@@ -123,17 +124,45 @@ export default function animateHeroTexts({ leftEl, rightEl, planeEl, togetherEl,
     // the MVVG section is reached.
     const STAGE4_KEYS = [
       { pos: { x: 3.0, y: -0.79, z: -3.08 }, rot: {  x: -0.7, y: -1.5, z: -0.92 }, duration: 0.7 },
-      { pos: { x: 3.0, y: -0.79, z: -3.08 }, rot: {  x: -0.7, y: -1.5, z: -0.92 }, duration: 0.6 },
       { pos: { x: -3.0, y: -0.79, z: -3.08 }, rot: { x: -0.7, y: -1.5, z: -0.92 }, duration: 0.9 }
+    ]
+
+    // Stage 5: additional keyframes requested — rotation changes while
+    // holding the same position, then move to the final position.
+    const STAGE5_KEYS = [
+      { pos: { x: -2.668, y: -0.79, z: -3.08 }, rot: { x: 0.280, y: 0.020, z: -0.690 }, duration: 0.6 },
+      { pos: { x: -2.668, y: -0.79, z: -3.08 }, rot: { x: 1.080, y: 0.860, z: -0.860 }, duration: 0.6 },
+      { pos: { x: 1.750, y: -1.420, z: -3.08 }, rot: { x: 1.080, y: 0.860, z: -0.860 }, duration: 0.9 }
+    ]
+
+    // Stage 6: user-provided sequence of five keyframes moving forward
+    // through the scene. Rotations are identical across these keys.
+    const STAGE6_KEYS = [
+      { pos: { x: 2.090, y: -0.630, z: -2.404 }, rot: { x: -0.110, y: -0.460, z: -0.788 }, duration: 0.6 },
+      { pos: { x: 1.320, y: -0.630, z: -1.430 }, rot: { x: -0.110, y: -0.460, z: -0.788 }, duration: 0.6 },
+      { pos: { x: 0.340, y: -0.630, z: -0.310 }, rot: { x: -0.110, y: -0.460, z: -0.788 }, duration: 0.6 },
+      { pos: { x: -0.260, y: -0.630, z: 0.300 }, rot: { x: -0.110, y: -0.460, z: -0.788 }, duration: 0.6 },
+      { pos: { x: -1.380, y: -0.630, z: 4.530 }, rot: { x: -0.110, y: -0.460, z: -0.788 }, duration: 0.9 }
+    ]
+
+    // Stage 7: new sequence of six keyframes (user-provided)
+    const STAGE7_KEYS = [
+      { pos: { x: -0.100, y: 0.620, z: -0.000 }, rot: { x: -3.000, y: -0.010, z: -0.040 }, duration: 0.4 },
+      { pos: { x: 0.210, y: 1.760, z: -2.258 }, rot: { x: -3.000, y: -0.010, z: -0.040 }, duration: 0.35 },
+      { pos: { x: 0.210, y: 1.160, z: -3.840 }, rot: { x: -4.500, y: -0.010, z: -0.040 }, duration: 0.35 },
+      { pos: { x: 0.210, y: 0.960, z: -3.840 }, rot: { x: -5.000, y: -0.010, z: -0.040 }, duration: 0.35 },
+      { pos: { x: 0.210, y: 0.170, z: -3.680 }, rot: { x: -6.000, y: -0.020, z: -0.010 }, duration: 0.35 },
+      { pos: { x: 0.210, y: -0.030, z: -1.680 }, rot: { x: -6.000, y: -0.020, z: -0.010 }, duration: 0.6 }
     ]
 
     // Initial small X-translation bump is part of the timeline so progress
     // remains continuous (avoids snapping back). Use a relative value.
-    const bumpX = -0.6 // negative = left; adjust as needed
-    planeTL.to(proxy, { px: `+=${bumpX}`, duration: 0.35, ease: 'power1.out', onUpdate: pushProxy })
+    const bumpX = 0 // removed initial nudge to avoid startup rollback
+      planeTL.to(proxy, { px: `+=${bumpX}`, duration: 0.35, ease: 'power1.out', onUpdate: pushProxy })
 
     // Build the timeline from the STAGES array for readability
-    STAGES.forEach((s) => {
+    // Only include Stage 1 and Stage 2 in the main (hero) scrubbed timeline.
+    STAGES.slice(0, 2).forEach((s) => {
       if (Array.isArray(s.keys) && s.keys.length) {
         s.keys.forEach((k) => {
           planeTL.to(proxy, {
@@ -162,6 +191,10 @@ export default function animateHeroTexts({ leftEl, rightEl, planeEl, togetherEl,
         })
       }
     })
+    
+    // About section timeline (Stage 3 keys) — created later once aboutEl
+    // exists. We attach a scrubbed timeline that pauses the main planeTL
+    // while active so the stage progression maps to the About scroll.
 
     // Stage 4: separate, non-scrubbed sequence that runs when MVVG section
     // is reached. We build a paused timeline that animates the same proxy
@@ -171,7 +204,33 @@ export default function animateHeroTexts({ leftEl, rightEl, planeEl, togetherEl,
       : null
 
     if (mvvgEl && Array.isArray(STAGE4_KEYS) && STAGE4_KEYS.length) {
-      const stage4TL = gsap.timeline({ paused: true })
+      // Make stage 4 scroll-driven (scrub) so X translation follows scroll
+      const stage4TL = gsap.timeline({
+        scrollTrigger: {
+          trigger: mvvgEl,
+          start: 'top bottom', // start earlier: when mvvg top hits viewport bottom
+          end: 'bottom top',
+          scrub: true,
+          markers: false,
+          invalidateOnRefresh: true,
+          // while the MVVG scrub is active, disable the main planeTL scrub to avoid overlap
+          onToggle: (self) => {
+            try {
+              if (self.isActive) {
+                if (planeTL && planeTL.scrollTrigger) {
+                  planeTL.pause()
+                  planeTL.scrollTrigger.disable()
+                }
+              } else {
+                if (planeTL && planeTL.scrollTrigger) {
+                  planeTL.scrollTrigger.enable()
+                }
+              }
+            } catch (e) {}
+          }
+        }
+      })
+
       STAGE4_KEYS.forEach((k) => {
         stage4TL.to(proxy, {
           px: k.pos.x,
@@ -185,38 +244,140 @@ export default function animateHeroTexts({ leftEl, rightEl, planeEl, togetherEl,
           onUpdate: pushProxy
         })
       })
+      // (Stage 5 is handled on the sponsor timeline so it doesn't play
+      // during the MVVG section.)
 
-      ScrollTrigger.create({
-        trigger: mvvgEl,
-        start: 'top center',
-        onEnter: () => {
-          try {
-            if (planeTL && planeTL.scrollTrigger) {
-              planeTL.pause()
-              planeTL.scrollTrigger.disable()
+      // Create a separate timeline for Stage 6 that triggers on the
+      // sponsor section so those keyframes don't play until the
+      // user reaches that section.
+      const sponsorEl = (typeof document !== 'undefined') ? (() => {
+        // Prefer the Sponsor section on the Home page (nearest section
+        // containing the home .sponsor-cta), then fall back to other
+        // common sponsor selectors.
+        const mainCta = document.querySelector('main .sponsor-cta')
+        if (mainCta) return mainCta.closest('section') || null
+        const explicit = document.querySelector('#sponsor, [data-sponsor], .sponsor-section, .sponsor')
+        if (explicit) return explicit
+        const cta = document.querySelector('.sponsor-cta')
+        if (cta) return cta.closest('section')
+        return null
+      })() : null
+
+      if (sponsorEl && Array.isArray(STAGE6_KEYS) && STAGE6_KEYS.length) {
+        // Build a timeline driven by ScrollTrigger (scrubbed) so the
+        // plane progress maps to the sponsor section scroll. We still
+        // pause/disable the main plane timeline while the sponsor
+        // scrub is active to avoid conflicting updates.
+        const stage6TL = gsap.timeline({
+          scrollTrigger: {
+            trigger: sponsorEl,
+            start: 'top 70%',
+            end: 'bottom top+=200',
+            scrub: true,
+            markers: false,
+            invalidateOnRefresh: true,
+            onToggle: (self) => {
+              try {
+                if (typeof console !== 'undefined' && console.debug) console.debug('[plane] sponsor onToggle', { isActive: self.isActive, scrollY: window?.scrollY })
+                if (self.isActive) {
+                  if (planeTL && planeTL.scrollTrigger) {
+                    planeTL.pause()
+                    planeTL.scrollTrigger.disable()
+                  }
+                } else {
+                  if (planeTL && planeTL.scrollTrigger) {
+                    planeTL.scrollTrigger.enable()
+                  }
+                }
+              } catch (e) {}
             }
-          } catch (e) {}
-          if (!stage4TL.isActive() && stage4TL.totalProgress() < 1) stage4TL.play()
-        },
-        onEnterBack: () => {
-          try {
-            if (planeTL && planeTL.scrollTrigger) {
-              planeTL.pause()
-              planeTL.scrollTrigger.disable()
+          }
+        })
+
+        // Play Stage 5 first when sponsor section is reached
+        if (Array.isArray(STAGE5_KEYS) && STAGE5_KEYS.length) {
+          STAGE5_KEYS.forEach((k) => {
+            stage6TL.to(proxy, {
+              px: k.pos.x,
+              py: k.pos.y,
+              pz: k.pos.z,
+              rx: k.rot.x,
+              ry: k.rot.y,
+              rz: k.rot.z,
+              duration: k.duration || 0.8,
+              ease: 'power1.inOut',
+              onUpdate: pushProxy
+            })
+          })
+        }
+
+        // Then play Stage 6
+        STAGE6_KEYS.forEach((k) => {
+          stage6TL.to(proxy, {
+            px: k.pos.x,
+            py: k.pos.y,
+            pz: k.pos.z,
+            rx: k.rot.x,
+            ry: k.rot.y,
+            rz: k.rot.z,
+            duration: k.duration || 0.8,
+            ease: 'power1.inOut',
+            onUpdate: pushProxy
+          })
+        })
+
+        // Note: ScrollTrigger is attached directly to the timeline above
+        // (so no separate ScrollTrigger.create() is required).
+      }
+
+      // Create a separate timeline for Stage 7 that triggers on the
+      // testimonials section so those keyframes don't play until the
+      // user reaches that section.
+      const testimonialsEl = (typeof document !== 'undefined')
+        ? document.querySelector('main .testimonials-section, main #testimonials, main [data-testimonials], .testimonials-section, #testimonials, #test')
+        : null
+
+      if (testimonialsEl && Array.isArray(STAGE7_KEYS) && STAGE7_KEYS.length) {
+        const stage7TL = gsap.timeline({
+          scrollTrigger: {
+            trigger: testimonialsEl,
+            start: 'top 70%',
+            end: 'bottom top+=200',
+            scrub: true,
+            markers: false,
+            invalidateOnRefresh: true,
+            onToggle: (self) => {
+              try {
+                if (typeof console !== 'undefined' && console.debug) console.debug('[plane] testimonials onToggle', { isActive: self.isActive, scrollY: window?.scrollY })
+                if (self.isActive) {
+                  if (planeTL && planeTL.scrollTrigger) {
+                    planeTL.pause()
+                    planeTL.scrollTrigger.disable()
+                  }
+                } else {
+                  if (planeTL && planeTL.scrollTrigger) {
+                    planeTL.scrollTrigger.enable()
+                  }
+                }
+              } catch (e) {}
             }
-          } catch (e) {}
-          if (!stage4TL.isActive() && stage4TL.totalProgress() < 1) stage4TL.play()
-        },
-        onLeaveBack: () => {
-          try {
-            if (planeTL && planeTL.scrollTrigger) {
-              planeTL.scrollTrigger.enable()
-            }
-          } catch (e) {}
-        },
-        markers: false,
-        invalidateOnRefresh: true
-      })
+          }
+        })
+
+        STAGE7_KEYS.forEach((k) => {
+          stage7TL.to(proxy, {
+            px: k.pos.x,
+            py: k.pos.y,
+            pz: k.pos.z,
+            rx: k.rot.x,
+            ry: k.rot.y,
+            rz: k.rot.z,
+            duration: k.duration || 0.8,
+            ease: 'power1.inOut',
+            onUpdate: pushProxy
+          })
+        })
+      }
     }
 
     let floatTween = null
@@ -281,7 +442,90 @@ export default function animateHeroTexts({ leftEl, rightEl, planeEl, togetherEl,
       })
     }
 
+    // Create an About-driven timeline for Stage 3 (crossX keys) so the
+    // plane progression through Stage 3 is controlled by scrolling the
+    // About section instead of the main hero timeline.
+    try {
+      if (aboutEl && Array.isArray(STAGES) && STAGES[2] && Array.isArray(STAGES[2].keys)) {
+        const aboutTL = gsap.timeline({
+          scrollTrigger: {
+            trigger: aboutEl,
+            start: 'top center',
+            end: 'bottom top',
+            scrub: true,
+            markers: false,
+            invalidateOnRefresh: true,
+            onToggle: (self) => {
+              try {
+                if (self.isActive) {
+                  if (planeTL && planeTL.scrollTrigger) {
+                    planeTL.pause()
+                    planeTL.scrollTrigger.disable()
+                  }
+                } else {
+                  if (planeTL && planeTL.scrollTrigger) {
+                    planeTL.scrollTrigger.enable()
+                  }
+                }
+              } catch (e) {}
+            }
+          }
+        })
+
+        STAGES[2].keys.forEach((k) => {
+          aboutTL.to(proxy, {
+            px: k.pos.x,
+            py: k.pos.y,
+            pz: k.pos.z,
+            rx: k.rot.x,
+            ry: k.rot.y,
+            rz: k.rot.z,
+            duration: k.duration || 0.8,
+            ease: 'power1.inOut',
+            onUpdate: pushProxy
+          })
+        })
+      }
+    } catch (e) {
+      // non-fatal
+    }
+
     
+  }
+
+  // Section reveals: only MVVG, Sponsor (Home), and Testimonials
+  try {
+    const mvvgEl = (typeof document !== 'undefined') ? document.querySelector('main #mvvg, main [data-mvvg], main .mvvg, .mvvg-section, .mvvg') : null
+    if (mvvgEl) {
+      gsap.from(mvvgEl, { opacity: 0, y: 50, duration: 1, ease: 'power2.out', scrollTrigger: { trigger: mvvgEl, start: 'top 75%', markers: false } })
+    }
+
+    // Sponsor on Home only: prefer the sponsor CTA inside <main>
+    const homeSponsorCta = (typeof document !== 'undefined') ? document.querySelector('main .sponsor-cta') : null
+    const sponsorHomeEl = homeSponsorCta ? (homeSponsorCta.closest('section') || null) : null
+    if (sponsorHomeEl) {
+      const logos = sponsorHomeEl.querySelectorAll('.sponsor-logo, .sponsor-item, .marquee-item')
+      if (logos && logos.length) {
+        gsap.set(logos, { opacity: 0, scale: 0.92, rotate: -2 })
+        gsap.to(logos, { opacity: 1, scale: 1, rotate: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: sponsorHomeEl, start: 'top 70%', end: 'bottom top+=200', scrub: true, markers: false } })
+      } else {
+        gsap.fromTo(sponsorHomeEl, { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', scrollTrigger: { trigger: sponsorHomeEl, start: 'top 70%', scrub: true, markers: false } })
+      }
+    }
+
+    // Testimonials (home): prefer section inside main
+    const testimonialsHome = (typeof document !== 'undefined') ? document.querySelector('main .testimonials-section, main #testimonials, main [data-testimonials], .testimonials-section') : null
+    if (testimonialsHome) {
+      const tItems = testimonialsHome.querySelectorAll('.testimonial-card, .testimonial, .quote, .test-card')
+      if (tItems && tItems.length) {
+        gsap.set(tItems, { opacity: 0, scale: 0.96 })
+        gsap.to(tItems, { opacity: 1, scale: 1, duration: 0.75, stagger: 0.12, ease: 'back.out(0.9)', scrollTrigger: { trigger: testimonialsHome, start: 'top 70%', end: 'bottom top+=200', scrub: true, markers: false } })
+      } else {
+        gsap.fromTo(testimonialsHome, { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out', scrollTrigger: { trigger: testimonialsHome, start: 'top 70%', scrub: true, markers: false } })
+      }
+    }
+  } catch (e) {
+    console.warn('section reveals failed', e)
   }
 
   // After the main texts finish, animate TOGETHER (from bottom) then Tejas (from top)

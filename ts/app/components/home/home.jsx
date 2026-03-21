@@ -5,6 +5,9 @@ import MVVG from "../MVVG/mvvg";
 import NextImage from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 import sponsor1 from "../sponsor/image-removebg-preview (19).png";
 import sponsor2 from "../sponsor/image-removebg-preview (20).png";
 import sponsor3 from "../sponsor/image-removebg-preview (21).png";
@@ -143,6 +146,43 @@ const Home = () => {
       document.removeEventListener("pointercancel", handlePointerUp);
       document.removeEventListener("touchcancel", handlePointerUp);
       if (animationRef.current) animationRef.current.kill();
+    };
+  }, []);
+
+  // Sponsor section creative reveal (title clip, paragraph slide, logos pop, CTA pulse)
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const title = el.querySelector('h2');
+    const para = el.querySelector('p');
+    const logos = el.querySelectorAll('.marquee-item');
+    const cta = el.querySelector('.sponsor-cta');
+
+    // initial states
+    if (title) gsap.set(title, { opacity: 0, y: 6, clipPath: 'inset(0 100% 0 0)' });
+    if (para) gsap.set(para, { opacity: 0, y: 18 });
+    if (logos && logos.length) gsap.set(logos, { opacity: 0, y: 18, scale: 0.94, rotate: -4 });
+    if (cta) gsap.set(cta, { opacity: 0, y: 10, scale: 0.98 });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 75%',
+        end: 'bottom top',
+        scrub: false,
+        markers: false,
+        invalidateOnRefresh: true,
+      }
+    });
+
+    if (title) tl.to(title, { clipPath: 'inset(0 0% 0 0)', opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' });
+    if (para) tl.to(para, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, '-=0.45');
+    if (logos && logos.length) tl.to(logos, { opacity: 1, y: 0, scale: 1, rotate: 0, duration: 0.7, stagger: 0.08, ease: 'back.out(1.1)' }, '-=0.4');
+    if (cta) tl.to(cta, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.6)' }, '-=0.45');
+
+    return () => {
+      try { tl.kill(); } catch (e) {}
     };
   }, []);
 
