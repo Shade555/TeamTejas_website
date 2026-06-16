@@ -148,6 +148,7 @@ const AboutUs = ({ stats = defaultStats }) => {
         background: "transparent", // match hero / page background
         color: "#e8fbff",
         minHeight: "60vh",
+        opacity: 1, // start hidden so reveal animation won't flash
         display: "flex",
         justifyContent: "center",
         width: "100%",

@@ -73,6 +73,7 @@ const MVVG = () => {
           background: transparent;
           color: #e8fbff;
           min-height: 60vh;
+          opacity: 0; /* start hidden so GSAP reveal doesn't flash */
         }
         .inner {
           max-width: 1200px;
