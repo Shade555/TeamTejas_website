@@ -6,6 +6,8 @@ import MVVG from "../MVVG/mvvg";
 import NextImage from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 import sponsor1 from "../sponsor/image-removebg-preview (19).png";
 import sponsor2 from "../sponsor/image-removebg-preview (20).png";
 import sponsor3 from "../sponsor/image-removebg-preview (21).png";
@@ -146,23 +148,81 @@ const Home = () => {
     };
   }, []);
 
+  // Sponsor section creative reveal (title clip, paragraph slide, logos pop, CTA pulse)
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const title = el.querySelector('h2');
+    const para = el.querySelector('p');
+    const logos = el.querySelectorAll('.marquee-item');
+    const cta = el.querySelector('.sponsor-cta');
+
+    // initial states
+    if (title) gsap.set(title, { opacity: 0, y: 6, clipPath: 'inset(0 100% 0 0)' });
+    if (para) gsap.set(para, { opacity: 0, y: 18 });
+    if (logos && logos.length) gsap.set(logos, { opacity: 0, y: 18, scale: 0.94, rotate: -4 });
+    if (cta) gsap.set(cta, { opacity: 0, y: 10, scale: 0.98 });
+
+    // Build a paused timeline and control it explicitly via ScrollTrigger callbacks
+    const sponsorTL = gsap.timeline({ paused: true });
+    if (title) sponsorTL.to(title, { clipPath: 'inset(0 0% 0 0)', opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' });
+    if (para) sponsorTL.to(para, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, '-=0.45');
+    if (logos && logos.length) sponsorTL.to(logos, { opacity: 1, y: 0, scale: 1, rotate: 0, duration: 0.7, stagger: 0.08, ease: 'back.out(1.1)' }, '-=0.4');
+    if (cta) sponsorTL.to(cta, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.6)' }, '-=0.45');
+
+    const st = ScrollTrigger.create({
+      trigger: el,
+      start: 'top 75%',
+      markers: false,
+      invalidateOnRefresh: true,
+      onEnter: () => sponsorTL.play(0),
+      onLeaveBack: () => sponsorTL.reverse()
+    })
+
+    return () => {
+      try { sponsorTL.kill(); } catch (e) {}
+      try { st && st.kill && st.kill(); } catch (e) {}
+    };
+  }, []);
+
   return (
     <main>
       {/* Global fixed plane overlay */}
       <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
         <ThreePlane />
       </div>
-      <Hero />
-      <div style={{ marginTop: "-6rem" }}>
-        <AboutUs />
-      </div>
+      <div className="home-flow">
+        <Hero />
+        <div style={{ marginTop: "-6rem" }}>
+          <AboutUs />
+        </div>
 
-      <MVVG />
+        <MVVG />
 
-      <MissionVision />
+        <MissionVision />
 
       {/* ✅ MOVED STYLES HERE (only change made) */}
       <style jsx>{`
+        .home-flow {
+          display: flex;
+          flex-direction: column;
+          gap: 120vh; /* increased vertical spacing between sections */
+        }
+
+        @media (max-width: 768px) {
+          .home-flow { gap: 90vh; }
+        }
+
+        /* Sponsor elements start hidden to avoid flash before GSAP runs */
+        .sponsor-section h2,
+        .sponsor-section p,
+        .marquee-item,
+        .sponsor-cta {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+
         .marquee {
           width: 100%;
           position: relative;
@@ -256,6 +316,7 @@ const Home = () => {
       {/* Sponsor Us section */}
       <section
         ref={sectionRef}
+        className="sponsor-section"
         style={{
           padding: "3.5rem 6rem",
           background: "linear-gradient(180deg, #070e1c 0%, #050a12 100%)",
@@ -346,6 +407,18 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      </div>
+
+      {/* extra spacer to delay plane reaching testimonials - match sponsor section end color */}
+      <div
+        aria-hidden
+        style={{
+          height: '60vh',
+          width: '100%',
+          backgroundColor: '#050a12',
+        }}
+      />
 
       <Testimonials />
     </main>

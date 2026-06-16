@@ -3,8 +3,9 @@
 import React, { useEffect, useRef } from "react";
 import Image from "next/image"; //to remove this
 import HeroPlane from "./HeroSectionPlane.png"; //to remove this
+import ThreePlane from "./three_plane/ThreePlane";
+import PlaneDebug from './PlaneDebug'
 import animateHeroTexts, { animateTypewriter } from './heroAnimations'
-// ThreePlane removed from hero; mounted at top-level home page
 
 const Hero = () => {
   const leftTextRef = useRef(null)
@@ -12,11 +13,11 @@ const Hero = () => {
   const planeRef = useRef(null)
   const togetherRef = useRef(null)
   const tejasRef = useRef(null)
-  const descriptionRef = useRef(null);
+  const descriptionRef = useRef(null)
   const heroSectionRef = useRef(null)
   const threePlaneRef = useRef(null)
 
-  const descriptionFullText = `On the ground in the lab and above\nthe horizon, we craft, test, and perfect advanced UAV systems\nfor global arenas`;
+  const descriptionFullText = `On the ground in the lab and above\nthe horizon, we craft, test, and perfect advanced UAV systems\nfor global arenas`
 
   useEffect(() => {
     let cleanupTypewriter = null
@@ -39,11 +40,14 @@ const Hero = () => {
       if (cleanupTypewriter && typeof cleanupTypewriter === 'function') cleanupTypewriter()
       if (tl && typeof tl.kill === 'function') tl.kill()
       try {
+        // kill ScrollTriggers created by this component
         const { ScrollTrigger } = require('gsap/ScrollTrigger')
         if (ScrollTrigger && typeof ScrollTrigger.getAll === 'function') {
           ScrollTrigger.getAll().forEach(t => t.kill())
         }
-      } catch (e) {}
+      } catch (e) {
+        // ignore if require not available
+      }
     }
   }, [])
 
@@ -66,19 +70,20 @@ const Hero = () => {
         @media (max-width: 768px) {
           .hero-logo-mobile {
             display: block !important;
-          }
-          .hero-section {
-            padding: 3rem 1.5rem !important;
-            flex-direction: column !important;
-            justify-content: flex-start !important;
-            align-items: flex-start !important;
-            padding-top: 2.5rem !important;
-          }
-          .hero-left {
-            flex: none !important;
-            max-width: 100% !important;
-            width: 100% !important;
+          <div
+            ref={planeRef}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: -1,
+              pointerEvents: "none",
+            }}
+          >
             text-align: center !important;
+            transform: translateY(-2rem) !important;
           }
           .hero-left > div:first-child {
             text-align: center !important;
@@ -114,7 +119,21 @@ const Hero = () => {
           }
         }
       `}</style>
-      {/* ThreePlane is mounted at the home page level so it stays on-screen */}
+      <div
+        ref={planeRef}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
+      >
+        <ThreePlane ref={threePlaneRef} />
+      </div>
+      <PlaneDebug threePlaneRef={threePlaneRef} />
       {/* LOGO FOR MOBILE */}
       <div
         className="hero-logo-mobile"
@@ -138,7 +157,6 @@ const Hero = () => {
           }}
         />
       </div>
-      <div ref={planeRef} style={{ position: 'absolute', inset: 0, zIndex: -1, pointerEvents: 'none' }} />
       {/* LEFT COLUMN */}
       <div
         className="hero-left"
@@ -155,7 +173,8 @@ const Hero = () => {
         }}
       >
         {/* Top Label: TOGETHER */}
-        <div ref={togetherRef}
+        <div
+          ref={togetherRef}
           style={{
             color: "rgba(255,255,255,0.75)",
             letterSpacing: "0.28rem",
@@ -168,7 +187,8 @@ const Hero = () => {
         </div>
 
         {/* Main Left Headline */}
-        <div ref={leftTextRef}
+        <div
+          ref={leftTextRef}
           style={{
             fontSize: "6.5rem",
             lineHeight: 1.08,
@@ -231,19 +251,20 @@ const Hero = () => {
             transform: "translateX(-1.5rem)",
           }}
         >
-            <p
-              ref={descriptionRef}
-              style={{
-                margin: 0,
-                fontSize: "1rem",
-                fontWeight: 300,
-                lineHeight: 1.3,
-              }}
-            />
+          <p
+            ref={descriptionRef}
+            style={{
+              margin: 0,
+              fontSize: "1rem",
+              fontWeight: 300,
+              lineHeight: 1.3,
+            }}
+          />
         </div>
 
         {/* Big Headline: Ahead */}
-        <h1 ref={rightTextRef}
+        <h1
+          ref={rightTextRef}
           style={{
             fontSize: "7rem",
             lineHeight: 0.95,
