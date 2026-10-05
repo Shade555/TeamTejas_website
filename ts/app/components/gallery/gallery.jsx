@@ -9,53 +9,31 @@ import styles from "./gallery.module.css";
 
 // Carousel images (7 images for horizontal scroll - odd number for center focus)
 const carouselImages = [
-  "https://picsum.photos/seed/highlight1/800/800",
-  "https://picsum.photos/seed/highlight2/800/800",
-  "https://picsum.photos/seed/highlight3/800/800",
-  "https://picsum.photos/seed/highlight4/800/800",
-  "https://picsum.photos/seed/highlight5/800/800",
-  "https://picsum.photos/seed/highlight6/800/800",
-  "https://picsum.photos/seed/highlight7/800/800",
+  "/Gallery/Highlight1.jpg",
+  "/Gallery/Highlight2.jpg",
+  "/Gallery/Highlight3.jpg",
+  "/Gallery/Highlight4.jpg",
 ];
 
 // Grid images for bottom section - varied aspect ratios for masonry effect
 const gridImages = [
   {
-    src: "https://picsum.photos/seed/grid1/600/800",
-    caption: "Team building session",
+    src: "/Gallery/Candid1.jpg",
+    caption: "Candid moments",
   },
-  { src: "https://picsum.photos/seed/grid2/600/400", caption: "Workshop day" },
+  { src: "/Gallery/Candid2.jpg", caption: "Team work" },
   {
-    src: "https://picsum.photos/seed/grid3/600/600",
+    src: "/Gallery/Candid3.JPG",
     caption: "Celebrating success",
   },
   {
-    src: "https://picsum.photos/seed/grid4/600/900",
-    caption: "Late night coding",
+    src: "/Gallery/Candid4.jpg",
+    caption: "Group pic",
   },
   {
-    src: "https://picsum.photos/seed/grid5/600/450",
-    caption: "Competition prep",
-  },
-  {
-    src: "https://picsum.photos/seed/grid6/600/750",
-    caption: "Award ceremony",
-  },
-  { src: "https://picsum.photos/seed/grid7/600/500", caption: "Design review" },
-  { src: "https://picsum.photos/seed/grid8/600/850", caption: "Testing phase" },
-  { src: "https://picsum.photos/seed/grid9/600/400", caption: "Team lunch" },
-  {
-    src: "https://picsum.photos/seed/grid10/600/700",
-    caption: "Brainstorming ideas",
-  },
-  {
-    src: "https://picsum.photos/seed/grid11/600/550",
-    caption: "Project kickoff",
-  },
-  {
-    src: "https://picsum.photos/seed/grid12/600/650",
-    caption: "Final presentation",
-  },
+    src: "/Gallery/candid5.JPG",
+    caption: "Event highlights",
+  }
 ];
 
 // ============================================

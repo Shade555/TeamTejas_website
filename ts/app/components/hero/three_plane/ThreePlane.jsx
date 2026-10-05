@@ -60,26 +60,7 @@ export default function ThreePlane() {
           (gltf) => {
             model = gltf.scene || gltf.scenes?.[0];
             if (model) scene.add(model);
-
-            // capture original scale and apply mobile scaling if needed
-            try {
-              originalModelScale = model.scale.clone();
-              const applyResponsiveScale = () => {
-                try {
-                  const isMobile = (window.innerWidth || document.documentElement.clientWidth) <= 768;
-                  const factor = isMobile ? 0.6 : 1.0; // reduce to 60% on mobile
-                  // Scale the model directly for mobile
-                  if (model && originalModelScale) {
-                    model.scale.copy(originalModelScale).multiplyScalar(factor);
-                  }
-                } catch (e) {}
-              };
-              applyResponsiveScale();
-              // call on resize as well
-              window.addEventListener('resize', applyResponsiveScale);
-              // remember handler reference so we can clean up later
-              scaleResizeHandler = applyResponsiveScale;
-            } catch (e) {}
+            // (Removed model scale responsiveness to use camera zoom instead)
 
             // Setup animations after model is added so tracks resolve correctly
             if (gltf.animations && gltf.animations.length > 0) {
@@ -122,6 +103,25 @@ export default function ThreePlane() {
               if (camFromScene) camera = camFromScene;
             }
 
+            // Apply camera zoom out on mobile screens instead of scaling the model
+            try {
+              const applyResponsiveCamera = () => {
+                try {
+                  const isMobile = (window.innerWidth || document.documentElement.clientWidth) <= 768;
+                  // The user requested: "dont make it tooo effective else the plane will appear too small"
+                  // Using 0.75 for a softer zoom out effect compared to the previous 0.6 model scale
+                  const zoomFactor = isMobile ? 0.75 : 1.0; 
+                  if (camera && (camera.isPerspectiveCamera || camera.isOrthographicCamera)) {
+                    camera.zoom = zoomFactor;
+                    if (camera.updateProjectionMatrix) camera.updateProjectionMatrix();
+                  }
+                } catch (e) {}
+              };
+              applyResponsiveCamera();
+              window.addEventListener('resize', applyResponsiveCamera);
+              scaleResizeHandler = applyResponsiveCamera;
+            } catch (e) {}
+
             // Ensure materials are opaque (no animations/transforms applied)
             if (model) {
               model.traverse((c) => {
@@ -148,14 +148,6 @@ export default function ThreePlane() {
             if (camera.updateProjectionMatrix) camera.updateProjectionMatrix();
           }
           renderer.setSize(w, h);
-          // if model scale responsiveness is set, re-apply based on new width
-          try {
-            if (originalModelScale && model) {
-              const isMobile = (window.innerWidth || document.documentElement.clientWidth) <= 768;
-              const factor = isMobile ? 0.6 : 1.0;
-              model.scale.copy(originalModelScale).multiplyScalar(factor);
-            }
-          } catch (e) {}
         }
 
         window.addEventListener("resize", onResize);

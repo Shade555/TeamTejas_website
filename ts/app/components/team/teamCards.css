@@ -34,15 +34,16 @@
 
 .member-card {
   width: 100%;
-  max-width: 300px; /* narrower */
-  min-height: 360px; /* reduced height */
+  max-width: 300px;
+  min-height: 360px;
+  aspect-ratio: 300 / 360;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.75rem 1.25rem; /* more vertical padding */
+  padding: 1.75rem 1.25rem;
   background: linear-gradient(180deg, rgba(10,18,30,0.55), rgba(7,12,22,0.45));
   border-radius: 18px;
-  border: 1px solid rgba(117, 251, 253, 0.18); /* #75fbfd tint */
+  border: 1px solid rgba(117, 251, 253, 0.18);
   box-shadow: 0 18px 40px rgba(2,6,23,0.35), 0 6px 30px rgba(117,251,253,0.03);
   color: #eaf6ff;
   position: relative;
@@ -53,6 +54,7 @@
 .member-card.large {
   max-width: 360px;
   min-height: 440px;
+  aspect-ratio: 360 / 440;
   padding-bottom: 2rem;
 }
 
@@ -64,9 +66,13 @@
 
 /* modal (focused) state - bring forward */
 .member-card.modal {
-  /* keep same size as normal cards; only bring forward visually */
+  width: 300px; /* Force intrinsic width in modal so it doesn't collapse */
+  max-width: 90vw;
   z-index: 1300;
   box-shadow: 0 40px 80px rgba(0,0,0,0.55), 0 14px 60px rgba(117,251,253,0.06);
+}
+.member-card.large.modal {
+  width: 360px;
 }
 
 /* Ensure modal footer looks like the original card footer (pinned to bottom)
@@ -104,35 +110,39 @@
 }
 
 .avatar {
-  width: 160px;
-  height: 160px;
-  border-radius: 14px;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
   box-shadow: 0 10px 30px rgba(0,0,0,0.4) inset;
-  margin-top: 1rem;
-  flex: 0 0 auto;
+  flex: none;
 }
 
 .avatar.large {
-  width: 180px;
-  height: 180px;
-  border-radius: 14px;
+  width: 100%;
+  height: 100%;
 }
 
-/* image avatar that matches the sizing/shape of .avatar */
+/* image avatar that fills the card */
 .avatar-img {
-  width: 160px;
-  height: 160px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 14px;
-  margin-top: 1rem;
-  flex: 0 0 auto;
+  object-position: center top;
+  border-radius: 0;
+  margin: 0;
+  flex: none;
   display: block;
+  z-index: 0;
 }
 .avatar-img.large {
-  width: 180px;
-  height: 180px;
-  border-radius: 14px;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
 }
 
 /* start avatar image blurred and unblur when card comes into view */
@@ -173,7 +183,7 @@
   top: 12px; /* initial position */
   width: calc(100% - 36px);
   max-width: calc(100% - 36px);
-  background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  background: rgba(7, 14, 28, 0.75);
   border-radius: 12px;
   padding: 10px 14px;
   display: flex;
@@ -183,6 +193,7 @@
   backdrop-filter: blur(6px);
   transition: transform 1200ms cubic-bezier(.16,.9,.24,1) 300ms, box-shadow 700ms ease, opacity 700ms ease;
   will-change: transform;
+  z-index: 10;
 }
 
 .card-footer.small { padding: 8px 12px; }

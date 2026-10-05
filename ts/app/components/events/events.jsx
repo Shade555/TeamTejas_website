@@ -609,9 +609,15 @@ export default function Events2() {
             and performance.
           </p>
           <div className={styles.cardsContainer}>
-            <div className={styles.card + ' ' + styles.cardLeft} ref={cardLeftRef} />
-            <div className={styles.card + ' ' + styles.cardCenter} ref={cardCenterRef} />
-            <div className={styles.card + ' ' + styles.cardRight} ref={cardRightRef} />
+            <div className={styles.card + ' ' + styles.cardLeft} ref={cardLeftRef}>
+              <img src="/Milestones/Flight1.jpg" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} alt="Flight 1" />
+            </div>
+            <div className={styles.card + ' ' + styles.cardCenter} ref={cardCenterRef}>
+              <img src="/Milestones/Flight2.jpg" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} alt="Flight 2" />
+            </div>
+            <div className={styles.card + ' ' + styles.cardRight} ref={cardRightRef}>
+              <img src="/Milestones/Flight3.jpg" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} alt="Flight 3" />
+            </div>
           </div>
           {/* Desktop view: THE FLIGHT text */}
           <h2 className={styles.flightText} ref={flightTextRef}>THE FLIGHT</h2>
@@ -630,12 +636,12 @@ export default function Events2() {
       <section className={styles.section3} ref={section3Ref}>
         <div className={styles.section3Inner}>
           <div className={styles.largeCard} ref={section3CardRef}>
+            <iframe src="https://drive.google.com/file/d/12sHpWHG1V537canZR7onGBv_EdGhLqXI/preview" width="100%" height="100%" style={{ border: 'none', borderRadius: 'inherit' }} allow="autoplay"></iframe>
             <div className={styles.textTopLeft} ref={section3TextLeftRef}>
-              Lorem ipsom sit dolor amet lorem Lorem ipsom sit dolor amet Lorem ipsom sit dolor amet
-              lorem
+              From blueprints to the open sky. Countless hours of design, fabrication, and rigorous testing culminate in this single moment of liftoff.
             </div>
             <div className={styles.textBottomRight} ref={section3TextRightRef}>
-              Lorem ipsom sit dolor amet lorem Lorem ipsom sit dolor amet lorem Lorem ipsom sit dolor amet lorem
+              Watch our engineering take flight. Precision control, aerodynamic stability, and raw power perfectly synchronized in the air.
             </div>
           </div>
         </div>
@@ -645,24 +651,28 @@ export default function Events2() {
         <div className={styles.section4Inner}>
           <div className={styles.columnContainer}>
             <div className={styles.column + ' ' + styles.columnLeft}>
-              <p className={styles.cardTopText} ref={section4LeftTextRef}>LOREM IPSUM</p>
-              <div className={styles.cardSmallLeft} ref={section4CardSmallRef} />
+              <p className={styles.cardTopText} ref={section4LeftTextRef}>INNOVATION</p>
+              <div className={styles.cardSmallLeft} ref={section4CardSmallRef}>
+                <img src="/Milestones/Flight11.jpg" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} alt="Flight 11" />
+              </div>
             </div>
 
             <div className={styles.column + ' ' + styles.columnCenter}>
-              <div className={styles.cardLarge} ref={section4CardLargeRef} />
-              <p className={styles.cardBottomText} ref={section4CenterTextRef}>LOREM IPSUM SIT DOLOR AMET LOREM</p>
+              <div className={styles.cardLarge} ref={section4CardLargeRef}>
+                <iframe src="https://drive.google.com/file/d/1xC_1Mp0oWuL-CdqgZZHQWKbaaujO0bLP/preview" width="100%" height="100%" style={{ border: 'none', borderRadius: 'inherit' }} allow="autoplay"></iframe>
+              </div>
+              <p className={styles.cardBottomText} ref={section4CenterTextRef}>PUSHING THE BOUNDARIES OF AERODYNAMICS</p>
             </div>
 
             <div className={styles.column + ' ' + styles.columnRight}>
               <div className={styles.rightColumnContent}>
-                <p ref={section4RightTopTextRef} className={styles.rightTopText}><span>L</span>OREM IPSUM SIT DOLOR AMET LOREM</p>
+                <p ref={section4RightTopTextRef} className={styles.rightTopText}><span>P</span>RECISION ENGINEERING AT EVERY STAGE</p>
                 <div className={styles.dropCapContainer}>
                   <div className={styles.listContent}>
-                    <span className={styles.listItem} ref={el => { if (el) section4ListItemsRef.current[0] = el }}>01 - LOREM IPSUM</span><br />
-                    <span className={styles.listItem} ref={el => { if (el) section4ListItemsRef.current[1] = el }}>02 - LOREM IPSUM</span><br />
-                    <span className={styles.listItem} ref={el => { if (el) section4ListItemsRef.current[2] = el }}>03 - LOREM IPSUM</span><br />
-                    <span className={styles.listItem} ref={el => { if (el) section4ListItemsRef.current[3] = el }}>04 - LOREM IPSUM</span>
+                    <span className={styles.listItem} ref={el => { if (el) section4ListItemsRef.current[0] = el }}>01 - CONCEPT & DESIGN</span><br />
+                    <span className={styles.listItem} ref={el => { if (el) section4ListItemsRef.current[1] = el }}>02 - CFD ANALYSIS</span><br />
+                    <span className={styles.listItem} ref={el => { if (el) section4ListItemsRef.current[2] = el }}>03 - STRUCTURAL TESTING</span><br />
+                    <span className={styles.listItem} ref={el => { if (el) section4ListItemsRef.current[3] = el }}>04 - FLIGHT TRIALS</span>
                   </div>
                 </div>
               </div>
@@ -683,25 +693,27 @@ export default function Events2() {
         <div ref={section5InnerRef} className={styles.section5Inner}>
           <div className={styles.section5Top}>
             <div className={styles.section5Left}>
-              <p className={styles.section5Title}>Lorem ipsum sit dolor amet lorem. Lorem ipsum sit dolor amet lorem</p>
+              <p className={styles.section5Title}>SAE Aero Design Challenge</p>
               <p className={styles.section5Text}>
-                Lorem ipsum sit dolor amet lorem. Lorem ipsum sit dolor amet lorem Lorem ipsum sit dolor amet lorem. Lorem ipsum sit dolor amet lorem sit dolor amet lorem. Lorem ipsum sit dolor amet lorem
+                Competing at the prestigious SAE Design Challenge, Team Tejas pushes the boundaries of autonomous and remote-controlled flight. We engineer high-payload, aerodynamically optimized UAVs designed to tackle rigorous real-world missions, proving our technical excellence on a national stage.
               </p>
             </div>
-            <div className={styles.section5Card} />
+            <div className={styles.section5Card}>
+              <img src="/Milestones/SAE_DDC.JPG" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} alt="SAE DDC" />
+            </div>
           </div>
 
           <div className={styles.divider} />
 
           <div className={styles.section5Bottom}>
             <div className={styles.section5BottomColumn}>
-              <p className={styles.section5ColumnTitle}>Lorem ipsum sit dolor amet lorem. Lorem ipsum sit dolor amet lorem Lorem ipsum sit dolor amet lorem. Lorem ipsum sit dolor amet lorem Lorem ipsum sit dolor amet lorem. Lorem ipsum sit dolor amet lorem</p>
+              <p className={styles.section5ColumnTitle}>Meticulous aerodynamic modeling and fluid dynamics simulations ensure our aircraft can withstand extreme payload stresses while maintaining optimal stability.</p>
             </div>
             <div className={styles.section5BottomColumn}>
-              <p className={styles.section5ColumnTitle}>Lorem ipsum sit dolor amet lorem. Lorem ipsum sit dolor amet lorem Lorem ipsum sit dolor amet lorem. Lorem ipsum sit dolor amet lorem Lorem ipsum sit dolor amet lorem. Lorem ipsum sit dolor amet lorem</p>
+              <p className={styles.section5ColumnTitle}>Utilizing lightweight composites, precision 3D printing, and aircraft-grade materials to maximize our vehicle's critical thrust-to-weight ratio.</p>
             </div>
             <div className={styles.section5BottomColumn}>
-              <p className={styles.section5ColumnTitle}>Lorem ipsum sit dolor amet lorem. Lorem ipsum sit dolor amet lorem Lorem ipsum sit dolor amet lorem. Lorem ipsum sit dolor amet lorem Lorem ipsum sit dolor amet lorem. Lorem ipsum sit dolor amet lorem</p>
+              <p className={styles.section5ColumnTitle}>Executing complex flight profiles with autonomous payload drops, live telemetric data tracking, and flawless manual override controls.</p>
             </div>
           </div>
         </div>
