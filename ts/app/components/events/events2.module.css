@@ -426,14 +426,25 @@
   }
 }
 
-/* Mobile - adjust text positions */
+/* Mobile - adjust text positions and card shapes for video embeds */
 @media (max-width: 640px){
+  .largeCard, .cardLarge{
+    width: 100%;
+    height: auto !important;
+    aspect-ratio: 16 / 9;
+    max-width: 400px;
+  }
+  
   .textTopLeft{
-    left: 10px;
+    left: 0;
+    top: -30px;
+    font-size: 0.85rem;
   }
 
   .textBottomRight{
-    right: 10px;
+    right: 0;
+    bottom: -40px;
+    font-size: 0.85rem;
   }
 }
 
@@ -552,8 +563,8 @@
 }
 
 .cardLarge{
-  width: 320px;
-  height: 420px;
+  width: 400px;
+  height: 225px;
   background: linear-gradient(135deg, #3a8a9e 0%, #2d7a8e 100%);
   border-radius: 24px;
 }
@@ -791,8 +802,8 @@
   }
 
   .cardLarge{
-    width: 220px;
-    height: 300px;
+    width: 320px;
+    height: 180px;
   }
 
   .dropCap{
