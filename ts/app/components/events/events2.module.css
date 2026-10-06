@@ -771,19 +771,6 @@
   }
 }
 
-/* Mobile - section 4 text positioning */
-@media (max-width: 640px){
-  .cardTopText{
-    left: 70%;
-    transform: translateX(-70%) translateY(70px);
-  }
-
-  .cardBottomText{
-    left: 90%;
-    transform: translateX(5%) translateY(-80px);
-  }
-}
-
 @media (max-width: 900px){
   .section4{
     min-height: auto;
@@ -803,6 +790,23 @@
   .columnCenter,
   .columnRight{
     align-items: center;
+  }
+
+  .cardTopText{
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .cardBottomText{
+    position: relative;
+    left: 0;
+    transform: none;
+    margin-top: 20px;
+    text-align: center;
   }
 
   .cardSmallLeft{
