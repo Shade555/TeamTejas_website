@@ -428,11 +428,18 @@
 
 /* Mobile - adjust text positions and card shapes for video embeds */
 @media (max-width: 640px){
-  .largeCard, .cardLarge{
+  .largeCard{
     width: 100%;
     height: auto !important;
     aspect-ratio: 16 / 9;
     max-width: 400px;
+  }
+  
+  .cardLarge{
+    width: 100%;
+    height: auto !important;
+    aspect-ratio: 3 / 4;
+    max-width: 320px;
   }
   
   .textTopLeft{
@@ -563,8 +570,8 @@
 }
 
 .cardLarge{
-  width: 400px;
-  height: 225px;
+  width: 320px;
+  height: 420px;
   background: linear-gradient(135deg, #3a8a9e 0%, #2d7a8e 100%);
   border-radius: 24px;
 }
@@ -802,8 +809,8 @@
   }
 
   .cardLarge{
-    width: 320px;
-    height: 180px;
+    width: 260px;
+    height: 340px;
   }
 
   .dropCap{
