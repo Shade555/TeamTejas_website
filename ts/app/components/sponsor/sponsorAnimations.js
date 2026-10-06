@@ -50,81 +50,64 @@ export default function initSponsorAnimations(container) {
 				},
 			});
 
-		// Top logos: center-first stagger (dynamic for odd/even counts)
+		// Simplify logo animations to a clean vertical fade-up (fixes mobile overflow/clipping issues)
+		const animateLogosIn = (batch, fromPos) => {
+			gsap.fromTo(
+				batch,
+				{ y: 40, x: 0, opacity: 0 },
+				{ y: 0, x: 0, opacity: 1, stagger: { each: 0.12, from: fromPos }, duration: 0.8, ease: 'power3.out' }
+			);
+		};
+
+		const animateLogosOut = (batch, fromPos) => {
+			gsap.to(batch, {
+				y: 20,
+				x: 0,
+				opacity: 0,
+				stagger: { each: 0.08, from: fromPos },
+				duration: 0.4,
+				ease: 'power2.in',
+			});
+		};
+
 		ScrollTrigger.batch('.sponsor-logo-top', {
-			interval: 0.12,
+			interval: 0.1,
 			batchMax: 20,
-			onEnter: (batch) => {
-				// Mirror: elements slide inward toward their layout positions.
-				// Left items should move left into place, right items move right into place.
-				gsap.fromTo(
-					batch,
-					{ x: (i, el, arr) => -((i - (arr.length - 1) / 2) * 100), opacity: 0 },
-					{ x: 0, opacity: 1, stagger: { each: 0.18, from: 'center' }, duration: 0.9, ease: 'power4.out', delay: 0.06 }
-				);
-			},
-			onLeaveBack: (batch) => {
-				gsap.to(batch, {
-					x: (i, el, arr) => -((i - (arr.length - 1) / 2) * 60),
-					opacity: 0,
-					stagger: { each: 0.12, from: 'center' },
-					duration: 0.45,
-					ease: 'power1.in',
-				});
-			},
-			start: 'top 80%',
+			onEnter: (batch) => animateLogosIn(batch, 'center'),
+			onLeaveBack: (batch) => animateLogosOut(batch, 'center'),
+			start: 'top 85%',
 		});
 
-		// Logos: animate individually as they enter using batch, mirrored per side
 		ScrollTrigger.batch('.sponsor-logo-right', {
-			interval: 0.12,
+			interval: 0.1,
 			batchMax: 20,
-			onEnter: (batch) => {
-				// appear from the top-right, animate starting from the right-most item
-				gsap.fromTo(
-					batch,
-					{ y: -40, x: 40, opacity: 0 },
-					{ y: 0, x: 0, opacity: 1, stagger: { each: 0.18, from: 'end' }, duration: 0.9, ease: 'power4.out', delay: 0.06 }
-				);
-			},
-			onLeaveBack: (batch) => {
-				gsap.to(batch, { y: -30, x: 30, opacity: 0, stagger: { each: 0.12, from: 'end' }, duration: 0.45, ease: 'power1.in' });
-			},
-			start: 'top 80%',
+			onEnter: (batch) => animateLogosIn(batch, 'end'),
+			onLeaveBack: (batch) => animateLogosOut(batch, 'end'),
+			start: 'top 85%',
 		});
 
 		ScrollTrigger.batch('.sponsor-logo-left', {
-			interval: 0.12,
+			interval: 0.1,
 			batchMax: 20,
-			onEnter: (batch) => {
-				// appear from the top-left, animate starting from the left-most item
-				gsap.fromTo(
-					batch,
-					{ y: -40, x: -40, opacity: 0 },
-					{ y: 0, x: 0, opacity: 1, stagger: { each: 0.18, from: 'start' }, duration: 0.9, ease: 'power4.out', delay: 0.06 }
-				);
-			},
-			onLeaveBack: (batch) => {
-				gsap.to(batch, { y: -30, x: -30, opacity: 0, stagger: { each: 0.12, from: 'start' }, duration: 0.45, ease: 'power1.in' });
-			},
-			start: 'top 80%',
+			onEnter: (batch) => animateLogosIn(batch, 'start'),
+			onLeaveBack: (batch) => animateLogosOut(batch, 'start'),
+			start: 'top 85%',
 		});
 
 		// Year sections
-			gsap.utils.toArray('.sponsor-year').forEach((sec) => {
-				gsap.from(sec, {
-					y: 22,
-					opacity: 0,
-					duration: 0.7,
-					ease: 'power3.out',
-					delay: 0.05,
-					scrollTrigger: {
-						trigger: sec,
-						start: 'top 80%',
-						toggleActions: 'play reverse play reverse',
-					},
-				});
+		gsap.utils.toArray('.sponsor-year').forEach((sec) => {
+			gsap.from(sec, {
+				y: 30,
+				opacity: 0,
+				duration: 0.7,
+				ease: 'power3.out',
+				scrollTrigger: {
+					trigger: sec,
+					start: 'top 85%',
+					toggleActions: 'play reverse play reverse',
+				},
 			});
+		});
 	}, container);
 
 	// CTA hover/focus
@@ -133,7 +116,7 @@ export default function initSponsorAnimations(container) {
 	const onEnter = () => {
 		if (!cta) return;
 		hoverTween && hoverTween.kill();
-		hoverTween = gsap.to(cta, { scale: 1.03, duration: 0.18, ease: 'power1.out' });
+		hoverTween = gsap.to(cta, { scale: 1.05, duration: 0.2, ease: 'power2.out' });
 	};
 	const onLeave = () => {
 		if (!cta) return;
@@ -155,11 +138,6 @@ export default function initSponsorAnimations(container) {
 			cta.removeEventListener('blur', onLeave);
 		}
 		hoverTween && hoverTween.kill();
-		try {
-			ScrollTrigger.getAll().forEach((st) => st.kill());
-		} catch (e) {
-			// ignore
-		}
 		ctx.revert();
 	};
 }

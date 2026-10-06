@@ -21,7 +21,7 @@ const gridImages = [
     src: "/Gallery/Candid1.jpg",
     caption: "Candid moments",
   },
-  { src: "/Gallery/Candid2.jpg", caption: "Team work" },
+  { src: "/Gallery/Candid2.jpg", caption: "Beach Bash" },
   {
     src: "/Gallery/Candid3.JPG",
     caption: "Celebrating success",
