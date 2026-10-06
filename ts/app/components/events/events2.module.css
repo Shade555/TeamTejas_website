@@ -366,9 +366,8 @@
   background: linear-gradient(135deg, #3a8a9e 0%, #2d7a8e 100%);
   border-radius: 32px;
   overflow: visible;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  display: block;
+  margin: 0 auto;
   padding: 0;
 }
 
@@ -433,6 +432,7 @@
     height: auto !important;
     aspect-ratio: 16 / 9;
     max-width: 400px;
+    margin: 0 auto;
   }
   
   .cardLarge{
@@ -440,6 +440,7 @@
     height: auto !important;
     aspect-ratio: 3 / 4;
     max-width: 320px;
+    margin: 0 auto;
   }
   
   .textTopLeft{
@@ -574,6 +575,7 @@
   height: 420px;
   background: linear-gradient(135deg, #3a8a9e 0%, #2d7a8e 100%);
   border-radius: 24px;
+  margin: 0 auto;
 }
 
 .dropCapContainer{

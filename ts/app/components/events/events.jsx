@@ -636,7 +636,7 @@ export default function Events2() {
       <section className={styles.section3} ref={section3Ref}>
         <div className={styles.section3Inner}>
           <div className={styles.largeCard} ref={section3CardRef}>
-            <iframe src="https://drive.google.com/file/d/12sHpWHG1V537canZR7onGBv_EdGhLqXI/preview" width="100%" height="100%" style={{ border: 'none', borderRadius: 'inherit' }} allow="autoplay"></iframe>
+            <iframe src="https://drive.google.com/file/d/12sHpWHG1V537canZR7onGBv_EdGhLqXI/preview" width="100%" height="100%" style={{ display: 'block', border: 'none', borderRadius: 'inherit', margin: '0 auto' }} allow="autoplay"></iframe>
             <div className={styles.textTopLeft} ref={section3TextLeftRef}>
               From blueprints to the open sky. Countless hours of design, fabrication, and rigorous testing culminate in this single moment of liftoff.
             </div>
@@ -659,7 +659,7 @@ export default function Events2() {
 
             <div className={styles.column + ' ' + styles.columnCenter}>
               <div className={styles.cardLarge} ref={section4CardLargeRef}>
-                <iframe src="https://drive.google.com/file/d/1xC_1Mp0oWuL-CdqgZZHQWKbaaujO0bLP/preview" width="100%" height="100%" style={{ border: 'none', borderRadius: 'inherit' }} allow="autoplay"></iframe>
+                <iframe src="https://drive.google.com/file/d/1xC_1Mp0oWuL-CdqgZZHQWKbaaujO0bLP/preview" width="100%" height="100%" style={{ display: 'block', border: 'none', borderRadius: 'inherit', margin: '0 auto' }} allow="autoplay"></iframe>
               </div>
               <p className={styles.cardBottomText} ref={section4CenterTextRef}>PUSHING THE BOUNDARIES OF AERODYNAMICS</p>
             </div>
