@@ -23,8 +23,47 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Team Tejas",
-  description: "Student-led aerospace innovation driven by precision, teamwork, and performance.",
+  metadataBase: new URL('https://teamtejas.vercel.app'),
+  title: "Team Tejas | Aerospace & Aero Design",
+  description: "Official website of Team Tejas. We are a premier student-led aerospace engineering team focused on building cutting-edge UAVs, RC aircraft, and competing in the SAE Aero Design Challenge.",
+  keywords: [
+    "Team Tejas",
+    "Team Tejas Aerospace",
+    "SAE Aero Design",
+    "SAE DDC",
+    "UAV Engineering",
+    "Student Aerospace Team",
+    "RC Aircraft",
+    "Drone Design",
+    "Aero Design Challenge",
+    "Engineering"
+  ],
+  authors: [{ name: "Team Tejas" }],
+  creator: "Team Tejas Webmasters",
+  publisher: "Team Tejas",
+  openGraph: {
+    title: "Team Tejas | Student-led Aerospace Innovation",
+    description: "Official website of Team Tejas. Pushing the boundaries of autonomous and remote-controlled flight on a national stage.",
+    siteName: "Team Tejas",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Team Tejas",
+    description: "Student-led aerospace innovation driven by precision, teamwork, and performance.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
